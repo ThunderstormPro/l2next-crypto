@@ -1,0 +1,23 @@
+# Do not include CMake generated files from out-of-source compilation.
+Build/
+
+# Do not include binaries.
+Binaries/
+
+# Do not include third party libraries.
+ThirdParty/
+
+# Files related to VS solution generation.
+*.sln
+*.vcxproj
+*.filters
+*.obj
+*.pdb
+
+# CMake temporary files.
+*.tlog
+*.stamp
+*.depend
+*.lastbuildstate
+cmake_install.cmake
+CMakeCache.txt
