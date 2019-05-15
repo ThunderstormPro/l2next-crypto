@@ -19,3 +19,4 @@ set_static_library_properties()
 
 # Link third party dependencies. 
 link_external_dependency(zlib)
+link_external_dependency(mpir)

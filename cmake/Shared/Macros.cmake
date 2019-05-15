@@ -27,12 +27,20 @@ macro(enqueue_external_dependency)
 	set(_LOG_DIR 		"${THIRD_PARTY_LIBS_PATH}/${LIBRARY_NAME}/logs")
 	
 	# Arguments.
-	set(_CMAKE_ARGS		"-DCMAKE_INSTALL_PREFIX=${_INSTALL_DIR}")
+	list(APPEND _CMAKE_ARGS	
+		-DCMAKE_INSTALL_PREFIX=${_INSTALL_DIR}
+		${LIBRARY_CMAKE_ARGS}
+	)
+	
+	if(DEFINED LIBRARY_GIT_REPOSITORY AND DEFINED LIBRARY_URL)
+		message(FATAL_ERROR "Error on enqueue external dependency. Both LIBRARY_GIT_REPOSITORY and LIBRARY_URL is defined, choose only one source to fetch the files from.")
+	endif()
 	
 	# Enqueue library for download, build & install.
 	ExternalProject_Add(${LIBRARY_NAME}
 		PREFIX			${THIRD_PARTY_LIBS_PATH}
 		URL				${LIBRARY_URL}
+		GIT_REPOSITORY	${LIBRARY_GIT_REPOSITORY}
 		CMAKE_ARGS		${_CMAKE_ARGS}
 		TMP_DIR			${_TMP_DIR}
 		STAMP_DIR		${_STAMP_DIR}
@@ -49,6 +57,9 @@ macro(enqueue_external_dependency)
 	
 	# Group all dependencies into a separate solution folder.
 	set_target_properties(${LIBRARY_NAME} PROPERTIES FOLDER Dependencies)
+	
+	# Log success.
+	message("Added third party dependency : [${LIBRARY_NAME}]")
 	
 	unset(LIBRARY_NAME)
 	unset(LIBRARY_URL)

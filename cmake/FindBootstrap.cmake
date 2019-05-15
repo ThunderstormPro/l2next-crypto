@@ -68,7 +68,7 @@ set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Add target projects to solution.
-message("[Projects]")
+message("\n-- Projects --\n")
 
 # Load shared & static library package.
 find_package(LineageCrypto REQUIRED)
