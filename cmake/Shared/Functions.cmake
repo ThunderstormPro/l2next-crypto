@@ -17,9 +17,8 @@ function(add_project_to_solution target)
 		message(FATAL_ERROR "Failed to add project : [${target}] to solution. Source directory is missing.")
 	endif()
 	
-	message("Adding project to solution: [${target}]")
+	message("-- [${target}]")
 	add_subdirectory(${_PROJECT_SRC_PATH} "${_PROJECT_BUILD_PATH}")
-	
 	unset(_PROJECT_SRC_PATH)
 	unset(_PROJECT_BUILD_PATH)
 endfunction()
