@@ -1,0 +1,22 @@
+# Copyright (c) 2019 Alexei Gaidulean
+# All rights reserved.
+#
+# Use of this source code is governed by a MIT-style license that
+# can be found in the LICENSE file.
+
+# Project metadata.
+project(${PROJECT_NAME} VERSION 1.0.0)
+ 
+# Add sources.
+include(Library/Sources)
+ 
+# Adds a static & dynamic library target.
+add_library_targets(${PROJECT_NAME} "${LineageCrypto_SOURCES}")
+
+# Set library properties.
+set_shared_library_properties()
+set_static_library_properties()
+
+# Link third party dependencies. 
+link_external_dependency(zlib)
+link_external_dependency(mpir)
