@@ -65,7 +65,13 @@ int main()
 		{
 			// 1. Read file contents at cp.src.
 			// ...
+
+			ifstream sourceFile(cp.src, ios::binary);
+
 			char* buffer = new char[256];
+			sourceFile.read(buffer, 256);
+
+			
 			// 2. Pass buffer to decrypt as char*.
 			char* decryptedData = LineageCrypto::Decrypt(buffer);
 			// 3. Write decrypted data to cp.out.
