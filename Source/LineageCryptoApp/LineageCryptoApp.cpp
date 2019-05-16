@@ -1,22 +1,90 @@
 // L2EncDec.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#include "pch.h"
-#include <string> 
-#include <iostream>
-#include "LineageCrypto.h"
 
-using namespace std;
+#include "LineageCryptoApp.h"
+
+void LineageCryptoApp::PrintIntro()
+{
+	cout << "# LineageCrypto.";
+	cout << "# By default config.yaml located in config/config.yaml is used for enc/dec tasks.\n";
+	cout << "# If you want to specify a custom yaml config, type a `filename.yaml`, that is located relative to app directory.\n";
+	cout << "#\n";
+	cout << "# Enter custom yaml config path, to skip just press ENTER:\n";
+}
+
+string LineageCryptoApp::GetCurrentWorkingDirectory()
+{
+	char* Filename = new char[MAX_PATH];
+	GetModuleFileNameA(NULL, Filename, MAX_PATH);
+
+	char* LastDirectorySeparator = strrchr(Filename, '\\');
+	*LastDirectorySeparator = '\0';
+
+	return string(Filename);
+}
+
+string LineageCryptoApp::GetConfigPath()
+{
+	return customYamlConfig.empty() 
+		? GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
+		: GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
+}
+
+void LineageCryptoApp::ReadCustomConfigPath()
+{
+	// Read custom config path.
+	getline(cin, customYamlConfig);
+}
 
 int main()
 {
-	int input = 0;
-	LineageCrypto::Test();
 
-	cin >> input;
+	LineageCryptoApp* app = new LineageCryptoApp();
+
+	// Print intro.
+	app->PrintIntro();
+
+	// Wait for user input.
+	app->ReadCustomConfigPath();
+
+	// Try to load yaml config file.
+	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
+
+	if (config == nullptr)
+	{
+		return 0;
+	}
+
+	// TODO Move this to task manager to run all the decryptions / encryptions.
+	// Simple pseudo code for now.
+	if (!config->Decrypt.empty())
+	{
+		// ...
+
+		for (ConfigPaths cp : config->Decrypt)
+		{
+			// 1. Read file contents at cp.src.
+			// ...
+			char* buffer = new char[256];
+			// 2. Pass buffer to decrypt as char*.
+			char* decryptedData = LineageCrypto::Decrypt(buffer);
+			// 3. Write decrypted data to cp.out.
+			// ...
+		}
+	}
+	
+	cout << "All tasks finished. Press any key to exit program.";
+
+	// Await user input.
+	string awaitClosing = "";
+	getline(cin, awaitClosing);
+	
+	// Cleanup.
+	delete config;
+	delete app;
+
+	return 1;
 }
-
-
-
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
