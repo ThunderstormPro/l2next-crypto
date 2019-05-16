@@ -1,8 +1,7 @@
 #include "LineageCrypto.h"
-#include <iostream>
 
-void LineageCrypto::Test()
+
+char* LineageCrypto::Decrypt(char * buffer)
 {
-	std::cout << "Hello from LineageCryptoLibrary!";
-
+	return nullptr;
 }
