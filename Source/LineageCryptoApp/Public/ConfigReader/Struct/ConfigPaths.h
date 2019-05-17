@@ -2,6 +2,7 @@
 #define H_CONFIG_PATHS
 
 #include <string>
+#include <iostream>
 #include "yaml-cpp/yaml.h"
 
 using namespace std;

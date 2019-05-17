@@ -23,8 +23,8 @@ function(set_common_library_props target)
 	# Target linker language C++.
 	set_target_properties(${target} PROPERTIES LINKER_LANGUAGE CXX)
 	
-	# Export public API.
-	target_include_directories(${target} PUBLIC include)
+	# Includes.
+	target_include_directories(${target} PUBLIC Public)
 	
 	# Compiler flags.
 	target_compile_options(${target} PRIVATE ${COMPILER_FLAGS_SHARED})

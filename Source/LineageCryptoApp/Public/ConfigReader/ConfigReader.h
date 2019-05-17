@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 #include "Struct/ConfigBase.h"
 #include "yaml-cpp/yaml.h"
 
@@ -15,7 +16,7 @@ class ConfigReader
 {
 // API
 public:
-	static ConfigBase* TryLoadConfig(string& path);
+	static unique_ptr<ConfigBase> TryLoadConfig(string& path);
 };
 
 #endif //H_CONFIG_READER
