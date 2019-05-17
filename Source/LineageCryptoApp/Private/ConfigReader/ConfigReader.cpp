@@ -1,14 +1,14 @@
-#include "ConfigReader.h"
+#include "ConfigReader/ConfigReader.h"
 
 using namespace YAML;
 
-ConfigBase* ConfigReader::TryLoadConfig(string& path)
+unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(string& path)
 {
 	try
 	{
 		Node rootNode = LoadFile(path);
 
-		ConfigBase* config = new ConfigBase();
+		unique_ptr<ConfigBase> config = make_unique<ConfigBase>();
 
 		if (!rootNode["decrypt"] || !rootNode["encrypt"])
 		{
@@ -20,7 +20,7 @@ ConfigBase* ConfigReader::TryLoadConfig(string& path)
 		{
 			config->Decrypt = rootNode["decrypt"].as<vector<ConfigPaths>>();
 		}
-		catch (exception& e)
+		catch (exception e)
 		{
 			// ...
 		}
@@ -29,7 +29,7 @@ ConfigBase* ConfigReader::TryLoadConfig(string& path)
 		{
 			config->Encrypt = rootNode["encrypt"].as<vector<ConfigPaths>>();
 		}
-		catch (exception& e)
+		catch (exception e)
 		{
 			// ...
 		}

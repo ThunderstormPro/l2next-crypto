@@ -3,6 +3,13 @@
 
 #include "LineageCryptoApp.h"
 
+using namespace LineageCryptoCommands;
+
+unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
+{
+	return make_unique<LineageCryptoApp>();
+}
+
 void LineageCryptoApp::PrintIntro()
 {
 	cout << "# LineageCrypto.";
@@ -36,10 +43,16 @@ void LineageCryptoApp::ReadCustomConfigPath()
 	getline(cin, customYamlConfig);
 }
 
+void LineageCryptoApp::awaitClosing()
+{
+	cout << "Press any key to exit program.";
+	string awaitClosing = "";
+	getline(cin, awaitClosing);
+}
+
 int main()
 {
-
-	LineageCryptoApp* app = new LineageCryptoApp();
+	auto& app = LineageCryptoApp::getRef();
 
 	// Print intro.
 	app->PrintIntro();
@@ -48,40 +61,64 @@ int main()
 	app->ReadCustomConfigPath();
 
 	// Try to load yaml config file.
-	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
+	auto& config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
-	if (config == nullptr)
+	if (config == nullptr) 
 	{
 		return 0;
 	}
-
-	// TODO Move this to task manager to run all the decryptions / encryptions.
-	// Simple pseudo code for now.
+	
+	// Decrypt task.
 	if (!config->Decrypt.empty())
 	{
-		// ...
-
 		for (ConfigPaths cp : config->Decrypt)
 		{
-			// 1. Read file contents at cp.src.
-			// ...
-			char* buffer = new char[256];
-			// 2. Pass buffer to decrypt as char*.
-			char* decryptedData = LineageCrypto::Decrypt(buffer);
-			// 3. Write decrypted data to cp.out.
-			// ...
+			ifstream inStream(cp.src, ios::binary);
+			ofstream outStream(cp.out, ofstream::binary);
+			
+			CDecrypt command(
+				inStream,
+				outStream
+			);
+
+			LineageCrypto::Enqueue(command);
 		}
 	}
-	
-	cout << "All tasks finished. Press any key to exit program.";
+
+	// Encrypt task.
+	if (!config->Encrypt.empty())
+	{
+		for (ConfigPaths cp : config->Encrypt)
+		{
+			ifstream inStream(cp.src, ios::binary);
+			ofstream outStream(cp.out, ofstream::binary);
+
+			CEncrypt command(
+				inStream,
+				outStream
+			);
+
+			LineageCrypto::Enqueue(command);
+		}
+	}
+
+	LineageCrypto::OnPassed([](ICommand& cmnd) -> void {
+		// Task passed with command `cmnd`.
+	});
+
+	LineageCrypto::OnFailed([](ICommand& cmnd) -> void {
+		// Task failed with command `cmnd`.
+	});
+
+	LineageCrypto::ExecuteAll();
 
 	// Await user input.
-	string awaitClosing = "";
-	getline(cin, awaitClosing);
+	app->AwaitClosing();
 	
 	// Cleanup.
-	delete config;
-	delete app;
+	LineageCrypto::Release();
+	config.reset();
+	app.reset();
 
 	return 1;
 }
