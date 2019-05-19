@@ -30,9 +30,12 @@ endfunction()
 function(set_test_app_properties)
 	set_app_executable_common_properties(${PROJECT_NAME})
 	
+	# Includes.
+	target_include_directories(${PROJECT_NAME} PUBLIC Public)
+	
 	# Set executable linker flags.
 	if(EXE_LINKER_FLAGS)
 		string(REPLACE ";" " " _LINK_FLAGS "${EXE_LINKER_FLAGS}")
-		set_target_properties(${target} PROPERTIES LINK_FLAGS ${_LINK_FLAGS})
+		set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS ${_LINK_FLAGS})
 	endif()
 endfunction()
