@@ -2,6 +2,7 @@
 #define H_ASYNC_TASK
 
 #include <functional>
+#include "TaskRunner/Commands/BaseCommand.h"
 #include "TaskRunner/Interfaces/Task.h"
 
 using namespace::std;
@@ -10,15 +11,15 @@ class AsyncTask
 	: public ITask
 {
 public:
-	AsyncTask(ICommand& command);
+	AsyncTask(BaseCommand& command);
 	~AsyncTask();
 	void Run();
 
-	function<void(ICommand&)> callbackPassed;
-	function<void(ICommand&)> callbackFailed;
+	function<void(BaseCommand&)> callbackPassed;
+	function<void(BaseCommand&)> callbackFailed;
 
-	virtual void OnTaskPassed(function<void(ICommand&)> callback) override;
-	virtual void OnTaskFailed(function<void(ICommand&)> callback) override;
+	virtual void OnTaskPassed(function<void(BaseCommand&)> callback) override;
+	virtual void OnTaskFailed(function<void(BaseCommand&)> callback) override;
 };
 
 #endif // H_ASYNC_TASK

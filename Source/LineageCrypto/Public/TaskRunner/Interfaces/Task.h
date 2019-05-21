@@ -1,8 +1,8 @@
 #ifndef H_TASK
 #define H_TASK
 
-#include "Command.h"
 #include <functional>
+#include "TaskRunner/Commands/BaseCommand.h"
 
 using namespace::std;
 
@@ -11,13 +11,13 @@ class ITask
 protected:
 	// TODO
 	// Add task ID
-	ICommand& _command;
+	BaseCommand& _command;
 
 	virtual void Run() = 0;
-	virtual void OnTaskPassed(function<void(ICommand&)> callback) = 0;
-	virtual void OnTaskFailed(function<void(ICommand&)> callback) = 0;
+	virtual void OnTaskPassed(function<void(BaseCommand&)> callback) = 0;
+	virtual void OnTaskFailed(function<void(BaseCommand&)> callback) = 0;
 
-	ITask(ICommand& command) : _command(command) {}
+	ITask(BaseCommand& command) : _command(command) {}
 	virtual ~ITask() {}
 };
 
