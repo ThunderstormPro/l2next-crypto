@@ -6,9 +6,10 @@
 #include <string>
 #include <vector>
 #include "TaskRunner/TaskRunner.h"
-#include "TaskRunner/Interfaces/Command.h"
+#include "TaskRunner/Commands/BaseCommand.h"
 #include "TaskRunner/Commands/Encrypt.h"
 #include "TaskRunner/Commands/Decrypt.h"
+#include "Shared/Structs/LineageFileSchema.h"
 #include <functional>
 #include <string>
 
@@ -18,13 +19,13 @@ class LineageCrypto
 {
 public:
 	// API
-	static void Enqueue(ICommand& cmnd);
+	static void Enqueue(BaseCommand& cmnd);
 	static void ExecuteAll();
 	static void Release();
 
 	// Delegates.
-	static void OnPassed(function<void(ICommand&)> callback);
-	static void OnFailed(function<void(ICommand&)> callback);
+	static void OnPassed(const function<void(L2Command&)> callback);
+	static void OnFailed(const function<void(L2Command&)> callback);
 	
 public:
 	~LineageCrypto() {};

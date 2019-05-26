@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include "Interfaces/Command.h"
+#include "Commands/BaseCommand.h"
 #include "Tasks/AsyncTask.h"
 
 using namespace::std;
@@ -18,13 +18,13 @@ public:
 		return instance;
 	};
 
-	void Enqueue(ICommand& cmnd);
+	void Enqueue(BaseCommand& cmnd);
 	void ExecuteAll();
 	void Release();
 
 	// Events.
-	void OnTaskPassed(function<void(ICommand&)> callback);
-	void OnTaskFailed(function<void(ICommand&)> callback);
+	void OnTaskPassed(function<void(BaseCommand&)> callback);
+	void OnTaskFailed(function<void(BaseCommand&)> callback);
 
 private:
 	vector<unique_ptr<AsyncTask>> _asyncTasks;

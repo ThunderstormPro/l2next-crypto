@@ -1,6 +1,6 @@
 #include "TaskRunner/TaskRunner.h"
 
-void TaskRunner::Enqueue(ICommand& cmnd)
+void TaskRunner::Enqueue(BaseCommand& cmnd)
 {
 	// TODO Multithreading
 	unique_ptr<AsyncTask> task = make_unique<AsyncTask>(cmnd);
@@ -23,7 +23,7 @@ void TaskRunner::Release()
 	}
 }
 
-void TaskRunner::OnTaskPassed(function<void(ICommand&)> callback)
+void TaskRunner::OnTaskPassed(function<void(BaseCommand&)> callback)
 {
 	for (auto const& task : _asyncTasks)
 	{
@@ -31,7 +31,7 @@ void TaskRunner::OnTaskPassed(function<void(ICommand&)> callback)
 	}
 }
 
-void TaskRunner::OnTaskFailed(function<void(ICommand&)> callback)
+void TaskRunner::OnTaskFailed(function<void(BaseCommand&)> callback)
 {
 	for (auto const& task : _asyncTasks)
 	{

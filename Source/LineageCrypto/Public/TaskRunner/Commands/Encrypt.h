@@ -2,20 +2,26 @@
 #define H_ENCRYPT
 
 #include <fstream>
-#include "TaskRunner/Interfaces/Command.h"
+#include <memory>
+#include <functional>
+#include "Crypto/Crypto.h"
+#include "Shared/Structs/LineageFileSchema.h"
+#include "TaskRunner/Commands/BaseCommand.h"
 
 using namespace::std;
 
 namespace LineageCryptoCommands
 {
-	class CEncrypt : public ICommand
+	class CEncrypt : public BaseCommand
 	{
 	public:
 		CEncrypt(ifstream& inStream, ofstream& outStream);
+		~CEncrypt();
 
 		virtual bool Execute() override;
-
-		~CEncrypt();
+	private:
+		char* encryptBuffer;
+		void ReadBuffer(ifstream& inStream);
 	};
 }
 

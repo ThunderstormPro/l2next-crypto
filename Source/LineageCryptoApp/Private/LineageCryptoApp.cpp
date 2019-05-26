@@ -102,12 +102,32 @@ int main()
 		}
 	}
 
-	LineageCrypto::OnPassed([](ICommand& cmnd) -> void {
-		// Task passed with command `cmnd`.
+	LineageCrypto::OnPassed([&](L2Command& command) -> void {
+		auto result = command.GetResult<SLineageFileSchema>();
+
+		switch (command.GetId())
+		{
+			case ECryptoCommands::ENCRYPT:
+				cout << "Task for ENCRYPT command passed." << endl;
+				break;
+			case ECryptoCommands::DECRYPT:
+				cout << "Task for DECRYPT command passed." << endl;
+				break;
+		}
 	});
 
-	LineageCrypto::OnFailed([](ICommand& cmnd) -> void {
-		// Task failed with command `cmnd`.
+	LineageCrypto::OnFailed([&](L2Command& command) -> void {
+		auto result = command.GetResult<SLineageFileSchema>();
+
+		switch (command.GetId())
+		{
+			case ECryptoCommands::ENCRYPT:
+				cout << "Task for ENCRYPT command failed." << endl;
+				break;
+			case ECryptoCommands::DECRYPT:
+				cout << "Task for DECRYPT command failed." << endl;
+				break;
+		}
 	});
 
 	LineageCrypto::ExecuteAll();
