@@ -1,0 +1,19 @@
+# Config Yaml.
+# 
+# Info.
+# Both `decrypt` and `encrypt` are an array of objects.
+# Each element in array is an object with two sub fields: 
+# - src : specify a path to a source file you want to decrypt/encrypt.
+# - out : specify a path where the encrypted/decrypted file should be written to.
+#
+# Leave decrypt/encrypt field as an empty array to skip the enc/dec task.
+
+# Enqueue following files for decrypt.
+decrypt: 
+  - src: 'C:/import/filename.dat'
+    out: 'C:/export/dec-filename.dat'
+  - src: 'C:/import/filename_awesome.dat'
+    out: 'C:/export/dec-filename_awesome.dat'
+
+# Enqueue following files for encrypt.
+encrypt: []

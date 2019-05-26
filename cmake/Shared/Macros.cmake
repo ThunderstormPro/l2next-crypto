@@ -74,6 +74,12 @@ macro(enqueue_external_dependency)
 	unset(_CMAKE_ARGS)
 endmacro()
 
+# Links internal project dependency.
+macro(link_internal_dependency dependency_name)
+	add_dependencies(${PROJECT_NAME} ${dependency_name})
+	target_link_libraries(${PROJECT_NAME} PUBLIC ${dependency_name})
+endmacro()
+
 # Links external dependency to required project.
 macro(link_external_dependency name)
 	# Try to load library configuration.
@@ -82,11 +88,14 @@ macro(link_external_dependency name)
 	# Get installation directory of the library.
 	ExternalProject_Get_property(${name} INSTALL_DIR)
 
-	# Include directories.
-	include_directories(${PROJECT_NAME} "${INSTALL_DIR}/include")
-	
 	# Add as a dependency to the project.
 	add_dependencies(${PROJECT_NAME} ${name})
+	
+	# Lib path.
+	target_link_libraries(${PROJECT_NAME} PUBLIC "${INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME}")
+	
+	# Include directories.
+	target_include_directories(${PROJECT_NAME} PUBLIC "${INSTALL_DIR}/include")
 endmacro()
 
 # Add source group.
@@ -98,7 +107,7 @@ macro(add_source_group group_name)
 	set(SRC_GROUP ${ARGN})
 
 	# Check if group paths are separated by dot character.
-	string(REGEX MATCHALL "^[A-Za-z]*[\.][A-Za-z]+$" HAS_DOT_CHAR ${group_name})
+	string(REGEX MATCHALL "^([A-Za-z]*[\.][A-Za-z])+" HAS_DOT_CHAR ${group_name})
 	
 	if(HAS_DOT_CHAR)
 		# Create a list of paths from the group name.
@@ -107,7 +116,7 @@ macro(add_source_group group_name)
 		# Append paths separated by dot.
 		foreach(path ${GRP_TREE_LIST})
 			string(APPEND GRP_PATH "${path}\\\\")
-		endforeach()	
+		endforeach()
 	else()
 		set(GRP_PATH ${group_name})
 	endif()

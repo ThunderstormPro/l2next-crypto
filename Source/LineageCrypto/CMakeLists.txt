@@ -6,10 +6,10 @@
 
 # Project metadata.
 project(${PROJECT_NAME} VERSION 1.0.0)
- 
+
 # Add sources.
 include(Library/Sources)
- 
+
 # Adds a static & dynamic library target.
 add_library_targets(${PROJECT_NAME} "${LineageCrypto_SOURCES}")
 
