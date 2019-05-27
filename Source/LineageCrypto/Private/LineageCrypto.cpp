@@ -1,7 +1,7 @@
 #include "LineageCrypto.h"
 
 
-void LineageCrypto::Enqueue(BaseCommand& cmnd)
+void LineageCrypto::Enqueue(unique_ptr<BaseCommand>& cmnd)
 {
 	TaskRunner::GetInstance().Enqueue(cmnd);
 }
@@ -11,9 +11,9 @@ void LineageCrypto::ExecuteAll()
 	TaskRunner::GetInstance().ExecuteAll();
 }
 
-void LineageCrypto::Release()
+void LineageCrypto::ReleaseAll()
 {
-	TaskRunner::GetInstance().Release();
+	TaskRunner::GetInstance().ReleaseAll();
 }
 
 void LineageCrypto::OnPassed(const function<void(L2Command&)> callback)

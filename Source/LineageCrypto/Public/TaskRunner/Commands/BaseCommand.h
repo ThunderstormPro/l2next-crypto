@@ -33,6 +33,7 @@ class BaseCommand: public L2Command
 {
 public:
 	virtual bool Execute();
+	virtual void Release();
 };
 
 #endif // H_BASE_COMMAND

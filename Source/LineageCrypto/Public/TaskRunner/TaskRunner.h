@@ -18,9 +18,9 @@ public:
 		return instance;
 	};
 
-	void Enqueue(BaseCommand& cmnd);
+	void Enqueue(unique_ptr<BaseCommand>& cmnd);
 	void ExecuteAll();
-	void Release();
+	void ReleaseAll();
 
 	// Events.
 	void OnTaskPassed(function<void(BaseCommand&)> callback);

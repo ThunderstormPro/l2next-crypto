@@ -3,6 +3,8 @@
 
 #include <string>
 #include <memory>
+#include <regex>
+#include <algorithm>
 #include "Shared/Structs/LineageFileSchema.h"
 #include "Crypto/Algorithms/Base/AlgorithmBase.h"
 #include "Crypto/Algorithms/41x/Enc41x.h"
@@ -10,7 +12,13 @@
 
 using namespace::std;
 
-enum ECryptType
+constexpr char NULL_TERMINATOR_CHR = '\0';
+const string INVALID_HEADER = "INVALID_HEADER";
+const regex LINEAGE_HEADER_SIGNATURE = regex("^Lineage2Ver\\d{3}$");
+constexpr unsigned char LINEAGE_HEADER_SIZE = 28;
+constexpr unsigned char LINEAGE_VERSION_LENGTH = 3;
+
+enum class ECryptType
 {
 	ENC,
 	DEC
@@ -24,8 +32,8 @@ public:
 	static SLineageFileSchema Encrypt(char* buffer);
 
 private:
-	static string GetHeader(char* buffer);
-	static short GetHeaderVersion(string& header);
+	static string GetHeaderString(char* buffer);
+	static int GetHeaderVersion(string header);
 	static unique_ptr<AlgorithmBase> GetAlgorithm(ECryptType type, short& version);
 
 	// Generic templates.

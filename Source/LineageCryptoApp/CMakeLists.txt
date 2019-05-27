@@ -13,6 +13,9 @@ include(App/Sources)
 # Add executable target.
 add_executable(${PROJECT_NAME} WIN32 ${LineageCryptoApp_SOURCES})
 
+# Add resources.
+include(App/Resources)
+
 # Set test app properties.
 set_test_app_properties(LineageCrypto_Static)
 

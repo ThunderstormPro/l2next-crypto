@@ -11,6 +11,9 @@
 # Directory where all source code for each module will be placed.
 set(PROJECT_SRC_PATH "${_ROOT_PATH}/Source")
 
+# Directory where all resources for each module will be placed.
+set(PROJECT_RSRC_PATH "${_ROOT_PATH}/Resources")
+
 # Binaries ouput directory.
 set(PROJECT_BIN_PATH "${_ROOT_PATH}/Binaries")
 
