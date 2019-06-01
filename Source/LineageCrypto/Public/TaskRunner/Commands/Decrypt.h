@@ -22,9 +22,10 @@ namespace LineageCryptoCommands
 		~CDecrypt();
 
 		virtual bool Execute() override;
+		virtual void Release() override;
 	private:
 		char* decryptBuffer;
-		void ReadBuffer(ifstream& inStream);
+		void ReadStream(ifstream& inStream);
 	};
 }
 

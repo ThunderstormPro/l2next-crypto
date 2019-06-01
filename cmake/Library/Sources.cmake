@@ -17,6 +17,8 @@ add_source_group(Source.TaskRunner
 )
 
 add_source_group(Source.TaskRunner.Tasks
+	"Public/TaskRunner/Tasks/BaseTask.h"
+	"Private/TaskRunner/Tasks/BaseTask.cpp"
 	"Public/TaskRunner/Tasks/AsyncTask.h"
 	"Private/TaskRunner/Tasks/AsyncTask.cpp"
 )

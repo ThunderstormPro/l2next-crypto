@@ -7,7 +7,7 @@ void Dec41x::SetInputData(const char* buffer)
 
 void Dec41x::GetExecResult(char*& result)
 {
-	// Process buffer.
+	result = new char[4] { 'O', 'K' };
 }
 
 void Dec41x::Reset()

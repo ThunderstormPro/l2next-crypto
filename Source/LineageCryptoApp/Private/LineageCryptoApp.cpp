@@ -12,7 +12,7 @@ unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
 
 void LineageCryptoApp::PrintIntro()
 {
-	cout << "# LineageCrypto.";
+	cout << "# LineageCrypto.\n";
 	cout << "# By default config.yaml located in config/config.yaml is used for enc/dec tasks.\n";
 	cout << "# If you want to specify a custom yaml config, type a `filename.yaml`, that is located relative to app directory.\n";
 	cout << "#\n";
@@ -74,9 +74,9 @@ int main()
 		for (ConfigPaths cp : config->Decrypt)
 		{
 			ifstream inStream(cp.src, ios::binary);
-			ofstream outStream(cp.out, ofstream::binary);
-			
-			CDecrypt command(
+			ofstream outStream(cp.out, ios::binary);
+
+			auto command = LineageCrypto::Create<CDecrypt>(
 				inStream,
 				outStream
 			);
@@ -93,7 +93,7 @@ int main()
 			ifstream inStream(cp.src, ios::binary);
 			ofstream outStream(cp.out, ofstream::binary);
 
-			CEncrypt command(
+			auto command = LineageCrypto::Create<CEncrypt>(
 				inStream,
 				outStream
 			);
@@ -107,13 +107,19 @@ int main()
 
 		switch (command.GetId())
 		{
+			// TODO
 			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command passed." << endl;
+				cout << "Task for ENCRYPT command passed." << "\n";
 				break;
 			case ECryptoCommands::DECRYPT:
-				cout << "Task for DECRYPT command passed." << endl;
+				cout << "\nTask for DECRYPT command passed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version : " << result.version << "\n";
+				cout << "# Buffer  : " << result.buffer << "\n";
 				break;
 		}
+
+		cout << endl;
 	});
 
 	LineageCrypto::OnFailed([&](L2Command& command) -> void {
@@ -125,7 +131,9 @@ int main()
 				cout << "Task for ENCRYPT command failed." << endl;
 				break;
 			case ECryptoCommands::DECRYPT:
-				cout << "Task for DECRYPT command failed." << endl;
+				cout << "\nTask for DECRYPT command failed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 		}
 	});
@@ -136,7 +144,7 @@ int main()
 	app->awaitClosing();
 	
 	// Cleanup.
-	LineageCrypto::Release();
+	LineageCrypto::ReleaseAll();
 	config.reset();
 	app.reset();
 

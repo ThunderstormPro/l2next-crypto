@@ -1,21 +1,27 @@
-#include "Crypto/Crypto.h"
+﻿#include "Crypto/Crypto.h"
+
 
 SLineageFileSchema Crypto::Decrypt(char* buffer)
 {
-	char* result = nullptr;
-	string header = GetHeader(buffer);
-	short version = GetHeaderVersion(header);
-
 	SLineageFileSchema schema;
+	string header = GetHeaderString(buffer);
 	schema.header = header;
+
+	if (header == INVALID_HEADER)
+	{
+		schema.errorMsg = "Buffer does not contain a valid Lineage2 header signature.";
+		return schema;
+	}
+
+	char* result = { 0 };
+	short version = GetHeaderVersion(header);
 	schema.version = version;
-	
+
 	const auto& algorithm = GetAlgorithm(ECryptType::DEC, version);
 	
 	if (algorithm == nullptr)
 	{
-		algorithm->Reset();
-		schema.errorMsg = "No enc/dec algorithm could be found for provided version.";
+		schema.errorMsg = "Header version is not supported by any enc/dec algorithm.";
 		return schema;
 	}
 	
@@ -39,22 +45,28 @@ SLineageFileSchema Crypto::Encrypt(char* buffer)
 {
 	// TODO
 	SLineageFileSchema schema;
-
 	schema.header = "Lineage2Ver413";
 
 	return schema;
 }
 
-string Crypto::GetHeader(char* buffer)
+string Crypto::GetHeaderString(char* buffer)
 {
-	// Sample.
-	return string("Lineage2Ver413");
+	string header(buffer, LINEAGE_HEADER_SIZE);
+	header.erase(remove(header.begin(), header.end(), NULL_TERMINATOR_CHR), header.end());
+
+	if (!regex_search(header.c_str(), LINEAGE_HEADER_SIGNATURE))
+	{
+		return INVALID_HEADER;
+	}
+	
+	return header;
 }
 
-short Crypto::GetHeaderVersion(string& header)
+int Crypto::GetHeaderVersion(string header)
 {
-	// Sample.
-	return 413;
+	header.erase(header.begin(), header.end() - 3);
+	return stoi(header);
 }
 
 unique_ptr<AlgorithmBase> Crypto::GetAlgorithm(ECryptType type, short& version)
