@@ -1,86 +1,90 @@
 ﻿#include "Crypto/Crypto.h"
 
-
-SLineageFileSchema Crypto::Decrypt(char* buffer)
+SLineageFileSchema Crypto::Decrypt(const char* inBuffer)
 {
 	SLineageFileSchema schema;
-	string header = GetHeaderString(buffer);
-	schema.header = header;
 
-	if (header == INVALID_HEADER)
+	schema.type = ECryptType::DEC;
+
+	if (!ValidateHeader(schema, inBuffer))
 	{
-		schema.errorMsg = "Buffer does not contain a valid Lineage2 header signature.";
 		return schema;
 	}
 
-	char* result = { 0 };
-	short version = GetHeaderVersion(header);
+	if (!SetCryptResultToBuffer(schema, inBuffer))
+	{
+		return schema;
+	}
+
+	return schema;
+}
+
+SLineageFileSchema Crypto::Encrypt(const char* inBuffer)
+{
+	SLineageFileSchema schema;
+
+	schema.type = ECryptType::ENC;
+
+	if (!ValidateHeader(schema, inBuffer))
+	{
+		return schema;
+	}
+
+	if (!SetCryptResultToBuffer(schema, inBuffer))
+	{
+		return schema;
+	}
+
+	return schema;
+}
+
+bool Crypto::ValidateHeader(SLineageFileSchema& schema, const char*& inBuffer)
+{
+	string header;
+	int version;
+
+	auto validator = HeaderValidator(inBuffer);
+
+	bool bIsValidHeader = validator.GetHeader(header);
+	bool bIsValidVersion = validator.GetVersion(version);
+
+	schema.header = header;
 	schema.version = version;
 
-	const auto& algorithm = GetAlgorithm(ECryptType::DEC, version);
-	
-	if (algorithm == nullptr)
+	if (!bIsValidHeader)
 	{
-		schema.errorMsg = "Header version is not supported by any enc/dec algorithm.";
-		return schema;
+		schema.errorMsg = "Invalid Lineage2 header signature.";
+	}
+	else if (!bIsValidVersion)
+	{
+		schema.errorMsg = "This Lineage2 header version is not supported yet.";
 	}
 	
-	algorithm->SetInputData(buffer);
-	algorithm->GetExecResult(result);
+	return bIsValidHeader && bIsValidVersion;
+}
 
-	if (result == nullptr)
+bool Crypto::SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& inBuffer)
+{
+	AlgorithmBase* algorithm = nullptr;
+	char* outBuffer = nullptr;
+
+	if (!AlgorithmRegistry::GetInstance().Get(schema.version, algorithm))
 	{
-		algorithm->Reset();
-		schema.errorMsg = "Invalid Lineage 2 file provided. Could not perform operation.";
-		return schema;
+		schema.errorMsg = "This Lineage2 header version is not supported by any algorithm.";
+		return false;
+	}
+	
+	algorithm->SetBuffer(inBuffer);
+	algorithm->GetResult(schema.type, outBuffer);
+
+	if (outBuffer == nullptr)
+	{
+		schema.errorMsg = "An error occured while performing crypt operation on this file.";
+		return false;
 	}
 
-	schema.buffer = result;
+	schema.buffer = outBuffer;
 	algorithm->Reset();
 
-	return schema;
-}
-
-SLineageFileSchema Crypto::Encrypt(char* buffer)
-{
-	// TODO
-	SLineageFileSchema schema;
-	schema.header = "Lineage2Ver413";
-
-	return schema;
-}
-
-string Crypto::GetHeaderString(char* buffer)
-{
-	string header(buffer, LINEAGE_HEADER_SIZE);
-	header.erase(remove(header.begin(), header.end(), NULL_TERMINATOR_CHR), header.end());
-
-	if (!regex_search(header.c_str(), LINEAGE_HEADER_SIGNATURE))
-	{
-		return INVALID_HEADER;
-	}
-	
-	return header;
-}
-
-int Crypto::GetHeaderVersion(string header)
-{
-	header.erase(header.begin(), header.end() - 3);
-	return stoi(header);
-}
-
-unique_ptr<AlgorithmBase> Crypto::GetAlgorithm(ECryptType type, short& version)
-{
-	switch (version)
-	{
-		case 413 :
-		{
-			return type == ECryptType::ENC
-				? GetAlgorithmWithClass<Enc41x>()
-				: GetAlgorithmWithClass<Dec41x>();
-		}
-
-		default:
-			return nullptr;
-	}
+	return true;
 }

@@ -26,13 +26,13 @@ public:
 	void OnTaskPassed(function<void(BaseCommand&)> callback);
 	void OnTaskFailed(function<void(BaseCommand&)> callback);
 
-private:
-	vector<unique_ptr<AsyncTask>> _asyncTasks;
-
 	TaskRunner() = default;
 	~TaskRunner() = default;
 	TaskRunner(const TaskRunner&) = delete;
 	TaskRunner& operator=(const TaskRunner&) = delete;
+
+private:
+	vector<unique_ptr<AsyncTask>> _asyncTasks;
 };
 
 #endif // H_TASK_RUNNER

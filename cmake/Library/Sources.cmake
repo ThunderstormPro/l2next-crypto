@@ -42,17 +42,36 @@ add_source_group(Source.Crypto
 	"Private/Crypto/Crypto.cpp"
 )
 
+# Crypto validators.
+add_source_group(Source.Crypto.Validators
+	"Public/Crypto/Validators/HeaderValidator.h"
+	"Private/Crypto/Validators/HeaderValidator.cpp"
+)
+
+# Crypto enums.
+add_source_group(Source.Crypto.Enums
+	"Public/Crypto/Enums/CryptType.h"
+	"Public/Crypto/Enums/HeaderVersion.h"
+)
+
 # Crypto algorithms.
+add_source_group(Source.Crypto.Algorithms
+	"Public/Crypto/Algorithms/AlgorithmRegistry.h"
+	"Private/Crypto/Algorithms/AlgorithmRegistry.cpp"
+)
+
+
 add_source_group(Source.Crypto.Algorithms.Base
 	"Public/Crypto/Algorithms/Base/AlgorithmBase.h"
 	"Private/Crypto/Algorithms/Base/AlgorithmBase.cpp"
 )
 
 add_source_group(Source.Crypto.Algorithms.41x
-	"Public/Crypto/Algorithms/41x/Dec41x.h"
-	"Private/Crypto/Algorithms/41x/Dec41x.cpp"
-	"Public/Crypto/Algorithms/41x/Enc41x.h"
-	"Private/Crypto/Algorithms/41x/Enc41x.cpp"
+	"Public/Crypto/Algorithms/41x/Ver41x.h"
+	"Public/Crypto/Algorithms/41x/Ver41xDec.h"
+	"Private/Crypto/Algorithms/41x/Ver41xDec.cpp"
+	"Public/Crypto/Algorithms/41x/Ver41xEnc.h"
+	"Private/Crypto/Algorithms/41x/Ver41xEnc.cpp"
 )
 
 # Common.
