@@ -1,26 +1,41 @@
 #include "TaskRunner/Commands/Encrypt.h"
-#include <iostream>
 
 using namespace LineageCryptoCommands;
 
 CEncrypt::CEncrypt(ifstream& inStream, ofstream& outStream)
 {
 	SetId(ECryptoCommands::ENCRYPT);
-	ReadBuffer(inStream);
+	ReadStream(inStream);
 }
 
 bool CEncrypt::Execute()
 {
-	shared_ptr<SLineageFileSchema> x = make_shared<SLineageFileSchema>(Crypto::Encrypt(encryptBuffer));
-	SetResult<SLineageFileSchema>(x);
+	shared_ptr<SLineageFileSchema> schema = make_shared<SLineageFileSchema>(Crypto::Encrypt(encryptBuffer));
+	SetResult<SLineageFileSchema>(schema);
 
-	return true;
+	return schema->errorMsg.empty() ? true : false;
 }
 
-void CEncrypt::ReadBuffer(ifstream& inStream)
+void CEncrypt::Release()
 {
-	encryptBuffer = new char(inStream.tellg());
-	inStream.read(encryptBuffer, inStream.tellg());
+	encryptBuffer = nullptr;
+	delete encryptBuffer;
+}
+
+void CEncrypt::ReadStream(ifstream& inStream)
+{
+	// Get length of file.
+	inStream.seekg(0, inStream.end);
+	int length = inStream.tellg();
+	inStream.seekg(0, inStream.beg);
+
+	// Read file contents to buffer.
+	encryptBuffer = new char[length];
+	inStream.read(encryptBuffer, length);
+
+	// Close stream.
+	inStream.clear();
+	inStream.close();
 }
 
 CEncrypt::~CEncrypt()

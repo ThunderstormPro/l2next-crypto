@@ -1,6 +1,11 @@
 #include "Crypto/Algorithms/Base/AlgorithmBase.h"
 
-void AlgorithmBase::SetInputData(const char * buffer)
+EHeaderVersion AlgorithmBase::GetVersion()
+{
+	return EHeaderVersion::NOT_IMPL;
+}
+
+void AlgorithmBase::SetBuffer(const char* buffer)
 {
 	_buffer = buffer;
 }

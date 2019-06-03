@@ -19,9 +19,10 @@ namespace LineageCryptoCommands
 		~CEncrypt();
 
 		virtual bool Execute() override;
+		virtual void Release() override;
 	private:
 		char* encryptBuffer;
-		void ReadBuffer(ifstream& inStream);
+		void ReadStream(ifstream& inStream);
 	};
 }
 

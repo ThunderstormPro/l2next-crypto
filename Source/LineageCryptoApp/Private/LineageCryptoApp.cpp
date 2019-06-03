@@ -105,21 +105,32 @@ int main()
 	LineageCrypto::OnPassed([&](L2Command& command) -> void {
 		auto result = command.GetResult<SLineageFileSchema>();
 
+		// TODO Cleanup
 		switch (command.GetId())
 		{
-			// TODO
 			case ECryptoCommands::ENCRYPT:
 				cout << "Task for ENCRYPT command passed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version : " << result.version << "\n";
+
+				if (result.buffer != nullptr)
+				{
+					cout << "# Buffer  : " << result.buffer << "\n";
+				}
+
 				break;
 			case ECryptoCommands::DECRYPT:
 				cout << "\nTask for DECRYPT command passed." << "\n";
 				cout << "# Header  : " << result.header << "\n";
 				cout << "# Version : " << result.version << "\n";
-				cout << "# Buffer  : " << result.buffer << "\n";
+
+				if (result.buffer != nullptr)
+				{
+					cout << "# Buffer  : " << result.buffer << "\n";
+				}
+
 				break;
 		}
-
-		cout << endl;
 	});
 
 	LineageCrypto::OnFailed([&](L2Command& command) -> void {
@@ -128,7 +139,9 @@ int main()
 		switch (command.GetId())
 		{
 			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command failed." << endl;
+				cout << "Task for ENCRYPT command failed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 			case ECryptoCommands::DECRYPT:
 				cout << "\nTask for DECRYPT command failed." << "\n";
