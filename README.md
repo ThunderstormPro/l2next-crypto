@@ -1,5 +1,5 @@
 # lineage-crypto
-Encode / Decode C++ library for Lineage 2 files.
+Encrypt / Decrypt C++ library for Lineage 2 files.
 
 # Requirements
 
