@@ -8,7 +8,10 @@ enum EHeaderVersion
 {
 	INVALID = -1,
 	NOT_IMPL = 0,
-	VER_413 = 413
+	VER_411 = 411,
+	VER_412 = 412,
+	VER_413 = 413,
+	VER_414 = 414
 	
 };
 

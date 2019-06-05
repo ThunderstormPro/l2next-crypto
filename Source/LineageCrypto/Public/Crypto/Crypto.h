@@ -11,7 +11,7 @@
 #include "Validators/HeaderValidator.h"
 #include "Enums/CryptType.h"
 #include "Shared/Structs/LineageFileSchema.h"
-#include "Crypto/Algorithms/Base/AlgorithmBase.h"
+#include "Crypto/Algorithms/Base/Algorithm.h"
 
 using namespace::std;
 
@@ -52,20 +52,6 @@ private:
 	 * @return bool operation status.
 	 */
 	static bool SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& buffer);
-
-	/*static bool CheckHeaderSignature(SLineageFileSchema& schema, char*& buffer);
-	static bool CheckHeaderVersion(SLineageFileSchema& schema);
-	static bool CheckSupportedAlgorithm(SLineageFileSchema& schema);
-
-	static string GetHeaderString(char* buffer);
-	static ESupportedLineageVer GetHeaderVersion(string header);
-	static unique_ptr<AlgorithmBase> GetAlgorithm(ECryptType type, short& version);
-
-	// Generic templates.
-	template <class T>
-	static unique_ptr<AlgorithmBase>  GetAlgorithmWithClass() {
-		return make_unique<T>();
-	}*/
 };
 
 #endif // H_CRYPTO

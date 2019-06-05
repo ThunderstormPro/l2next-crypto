@@ -10,7 +10,7 @@ CDecrypt::CDecrypt(ifstream& inStream, ofstream& outStream)
 
 bool CDecrypt::Execute()
 {
-	shared_ptr<SLineageFileSchema> schema = make_shared<SLineageFileSchema>(Crypto::Decrypt(decryptBuffer));
+	shared_ptr<SLineageFileSchema> schema = make_shared<SLineageFileSchema>(Crypto::Decrypt(buffer));
 	SetResult<SLineageFileSchema>(schema);
 
 	return schema->errorMsg.empty() ? true : false;
@@ -18,20 +18,20 @@ bool CDecrypt::Execute()
 
 void CDecrypt::Release()
 {
-	decryptBuffer = nullptr;
-	delete decryptBuffer;
+	buffer = nullptr;
+	delete buffer;
 }
 
 void CDecrypt::ReadStream(ifstream& inStream)
 {
 	// Get length of file.
 	inStream.seekg(0, inStream.end);
-	int length = inStream.tellg();
+	bufferSize = inStream.tellg();
 	inStream.seekg(0, inStream.beg);
 
 	// Read file contents to buffer.
-	decryptBuffer = new char[length];
-	inStream.read(decryptBuffer, length);
+	buffer = new char[bufferSize];
+	inStream.read(buffer, bufferSize);
 
 	// Close stream.
 	inStream.clear();

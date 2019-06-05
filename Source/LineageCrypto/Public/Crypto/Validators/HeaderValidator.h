@@ -8,9 +8,8 @@
 #include <regex>
 #include <iostream>
 #include "Crypto/Algorithms/AlgorithmRegistry.h"
-#include "Crypto/Algorithms/Base/AlgorithmBase.h"
+#include "Crypto/Algorithms/Base/Algorithm.h"
 #include "Crypto/Enums/HeaderVersion.h"
-#include "Crypto/Algorithms/41x/Ver41x.h"
 
 const char NULL_TERMINATOR_CHR = '\0';
 const char LINEAGE_HEADER_SIZE = 28;

@@ -60,18 +60,46 @@ add_source_group(Source.Crypto.Algorithms
 	"Private/Crypto/Algorithms/AlgorithmRegistry.cpp"
 )
 
-
 add_source_group(Source.Crypto.Algorithms.Base
-	"Public/Crypto/Algorithms/Base/AlgorithmBase.h"
-	"Private/Crypto/Algorithms/Base/AlgorithmBase.cpp"
+	"Public/Crypto/Algorithms/Base/Algorithm.h"
+	"Private/Crypto/Algorithms/Base/Algorithm.cpp"
+	"Public/Crypto/Algorithms/Base/Duplex.h"
+	"Private/Crypto/Algorithms/Base/Duplex.cpp"
 )
 
-add_source_group(Source.Crypto.Algorithms.41x
-	"Public/Crypto/Algorithms/41x/Ver41x.h"
-	"Public/Crypto/Algorithms/41x/Ver41xDec.h"
-	"Private/Crypto/Algorithms/41x/Ver41xDec.cpp"
-	"Public/Crypto/Algorithms/41x/Ver41xEnc.h"
-	"Private/Crypto/Algorithms/41x/Ver41xEnc.cpp"
+# 41x
+add_source_group(Source.Crypto.Algorithms.41x.Versions
+	"Public/Crypto/Algorithms/41x/Versions/Ver411.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver412.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver413.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver414.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.41x.Duplex
+	"Public/Crypto/Algorithms/41x/Duplex/Ver41xDec.h"
+	"Private/Crypto/Algorithms/41x/Duplex/Ver41xDec.cpp"
+	"Public/Crypto/Algorithms/41x/Duplex/Ver41xEnc.h"
+	"Private/Crypto/Algorithms/41x/Duplex/Ver41xEnc.cpp"
+)
+
+add_source_group(Source.Crypto.Algorithms.41x.Shared
+	"Public/Crypto/Algorithms/41x/Shared/Ver41xParams.h"
+)
+
+# Utils.
+
+# BufferedStream.
+add_source_group(Source.Utils.Streams
+	"Public/Utils/Streams/ReadableStream.h"
+	"Private/Utils/Streams/ReadableStream.cpp"
+	"Public/Utils/Streams/WritableStream.h"
+	"Private/Utils/Streams/WritableStream.cpp"
+	"Public/Utils/Streams/DuplexStream.h"
+	"Private/Utils/Streams/DuplexStream.cpp"
+)
+
+add_source_group(Source.Utils.Streams.Structs
+	"Public/Utils/Streams/Structs/Buffer.h"
 )
 
 # Common.

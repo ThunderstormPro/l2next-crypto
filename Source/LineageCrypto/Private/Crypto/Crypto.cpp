@@ -65,7 +65,7 @@ bool Crypto::ValidateHeader(SLineageFileSchema& schema, const char*& inBuffer)
 
 bool Crypto::SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& inBuffer)
 {
-	AlgorithmBase* algorithm = nullptr;
+	Algorithm* algorithm = nullptr;
 	char* outBuffer = nullptr;
 
 	if (!AlgorithmRegistry::GetInstance().Get(schema.version, algorithm))
