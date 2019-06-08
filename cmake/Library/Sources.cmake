@@ -82,3 +82,20 @@ add_source_group(Source.Shared.Structs
 add_source_group(Source.Shared.Enums
 	"Public/Shared/Enums/CryptoCommands.h"
 )
+
+ 
+# Utils.
+
+# BufferedStream.
+add_source_group(Source.Utils.Streams
+	"Public/Utils/Streams/ReadableStream.h"
+	"Private/Utils/Streams/ReadableStream.cpp"
+	"Public/Utils/Streams/WritableStream.h"
+	"Private/Utils/Streams/WritableStream.cpp"
+	"Public/Utils/Streams/DuplexStream.h"
+	"Private/Utils/Streams/DuplexStream.cpp"
+)
+
+add_source_group(Source.Utils.Streams.Structs
+	"Public/Utils/Streams/Structs/Buffer.h"
+)
