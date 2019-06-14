@@ -16,7 +16,7 @@ class ConfigReader
 {
 // API
 public:
-	static unique_ptr<ConfigBase> TryLoadConfig(string& path);
+	static unique_ptr<ConfigBase> TryLoadConfig(const string& path);
 };
 
 #endif //H_CONFIG_READER

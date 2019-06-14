@@ -16,6 +16,11 @@ function(set_app_executable_common_properties target)
 	# Target linker language C++.
 	set_target_properties(${target} PROPERTIES LINKER_LANGUAGE CXX)
 	
+	# Compiler flags.
+	target_compile_options(${target} PRIVATE ${COMPILER_FLAGS_SHARED})
+	target_compile_options(${target} PRIVATE $<$<CONFIG:Debug>:${COMPILER_FLAGS_DEBUG}>)
+	target_compile_options(${target} PRIVATE $<$<CONFIG:Release>:${COMPILER_FLAGS_RELEASE}>)
+	
 	# Set binaries output path.
 	if (PROJECT_BIN_PATH)
 		set_target_properties(${target} PROPERTIES

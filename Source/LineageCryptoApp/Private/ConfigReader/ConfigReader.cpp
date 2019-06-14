@@ -2,7 +2,7 @@
 
 using namespace YAML;
 
-unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(string& path)
+unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(const string& path)
 {
 	try
 	{

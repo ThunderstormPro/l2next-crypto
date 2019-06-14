@@ -1,26 +1,21 @@
 #include "Utils/Streams/DuplexStream.h"
 
-DuplexStream::DuplexStream(std::string name) : name(name)
+using namespace LineageCryptoStreams;
+
+DuplexStream::DuplexStream()
 {
 }
 
-std::shared_ptr<DuplexStream> DuplexStream::Create(std::string name)
+DuplexStream::DuplexStream(const DuplexStream & _self)
 {
-	return std::make_shared<DuplexStream>(name);
 }
 
-void DuplexStream::Transform()
+DuplexStream::~DuplexStream()
 {
-	std::cout << "From DuplexStream" << name << "\n";
+}
 
-	if (duplexPipePtr)
-	{
-		duplexPipePtr->Transform();
-	}
-
-	if (wstreamPipePtr)
-	{
-		wstreamPipePtr->Transform();
-	}
-
+void DuplexStream::Exec(std::shared_ptr<std::iostream> stream)
+{
+	nextStream = Transform(stream);
+	TTransformable::Propagate(GetPipe(), nextStream);
 }

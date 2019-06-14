@@ -83,7 +83,6 @@ add_source_group(Source.Shared.Enums
 	"Public/Shared/Enums/CryptoCommands.h"
 )
 
- 
 # Utils.
 
 # BufferedStream.
@@ -96,6 +95,39 @@ add_source_group(Source.Utils.Streams
 	"Private/Utils/Streams/DuplexStream.cpp"
 )
 
+# Events.
+add_source_group(Source.Utils.Streams.Events
+	"Public/Utils/Streams/Events/EventTemplate.h"
+	"Private/Utils/Streams/Events/EventTemplate.cpp"
+	"Public/Utils/Streams/Events/OnData.h"
+	"Private/Utils/Streams/Events/OnData.cpp"
+	"Public/Utils/Streams/Events/OnEnd.h"
+	"Private/Utils/Streams/Events/OnEnd.cpp"
+)
+
+# Event factory.
+add_source_group(Source.Utils.Streams.Factory
+	"Public/Utils/Streams/Factory/StreamFactory.h"
+	"Private/Utils/Streams/Factory/StreamFactory.cpp"
+)
+
+# Stream traits.
+add_source_group(Source.Utils.Streams.Traits
+	"Public/Utils/Streams/Traits/Readable.h"
+	"Private/Utils/Streams/Traits/Readable.cpp"
+	"Public/Utils/Streams/Traits/Transformable.h"
+	"Private/Utils/Streams/Traits/Transformable.cpp"
+	"Public/Utils/Streams/Traits/Writable.h"
+	"Private/Utils/Streams/Traits/Writable.cpp"
+	"Public/Utils/Streams/Traits/Pipable.h"
+	"Private/Utils/Streams/Traits/Pipable.cpp"
+	"Public/Utils/Streams/Traits/Streamable.h"
+	"Private/Utils/Streams/Traits/Streamable.cpp"
+)
+
+# Structs.
 add_source_group(Source.Utils.Streams.Structs
-	"Public/Utils/Streams/Structs/Buffer.h"
+	"Public/Utils/Streams/Structs/StreamOptions.h"
+	"Public/Utils/Streams/Structs/BufStreamOptions.h"
+	"Public/Utils/Streams/Structs/FileStreamOptions.h"
 )

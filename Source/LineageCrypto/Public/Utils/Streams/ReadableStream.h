@@ -1,34 +1,34 @@
 #ifndef H_READABLE_STREAM
 #define H_READABLE_STREAM
 
-#include <string>
+#include <vector>
 #include <iostream>
-#include <fstream>
 #include <memory>
-#include <streambuf>
-#include "Utils/Streams/Structs/Buffer.h"
-#include "Utils/Streams/DuplexStream.h"
-#include "Utils/Streams/WritableStream.h"
+#include "DuplexStream.h"
+#include "WritableStream.h"
+#include "Traits/Readable.h"
+#include "Traits/Pipable.h"
+#include "Structs/FileStreamOptions.h"
+#include "Structs/BufStreamOptions.h"
 
-class ReadableStream : public std::streambuf
-{
-public:
-	ReadableStream(const std::string& fname) : internalstream(std::ifstream(fname, std::ios::binary))
+namespace LineageCryptoStreams {
+
+	class ReadableStream
+		: public TReadable
+		, public TPipable<DuplexStream, WritableStream>
 	{
+	public:
+		using PipableTypes = TPipable<DuplexStream, WritableStream>;
+		
+		ReadableStream(const ReadableStream& _self);
+		ReadableStream(StreamOptions& options);
+		~ReadableStream();
 
-	}
+	protected:
+		virtual void Exec(std::shared_ptr<std::iostream> _self) final;
 
-	static std::shared_ptr<ReadableStream> Create(const std::string& fname);
-
-public:
-	std::shared_ptr<DuplexStream> Pipe(std::shared_ptr<DuplexStream> stream);
-	std::shared_ptr<WritableStream> Pipe(std::shared_ptr<WritableStream> stream);
-	void OnRead();
-
-private:
-	std::shared_ptr<DuplexStream> duplexPipePtr;
-	std::shared_ptr<WritableStream> wstreamPipePtr;
-	std::ifstream internalstream;
-};
-
-#endif // H_READABLE_STREAM
+	private:
+		StreamOptions& options;
+	};
+}
+#endif

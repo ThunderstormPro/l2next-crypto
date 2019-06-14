@@ -1,6 +1,18 @@
 #include "Utils/Streams/WritableStream.h"
 
-void WritableStream::Transform()
+using namespace LineageCryptoStreams;
+
+void WritableStream::Exec(std::shared_ptr<std::iostream> stream)
 {
-	std::cout << "Writing Writeable stream...\n";
+	switch (options.GetType())
+	{
+	case EStreamTypes::FILE:
+		WriteFile(options, stream);
+		break;
+	case EStreamTypes::BUFFER:
+		WriteBuffer(options, stream);
+		break;
+	default:
+		break;
+	}
 };

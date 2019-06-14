@@ -1,31 +1,34 @@
 #include "Utils/Streams/ReadableStream.h"
 
-std::shared_ptr<ReadableStream> ReadableStream::Create(const std::string & fname)
+using namespace LineageCryptoStreams;
+
+ReadableStream::ReadableStream(const ReadableStream & _self) 
+	: options(_self.options)
 {
-	return std::make_shared<ReadableStream>(fname);
 }
 
-std::shared_ptr<DuplexStream> ReadableStream::Pipe(std::shared_ptr<DuplexStream> stream)
+ReadableStream::ReadableStream(StreamOptions & options)
+	: options(options)
 {
-	duplexPipePtr = stream;
-	return stream;
-};
+}
 
-std::shared_ptr<WritableStream> ReadableStream::Pipe(std::shared_ptr<WritableStream> stream)
+ReadableStream::~ReadableStream()
 {
-	wstreamPipePtr = stream;
-	return stream;
-};
+}
 
-void ReadableStream::OnRead()
+void ReadableStream::Exec(std::shared_ptr<std::iostream> _self)
 {
-	if (duplexPipePtr)
+	switch (options.GetType())
 	{
-		duplexPipePtr->Transform();
+	case EStreamTypes::FILE:
+		ReadFileStream(options);
+		break;
+	case EStreamTypes::BUFFER:
+		ReadBufferedStream(options);
+		break;
+	default:
+		break;
 	}
 
-	if (wstreamPipePtr)
-	{
-		wstreamPipePtr->Transform();
-	}
+	TReadable::Propagate(GetPipe(), nextStream);
 }

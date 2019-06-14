@@ -1,32 +1,36 @@
 #ifndef H_INPUT_READER
 #define H_INPUT_READER
 
-#include <string>
 #include <iostream>
 #include <fstream>
 #include <memory>
 #include <streambuf>
-#include "Utils/Streams/Structs/Buffer.h"
+#include "Utils/Streams/Traits/Writable.h"
+#include "Utils/Streams/Structs/FileStreamOptions.h"
+#include "Utils/Streams/Structs/BufStreamOptions.h"
 
-class WritableStream : public std::streambuf, SWritable
-{
-public:
-	WritableStream(const std::string& fname)
-		: internalstream(std::ofstream(fname, std::ios::binary))
+namespace LineageCryptoStreams {
+
+	class WritableStream
+		: public TWritable
 	{
+	public:
+		WritableStream(const WritableStream& _self)
+			: options(_self.options)
+		{
+		};
 
-	}
 
-	static std::shared_ptr<WritableStream> Create(const std::string& fname)
-	{
-		return std::make_shared<WritableStream>(fname);
-	}
+		WritableStream(StreamOptions& options)
+			: options(options)
+		{
+		};
 
-public:
+	public:
+		virtual void Exec(std::shared_ptr<std::iostream> stream) final;
 
-	virtual void Transform() override;
-private:
-	std::ofstream internalstream;
-};
-
+	private:
+		StreamOptions& options;
+	};
+}
 #endif
