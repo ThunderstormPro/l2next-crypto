@@ -3,16 +3,18 @@
 
 #include <string>
 #include "Crypto/Algorithms/41x/Shared/Ver41xParams.h"
-#include "Crypto/Algorithms/Base/Duplex.h"
+#include "Utils/Streams/Factory/StreamFactory.h"
 
-class Ver41xDec : public Duplex
+using namespace::LineageCryptoStreams;
+
+class Ver41xDec : public DuplexStream
 {
 public:
 	Ver41xDec(Ver41xParams& params);
 	~Ver41xDec();
 
 public:
-	void Transform(const char*& inBuffer, char*& outBuffer) override;
+	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final;
 
 private:
 	Ver41xParams params;

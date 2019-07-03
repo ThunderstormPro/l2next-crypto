@@ -16,3 +16,13 @@ std::shared_ptr<WritableStream> StreamFactory::Make(const WritableStream & strea
 {
 	return Make<WritableStream>(stream);
 }
+
+std::shared_ptr<SFileStreamOptions> LineageCryptoStreams::StreamFactory::Options(const SFileStreamOptions& stream)
+{
+	return Make<SFileStreamOptions>(stream);
+}
+
+std::shared_ptr<SBufStreamOptions> LineageCryptoStreams::StreamFactory::Options(const SBufStreamOptions & stream)
+{
+	return  Make<SBufStreamOptions>(stream);
+}

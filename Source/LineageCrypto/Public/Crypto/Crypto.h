@@ -7,11 +7,15 @@
 #include <regex>
 #include <vector>
 #include <algorithm>
-#include "Algorithms/AlgorithmRegistry.h"
-#include "Validators/HeaderValidator.h"
 #include "Enums/CryptType.h"
 #include "Shared/Structs/LineageFileSchema.h"
-#include "Crypto/Algorithms/Base/Algorithm.h"
+#include "Algorithms/AlgorithmRegistry.h"
+#include "Algorithms/Base/Algorithm.h"
+#include "Algorithms/Base/AlgorithmDuplex.h"
+#include "Algorithms/Shared/InflateDuplex.h"
+#include "Algorithms/Shared/DeflateDuplex.h"
+#include "Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
+#include "Utils/Streams/Factory/StreamFactory.h"
 
 using namespace::std;
 
@@ -24,7 +28,7 @@ public:
 	 * @param char* character buffer read from L2 files.
 	 * @return SLineageFileSchema the result of the decryption.
 	 */
-	static SLineageFileSchema Decrypt(const char* buffer);
+	static SLineageFileSchema Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output);
 
 	/**
 	 * Encrypt a buffer as a Lineage2File data.
@@ -42,7 +46,7 @@ private:
 	 * @param char*& buffer a reference to input char buffer.
 	 * @return bool is a valid header or not.
 	 */
-	static bool ValidateHeader(SLineageFileSchema& schema, const char*& buffer);
+	//static bool ValidateHeader(SLineageFileSchema& schema, const char*& buffer);
 
 	/**
 	 * Perform encrypt/decrypt operation with appropriate algorithm on buffer.
@@ -51,7 +55,7 @@ private:
 	 * @param char*& buffer a reference to input char buffer.
 	 * @return bool operation status.
 	 */
-	static bool SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& buffer);
+	//static bool SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& buffer);
 };
 
 #endif // H_CRYPTO

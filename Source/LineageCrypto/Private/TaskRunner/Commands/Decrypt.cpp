@@ -1,16 +1,20 @@
 #include "TaskRunner/Commands/Decrypt.h"
 
 using namespace LineageCryptoCommands;
+using namespace LineageCryptoStreams;
 
-CDecrypt::CDecrypt(ifstream& inStream, ofstream& outStream)
+CDecrypt::CDecrypt(std::shared_ptr<StreamOptions> options)
+	: _options(options)
 {
 	SetId(ECryptoCommands::DECRYPT);
-	ReadStream(inStream);
 }
 
 bool CDecrypt::Execute()
 {
-	shared_ptr<SLineageFileSchema> schema = make_shared<SLineageFileSchema>(Crypto::Decrypt(buffer));
+	auto input = StreamFactory::Make(ReadableStream(*_options.get()));
+	auto output = StreamFactory::Make(WritableStream(*_options.get()));
+
+	auto schema = std::make_shared<SLineageFileSchema>(Crypto::Decrypt(input, output));
 	SetResult<SLineageFileSchema>(schema);
 
 	return schema->errorMsg.empty() ? true : false;
@@ -18,24 +22,24 @@ bool CDecrypt::Execute()
 
 void CDecrypt::Release()
 {
-	buffer = nullptr;
-	delete buffer;
+	//buffer = nullptr;
+	//delete buffer;
 }
 
 void CDecrypt::ReadStream(ifstream& inStream)
 {
 	// Get length of file.
-	inStream.seekg(0, inStream.end);
-	bufferSize = inStream.tellg();
-	inStream.seekg(0, inStream.beg);
+	//inStream.seekg(0, inStream.end);
+//	bufferSize = inStream.tellg();
+	//inStream.seekg(0, inStream.beg);
 
 	// Read file contents to buffer.
-	buffer = new char[bufferSize];
-	inStream.read(buffer, bufferSize);
+	//buffer = new char[bufferSize];
+	//inStream.read(buffer, bufferSize);
 
 	// Close stream.
-	inStream.clear();
-	inStream.close();
+//	inStream.clear();
+	//inStream.close();
 }
 
 CDecrypt::~CDecrypt()

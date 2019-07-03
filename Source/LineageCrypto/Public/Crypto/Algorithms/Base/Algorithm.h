@@ -3,16 +3,16 @@
 
 #include <memory>
 #include <iostream>
-#include "Crypto/Algorithms/Base/Duplex.h"
 #include "Crypto/Enums/CryptType.h"
 #include "Crypto/Enums/HeaderVersion.h"
+#include "Utils/Streams/Factory/StreamFactory.h"
 
-using namespace::std;
+using namespace::LineageCryptoStreams;
 
 struct DuplexTypes
 {
-	unique_ptr<Duplex> encrypt;
-	unique_ptr<Duplex> decrypt;
+	std::shared_ptr<DuplexStream> encrypt;
+	std::shared_ptr<DuplexStream> decrypt;
 };
 
 class Algorithm

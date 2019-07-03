@@ -5,8 +5,8 @@
 #include "Crypto/Enums/HeaderVersion.h"
 #include "Crypto/Algorithms/Base/Algorithm.h"
 #include "Crypto/Algorithms/41x/Shared/Ver41xParams.h"
-#include "Crypto/Algorithms/41x/Duplex/Ver41xEnc.h"
-#include "Crypto/Algorithms/41x/Duplex/Ver41xDec.h"
+#include "Crypto/Algorithms/41x/Duplex/Ver41xEncDuplex.h"
+#include "Crypto/Algorithms/41x/Duplex/Ver41xDecDuplex.h"
 
 using namespace::std;
 

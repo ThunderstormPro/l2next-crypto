@@ -5,7 +5,7 @@ HeaderValidator::HeaderValidator(const char*& buffer)
 	headerString = ReadHeader(buffer);
 }
 
-bool HeaderValidator::GetHeader(std::string & headerRef) const 
+bool HeaderValidator::GetHeader(std::string& headerRef) const 
 {
 	if (!regex_search(headerString.c_str(), LINEAGE_HEADER_SIGNATURE))
 	{
@@ -17,7 +17,7 @@ bool HeaderValidator::GetHeader(std::string & headerRef) const
 	return true;
 }
 
-bool HeaderValidator::GetVersion(int & versionRef)
+bool HeaderValidator::GetVersion(int& versionRef)
 {
 	try {
 		std::string versionString = headerString;

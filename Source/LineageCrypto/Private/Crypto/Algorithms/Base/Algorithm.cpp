@@ -17,7 +17,7 @@ const char* Algorithm::GetBuffer() const
 
 void Algorithm::GetResult(ECryptType type, char *& outBuffer)
 {
-	const char* inBuffer = GetBuffer();
+	/*const char* inBuffer = GetBuffer();
 
 	if (type == ECryptType::ENC && duplex.encrypt != nullptr)
 	{
@@ -27,7 +27,7 @@ void Algorithm::GetResult(ECryptType type, char *& outBuffer)
 	if (type == ECryptType::DEC && duplex.decrypt != nullptr)
 	{
 		return duplex.decrypt->Transform(inBuffer, outBuffer);
-	}
+	}*/
 }
 
 void Algorithm::Reset()

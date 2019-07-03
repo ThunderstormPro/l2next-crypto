@@ -1,12 +1,44 @@
 ﻿#include "Crypto/Crypto.h"
 
-SLineageFileSchema Crypto::Decrypt(const char* inBuffer)
+
+
+SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output)
 {
 	SLineageFileSchema schema;
 
+	auto validator = StreamFactory::Make(HeaderValidatorDuplex());
+	auto algorithm = StreamFactory::Make(AlgorithmDuplex());
+	auto inflator = StreamFactory::Make(InflateDuplex());
+
 	schema.type = ECryptType::DEC;
 
-	if (!ValidateHeader(schema, inBuffer))
+	input
+		->Pipe(validator)
+		->Pipe(algorithm)
+		->Pipe(inflator)
+		->Pipe(output);
+
+	input->Start();
+
+
+
+
+	/*
+	//auto input = StreamFactory::Make(ReadableStream(options));
+	//auto output = StreamFactory::Make(WritableStream(options));
+	/*
+	
+	input
+		->Pipe(StreamFactory::Make(Custom41xStream()))
+		->Pipe(output);
+
+	input->Bind_OnEnd([&](double duration) {
+		printf("Time taken: %.2fs\n", duration);
+	});
+
+	input->Start(); 
+	
+if (!ValidateHeader(schema, inBuffer))
 	{
 		return schema;
 	}
@@ -14,7 +46,7 @@ SLineageFileSchema Crypto::Decrypt(const char* inBuffer)
 	if (!SetCryptResultToBuffer(schema, inBuffer))
 	{
 		return schema;
-	}
+	}*/
 
 	return schema;
 }
@@ -23,7 +55,7 @@ SLineageFileSchema Crypto::Encrypt(const char* inBuffer)
 {
 	SLineageFileSchema schema;
 
-	schema.type = ECryptType::ENC;
+	/*schema.type = ECryptType::ENC;
 
 	if (!ValidateHeader(schema, inBuffer))
 	{
@@ -33,11 +65,11 @@ SLineageFileSchema Crypto::Encrypt(const char* inBuffer)
 	if (!SetCryptResultToBuffer(schema, inBuffer))
 	{
 		return schema;
-	}
+	}*/
 
 	return schema;
 }
-
+/*
 bool Crypto::ValidateHeader(SLineageFileSchema& schema, const char*& inBuffer)
 {
 	string header;
@@ -87,4 +119,4 @@ bool Crypto::SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& inB
 	algorithm->Reset();
 
 	return true;
-}
+}*/
