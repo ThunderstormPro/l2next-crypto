@@ -3,7 +3,34 @@
 
 #include "LineageCryptoApp.h"
 
+using namespace LineageCryptoStreams;
 using namespace LineageCryptoCommands;
+
+// TODO Just an usage example. Remove this.
+class Custom41xStream : public DuplexStream
+{
+	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) override
+	{
+		auto transformed = std::make_shared<std::iostream>(this);
+		std::vector<char> buffer;
+
+		while (!stream->eof())
+		{
+			std::vector<char> chunk(8, 0);
+			stream->read(chunk.data(), chunk.size());
+
+			// TODO Modify chunk here. Remove this example :)
+			// Replaces each first char in chunk with Z character.
+			chunk.at(0) = 'Z';
+
+			buffer.insert(buffer.end(), chunk.data(), chunk.data() + stream->gcount());
+		}
+
+		SetBuffer(buffer);
+
+		return transformed;
+	}
+};
 
 unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
 {
@@ -52,7 +79,7 @@ void LineageCryptoApp::awaitClosing()
 
 int main()
 {
-	auto& app = LineageCryptoApp::getRef();
+	auto app = LineageCryptoApp::getRef();
 
 	// Print intro.
 	app->PrintIntro();
@@ -61,13 +88,61 @@ int main()
 	app->ReadCustomConfigPath();
 
 	// Try to load yaml config file.
-	auto& config = ConfigReader::TryLoadConfig(app->GetConfigPath());
+	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
-	if (config == nullptr) 
+	if (config == nullptr)
 	{
 		return 0;
 	}
-	
+
+	/*
+	* TODO Just an example, remove this chunk of code.
+	* Pipable file stream example.
+	*/
+	{
+		SFileStreamOptions options{ "D:/readable.dat", "D:/writable.dat" };
+
+		auto input = StreamFactory::Make(ReadableStream(options));
+		auto output = StreamFactory::Make(WritableStream(options));
+
+		input
+			->Pipe(StreamFactory::Make(Custom41xStream()))
+			->Pipe(output);
+
+		input->Bind_OnEnd([&](double duration) {
+			printf("Time taken: %.2fs\n", duration);
+		});
+
+		input->Start();
+
+
+	}
+	/*--------------------------*/
+
+	/*
+	* TODO Just an example, remove this chunk of code.
+	* Pipable buffer stream example.
+	*/
+	{
+		char data[] = "Input data to be readed from.";
+
+		SBufStreamOptions options(data, data + sizeof(data));
+
+		auto input = StreamFactory::Make(ReadableStream(options));
+		auto output = StreamFactory::Make(WritableStream(options));
+
+		input
+			->Pipe(StreamFactory::Make(Custom41xStream()))
+			->Pipe(output);
+
+		input->Bind_OnEnd([&](double duration) {
+			printf("Time taken: %.2fs\n", duration);
+		});
+
+		input->Start();
+	}
+	/*--------------------------*/
+
 	// Decrypt task.
 	if (!config->Decrypt.empty())
 	{

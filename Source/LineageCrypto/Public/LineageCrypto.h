@@ -9,10 +9,12 @@
 #include <functional>
 #include "TaskRunner/TaskRunner.h"
 #include "TaskRunner/Commands/BaseCommand.h"
+
+// Public export
 #include "TaskRunner/Commands/Encrypt.h"
 #include "TaskRunner/Commands/Decrypt.h"
 #include "Shared/Structs/LineageFileSchema.h"
-
+#include "Utils/Streams/Factory/StreamFactory.h"
 
 using namespace::std;
 

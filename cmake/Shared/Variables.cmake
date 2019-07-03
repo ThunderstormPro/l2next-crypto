@@ -47,7 +47,7 @@ endif()
 list(APPEND COMPILER_FLAGS_SHARED
 	/MP           # Multiprocess compilation
 	/Gy           # Enable function-level linking
-	/GR-          # Disable run-time type information
+	/GR           # Enable run-time type information
 	/W4           # Warning level 4
 	/WX           # Treat warnings as errors
 	/wd4100       # Ignore "unreferenced formal parameter" warning
