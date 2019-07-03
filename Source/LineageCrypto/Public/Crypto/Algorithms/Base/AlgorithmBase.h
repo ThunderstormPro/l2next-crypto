@@ -1,14 +1,20 @@
 #ifndef H_ALGORITHM_BASE
 #define H_ALGORITHM_BASE
 
+#include <memory>
+#include "Crypto/Enums/CryptType.h"
+#include "Crypto/Enums/HeaderVersion.h"
+
 using namespace::std;
 
 class AlgorithmBase
 {
 public:
-	/** Methods */
-	virtual void SetInputData(const char* buffer);
-	virtual void GetExecResult(char*& result) {};
+	~AlgorithmBase() {};
+
+	virtual EHeaderVersion GetVersion();
+	virtual void SetBuffer(const char* buffer);
+	virtual void GetResult(ECryptType type, char*& result) {};
 	virtual void Reset();
 
 protected:

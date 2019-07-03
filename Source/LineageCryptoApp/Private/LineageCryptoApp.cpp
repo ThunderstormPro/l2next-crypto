@@ -3,7 +3,34 @@
 
 #include "LineageCryptoApp.h"
 
+using namespace LineageCryptoStreams;
 using namespace LineageCryptoCommands;
+
+// TODO Just an usage example. Remove this.
+class Custom41xStream : public DuplexStream
+{
+	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) override
+	{
+		auto transformed = std::make_shared<std::iostream>(this);
+		std::vector<char> buffer;
+
+		while (!stream->eof())
+		{
+			std::vector<char> chunk(8, 0);
+			stream->read(chunk.data(), chunk.size());
+
+			// TODO Modify chunk here. Remove this example :)
+			// Replaces each first char in chunk with Z character.
+			chunk.at(0) = 'Z';
+
+			buffer.insert(buffer.end(), chunk.data(), chunk.data() + stream->gcount());
+		}
+
+		SetBuffer(buffer);
+
+		return transformed;
+	}
+};
 
 unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
 {
@@ -12,7 +39,7 @@ unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
 
 void LineageCryptoApp::PrintIntro()
 {
-	cout << "# LineageCrypto.";
+	cout << "# LineageCrypto.\n";
 	cout << "# By default config.yaml located in config/config.yaml is used for enc/dec tasks.\n";
 	cout << "# If you want to specify a custom yaml config, type a `filename.yaml`, that is located relative to app directory.\n";
 	cout << "#\n";
@@ -52,7 +79,7 @@ void LineageCryptoApp::awaitClosing()
 
 int main()
 {
-	auto& app = LineageCryptoApp::getRef();
+	auto app = LineageCryptoApp::getRef();
 
 	// Print intro.
 	app->PrintIntro();
@@ -61,22 +88,70 @@ int main()
 	app->ReadCustomConfigPath();
 
 	// Try to load yaml config file.
-	auto& config = ConfigReader::TryLoadConfig(app->GetConfigPath());
+	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
-	if (config == nullptr) 
+	if (config == nullptr)
 	{
 		return 0;
 	}
-	
+
+	/*
+	* TODO Just an example, remove this chunk of code.
+	* Pipable file stream example.
+	*/
+	{
+		SFileStreamOptions options{ "D:/readable.dat", "D:/writable.dat" };
+
+		auto input = StreamFactory::Make(ReadableStream(options));
+		auto output = StreamFactory::Make(WritableStream(options));
+
+		input
+			->Pipe(StreamFactory::Make(Custom41xStream()))
+			->Pipe(output);
+
+		input->Bind_OnEnd([&](double duration) {
+			printf("Time taken: %.2fs\n", duration);
+		});
+
+		input->Start();
+
+
+	}
+	/*--------------------------*/
+
+	/*
+	* TODO Just an example, remove this chunk of code.
+	* Pipable buffer stream example.
+	*/
+	{
+		char data[] = "Input data to be readed from.";
+
+		SBufStreamOptions options(data, data + sizeof(data));
+
+		auto input = StreamFactory::Make(ReadableStream(options));
+		auto output = StreamFactory::Make(WritableStream(options));
+
+		input
+			->Pipe(StreamFactory::Make(Custom41xStream()))
+			->Pipe(output);
+
+		input->Bind_OnEnd([&](double duration) {
+			printf("Time taken: %.2fs\n", duration);
+		});
+
+		input->Start();
+	}
+	/*--------------------------*/
+
 	// Decrypt task.
 	if (!config->Decrypt.empty())
 	{
 		for (ConfigPaths cp : config->Decrypt)
 		{
 			ifstream inStream(cp.src, ios::binary);
-			ofstream outStream(cp.out, ofstream::binary);
-			
-			CDecrypt command(
+			ofstream outStream(cp.out, ios::binary);
+
+			auto command = LineageCrypto::Create<CDecrypt>(
 				inStream,
 				outStream
 			);
@@ -93,7 +168,7 @@ int main()
 			ifstream inStream(cp.src, ios::binary);
 			ofstream outStream(cp.out, ofstream::binary);
 
-			CEncrypt command(
+			auto command = LineageCrypto::Create<CEncrypt>(
 				inStream,
 				outStream
 			);
@@ -105,13 +180,30 @@ int main()
 	LineageCrypto::OnPassed([&](L2Command& command) -> void {
 		auto result = command.GetResult<SLineageFileSchema>();
 
+		// TODO Cleanup
 		switch (command.GetId())
 		{
 			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command passed." << endl;
+				cout << "Task for ENCRYPT command passed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version : " << result.version << "\n";
+
+				if (result.buffer != nullptr)
+				{
+					cout << "# Buffer  : " << result.buffer << "\n";
+				}
+
 				break;
 			case ECryptoCommands::DECRYPT:
-				cout << "Task for DECRYPT command passed." << endl;
+				cout << "\nTask for DECRYPT command passed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version : " << result.version << "\n";
+
+				if (result.buffer != nullptr)
+				{
+					cout << "# Buffer  : " << result.buffer << "\n";
+				}
+
 				break;
 		}
 	});
@@ -122,10 +214,14 @@ int main()
 		switch (command.GetId())
 		{
 			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command failed." << endl;
+				cout << "Task for ENCRYPT command failed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 			case ECryptoCommands::DECRYPT:
-				cout << "Task for DECRYPT command failed." << endl;
+				cout << "\nTask for DECRYPT command failed." << "\n";
+				cout << "# Header  : " << result.header << "\n";
+				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 		}
 	});
@@ -136,7 +232,7 @@ int main()
 	app->awaitClosing();
 	
 	// Cleanup.
-	LineageCrypto::Release();
+	LineageCrypto::ReleaseAll();
 	config.reset();
 	app.reset();
 

@@ -1,9 +1,11 @@
 #include "TaskRunner/TaskRunner.h"
 
-void TaskRunner::Enqueue(BaseCommand& cmnd)
+void TaskRunner::Enqueue(unique_ptr<BaseCommand>& cmnd)
 {
-	// TODO Multithreading
-	unique_ptr<AsyncTask> task = make_unique<AsyncTask>(cmnd);
+	// Prepare async task.
+	unique_ptr<AsyncTask> task = make_unique<AsyncTask>();
+	task->SetCommand(cmnd);
+
 	_asyncTasks.push_back(move(task));
 }
 
@@ -15,8 +17,14 @@ void TaskRunner::ExecuteAll()
 	}
 }
 
-void TaskRunner::Release()
+void TaskRunner::ReleaseAll()
 {
+	for (auto const& task : _asyncTasks)
+	{
+		task->Release();
+	}
+
+
 	if (!_asyncTasks.empty())
 	{
 		_asyncTasks.clear();

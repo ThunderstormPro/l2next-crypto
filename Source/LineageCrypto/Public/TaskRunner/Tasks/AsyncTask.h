@@ -3,23 +3,24 @@
 
 #include <functional>
 #include "TaskRunner/Commands/BaseCommand.h"
-#include "TaskRunner/Interfaces/Task.h"
+#include "TaskRunner/Tasks/BaseTask.h"
 
 using namespace::std;
 
-class AsyncTask 
-	: public ITask
+class AsyncTask
+	: public BaseTask
 {
 public:
-	AsyncTask(BaseCommand& command);
+	AsyncTask();
 	~AsyncTask();
-	void Run();
-
-	function<void(BaseCommand&)> callbackPassed;
-	function<void(BaseCommand&)> callbackFailed;
-
+	virtual void Run() override;
 	virtual void OnTaskPassed(function<void(BaseCommand&)> callback) override;
 	virtual void OnTaskFailed(function<void(BaseCommand&)> callback) override;
+	virtual void Release() override {};
+
+private:
+	function<void(BaseCommand&)> callbackPassed;
+	function<void(BaseCommand&)> callbackFailed;
 };
 
 #endif // H_ASYNC_TASK

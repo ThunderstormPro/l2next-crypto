@@ -5,6 +5,11 @@ bool BaseCommand::Execute()
 	return false;
 }
 
+void BaseCommand::Release()
+{
+
+}
+
 ECryptoCommands L2Command::GetId() const
 {
 	return _id;

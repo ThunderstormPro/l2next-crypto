@@ -1,28 +1,29 @@
 
 #include "TaskRunner/Tasks/AsyncTask.h"
 
-AsyncTask::AsyncTask(BaseCommand& command)
-	: ITask(command)
+AsyncTask::AsyncTask()
 {
 	
 }
 
 AsyncTask::~AsyncTask()
 {
+
 }
 
 void AsyncTask::Run()
 {
+	// TODO
 	// Execute command on an available thread.
-	bool bPassed = _command.Execute();
+	bool bPassed = _command->Execute();
 
 	if (bPassed)
 	{
-		callbackPassed(_command);
+		callbackPassed(*_command.get());
 	} 
 	else
 	{
-		callbackFailed(_command);
+		callbackFailed(*_command.get());
 	}
 }
 

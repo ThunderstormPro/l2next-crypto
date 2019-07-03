@@ -133,3 +133,32 @@ macro(add_source_group group_name)
 	unset(HAS_DOT_CHAR)
 	unset(GRP_TREE_LIST)
 endmacro()
+
+macro(add_resources output_path)
+	set(_PROJECT_RSRC_PATH "${PROJECT_RSRC_PATH}/${target}")
+	set(_PROJECT_BIN_PATH "${PROJECT_BIN_PATH}/${target}")
+	set(_RESOURCES ${ARGN})
+	set(_COMMANDS)
+	
+	# Add command to remove directory if exist.
+	list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E remove_directory 
+		${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+	
+	# Add command to create directory for specified output path.
+	list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory 
+		${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+	
+	# Add command to copy every file to binary folder.
+	foreach(path ${_RESOURCES})
+		list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E copy
+			${_PROJECT_RSRC_PATH}/${path} ${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+	endforeach()
+	
+	# Add commands.
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+			   ${_COMMANDS})
+	
+	unset(_PROJECT_RSRC_PATH)
+	unset(_PROJECT_BIN_PATH)
+	unset(_RESOURCES)
+endmacro()
