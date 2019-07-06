@@ -5,41 +5,71 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include <regex>
 #include <iostream>
-#include "Crypto/Algorithms/AlgorithmRegistry.h"
-#include "Crypto/Algorithms/Base/Algorithm.h"
-#include "Crypto/Enums/HeaderVersion.h"
+#include "Shared/Structs/LineageFileSchema.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
+#include "Crypto/Enums/HeaderVersion.h"
+#include "Crypto/Validators/HeaderValidator/HeaderValidator.h"
+#include "Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"
+#include "Crypto/Validators/HeaderValidator/Events/OnValidationFailed.h"
+
+/*
+* TODO For cleanup task.
+* 1. Rename namespaces to an uniform & consistent model.
+* 2. Extract error codes / messages to separate struct.
+*/
 
 using namespace::LineageCryptoStreams;
+using namespace::CryptoEvents;
 
-class HeaderValidatorDuplex : public DuplexStream
+class HeaderValidatorDuplex
+	: public DuplexStream
+	, public OnValidationPassed
+	, public OnValidationFailed
 {
-	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final
+	bool ValidateHeader(const std::shared_ptr<std::iostream>& stream)
 	{
-		auto transformed = std::make_shared<std::iostream>(this);
+		string header;
+		EHeaderVersion version;
 
-		std::vector<char> buffer;
+		auto validator = HeaderValidator(stream);
 
-		std::vector<char> header(28, 0);
-		stream->read(header.data(), header.size());
+		bool bIsValidHeader = validator.GetHeader(header);
+		bool bIsValidVersion = validator.GetVersion(version);
 
-		std::cout << "HEADER::" << std::string(header.data(), header.size());
-
-		buffer.insert(buffer.end(), header.begin(), header.end());
-
-		while (!stream->eof())
+		if (!bIsValidHeader)
 		{
-			std::vector<char> chunk(8, 0);
-			stream->read(chunk.data(), chunk.size());
+			SValidationResult result;
+			result.version = (EHeaderVersion)version;
+			result.message = "Invalid Lineage2 header signature.";
 
-			buffer.insert(buffer.end(), chunk.data(), chunk.data() + stream->gcount());
+			Exec_OnValidationFailed(result);
+		}
+		else if (!bIsValidVersion)
+		{
+			SValidationResult result;
+			result.version = (EHeaderVersion)version;
+			result.message = "This Lineage2 header version is not supported yet.";
+
+			Exec_OnValidationFailed(result);
 		}
 
-		SetBuffer(buffer);
+		SValidationResult result;
+		result.version = (EHeaderVersion)version;
 
-		return transformed;
+		Exec_OnValidationPassed(result);
+
+		return bIsValidHeader && bIsValidVersion;
+	}
+
+	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final
+	{
+		if (!ValidateHeader(stream))
+		{
+			Stop();
+		}
+
+		return stream;
 	}
 };
 

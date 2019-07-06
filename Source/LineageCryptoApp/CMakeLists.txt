@@ -10,6 +10,9 @@ project(${PROJECT_NAME} VERSION 1.0.0)
 # Add sources.
 include(App/Sources)
 
+# Enqueue yaml for download.
+include("ThirdParty/yaml" REQUIRED)
+
 # Add executable target.
 add_executable(${PROJECT_NAME} WIN32 ${LineageCryptoApp_SOURCES})
 
@@ -23,4 +26,4 @@ set_test_app_properties(LineageCrypto_Static)
 link_internal_dependency(LineageCrypto_Static)
 
 # Link third party dependencies. 
-link_external_dependency(yaml)
+link_external_dependency(yaml ${PROJECT_NAME})

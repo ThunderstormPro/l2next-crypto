@@ -4,6 +4,8 @@
 
 SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output)
 {
+	//TODO Performance optimisations.
+
 	SLineageFileSchema schema;
 
 	auto validator = StreamFactory::Make(HeaderValidatorDuplex());
@@ -12,6 +14,18 @@ SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input,
 
 	schema.type = ECryptType::DEC;
 
+	// Bind events.
+	validator->Bind_OnValidationPassed([&](SValidationResult res) {
+		schema.version = res.version;
+		algorithm->SetFileSchema(schema);
+	});
+
+	validator->Bind_OnValidationFailed([&](SValidationResult res) {
+		schema.version = res.version;
+		schema.errorMsg = res.message;
+	});
+
+	// Pipe the duplex streams.
 	input
 		->Pipe(validator)
 		->Pipe(algorithm)
@@ -19,34 +33,6 @@ SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input,
 		->Pipe(output);
 
 	input->Start();
-
-
-
-
-	/*
-	//auto input = StreamFactory::Make(ReadableStream(options));
-	//auto output = StreamFactory::Make(WritableStream(options));
-	/*
-	
-	input
-		->Pipe(StreamFactory::Make(Custom41xStream()))
-		->Pipe(output);
-
-	input->Bind_OnEnd([&](double duration) {
-		printf("Time taken: %.2fs\n", duration);
-	});
-
-	input->Start(); 
-	
-if (!ValidateHeader(schema, inBuffer))
-	{
-		return schema;
-	}
-
-	if (!SetCryptResultToBuffer(schema, inBuffer))
-	{
-		return schema;
-	}*/
 
 	return schema;
 }

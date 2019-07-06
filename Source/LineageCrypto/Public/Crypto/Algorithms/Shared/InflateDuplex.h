@@ -8,7 +8,10 @@ using namespace::LineageCryptoStreams;
 
 class InflateDuplex : public DuplexStream
 {
-
+	//std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final
+	//{
+		
+	//}
 
 };
 

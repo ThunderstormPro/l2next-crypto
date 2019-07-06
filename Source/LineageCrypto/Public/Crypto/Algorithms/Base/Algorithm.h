@@ -25,14 +25,14 @@ public:
 	 *
 	 * @return EHeaderVersion header version
 	 */
-	virtual EHeaderVersion GetVersion();
+	EHeaderVersion GetVersion();
 
 	/**
 	 * Sets internal input buffer.
 	 * @param const char* inBuffer buffer with source data.
 	 * @return void
 	 */
-	virtual void SetBuffer(const char* inBuffer);
+	void SetBuffer(const char* inBuffer);
 
 	/**
 	 * Gets algorithm result.
@@ -40,7 +40,12 @@ public:
 	 * @param char*& outBuffer output buffer to write the results to.
 	 * @return void
 	 */
-	virtual void GetResult(ECryptType type, char*& outBuffer);
+	void GetResult(ECryptType type, char*& outBuffer);
+
+	const DuplexTypes& GetDuplex()
+	{
+		return duplex;
+	}
 
 	/**
 	 * Override & call this to reset/cleanup any unmanaged code.

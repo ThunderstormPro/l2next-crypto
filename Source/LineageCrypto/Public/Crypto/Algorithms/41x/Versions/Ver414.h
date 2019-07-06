@@ -15,7 +15,7 @@ class Ver414 : public Algorithm, public Ver41xParams
 public:
 	Ver414()
 	{
-		keys = 2;
+		//keys = 2;
 
 		version = EHeaderVersion::VER_414;
 		//duplex = {

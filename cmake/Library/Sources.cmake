@@ -53,6 +53,19 @@ add_source_group(Source.Crypto.Validators.HeaderValidator.Duplex
 	"Private/Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.cpp"
 )
 
+add_source_group(Source.Crypto.Validators.HeaderValidator.Events
+	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"
+	"Private/Crypto/Validators/HeaderValidator/Events/OnValidationPassed.cpp"
+	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationFailed.h"
+	"Private/Crypto/Validators/HeaderValidator/Events/OnValidationFailed.cpp"
+)
+
+# Crypto structs.
+add_source_group(Source.Crypto.Validators.HeaderValidator.Structs
+	"Public/Crypto/Validators/HeaderValidator/Structs/ValidationResult.h"
+)
+
+
 # Crypto enums.
 add_source_group(Source.Crypto.Enums
 	"Public/Crypto/Enums/CryptType.h"
@@ -109,6 +122,10 @@ add_source_group(Source.Shared.Enums
 	"Public/Shared/Enums/CryptoCommands.h"
 )
 
+add_source_group(Source.Shared.Templates
+	"Public/Shared/Templates/EventTemplate.h"
+)
+
 # Utils.
 
 # BufferedStream.
@@ -123,8 +140,6 @@ add_source_group(Source.Utils.Streams
 
 # Events.
 add_source_group(Source.Utils.Streams.Events
-	"Public/Utils/Streams/Events/EventTemplate.h"
-	"Private/Utils/Streams/Events/EventTemplate.cpp"
 	"Public/Utils/Streams/Events/OnData.h"
 	"Private/Utils/Streams/Events/OnData.cpp"
 	"Public/Utils/Streams/Events/OnEnd.h"

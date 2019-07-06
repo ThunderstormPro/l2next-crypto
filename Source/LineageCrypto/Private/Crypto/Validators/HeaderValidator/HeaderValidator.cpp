@@ -1,8 +1,8 @@
-﻿#include "Crypto/Validators/HeaderValidator.h"
+﻿#include "Crypto/Validators/HeaderValidator/HeaderValidator.h"
 
-HeaderValidator::HeaderValidator(const char*& buffer)
+HeaderValidator::HeaderValidator(const std::shared_ptr<std::iostream>& stream)
 {
-	headerString = ReadHeader(buffer);
+	headerString = ReadHeader(stream);
 }
 
 bool HeaderValidator::GetHeader(std::string& headerRef) const 
@@ -17,7 +17,7 @@ bool HeaderValidator::GetHeader(std::string& headerRef) const
 	return true;
 }
 
-bool HeaderValidator::GetVersion(int& versionRef)
+bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 {
 	try {
 		std::string versionString = headerString;
@@ -27,11 +27,11 @@ bool HeaderValidator::GetVersion(int& versionRef)
 
 		if (IsVersionSupported(version))
 		{
-			versionRef = version;
+			versionRef = (EHeaderVersion&)version;
 			return true;
 		}
 
-		versionRef = EHeaderVersion::NOT_IMPL;
+		versionRef = (EHeaderVersion&)version;
 		return false;
 	}
 	catch (std::exception e)
@@ -41,11 +41,16 @@ bool HeaderValidator::GetVersion(int& versionRef)
 	}
 }
 
-std::string HeaderValidator::ReadHeader(const char *& buffer) const
+std::string HeaderValidator::ReadHeader(const std::shared_ptr<std::iostream>& stream) const
 {
-	std::string header(buffer, LINEAGE_HEADER_SIZE);
-	header.erase(remove(header.begin(), header.end(), NULL_TERMINATOR_CHR), header.end());
-	return header;
+	// Read stream to get the header.
+	std::vector<char> header(LINEAGE_HEADER_SIZE, 0);
+	stream->read(header.data(), header.size());
+
+	// Transform it to plain string.
+	std::string headerStr(header.data(), header.size());
+	headerStr.erase(remove(headerStr.begin(), headerStr.end(), NULL_TERMINATOR_CHR), headerStr.end());
+	return headerStr;
 }
 
 bool HeaderValidator::IsVersionSupported(const int & version)

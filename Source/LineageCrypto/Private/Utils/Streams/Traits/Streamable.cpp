@@ -1,12 +1,8 @@
 #include "Utils/Streams/Traits/Streamable.h"
 
-bool TStreamable::IsStreaming()
-{
-	return bIsStreaming;
-}
 void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream)
 {
-	if (pipe != nullptr)
+	if (pipe != nullptr && bIsStreaming)
 	{
 		pipe->Exec(stream);
 	}
@@ -14,7 +10,7 @@ void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> st
 
 void TStreamable::Start()
 {
-	if (!IsStreaming())
+	if (!bIsStreaming)
 	{
 		bIsStreaming = true;
 		Exec(std::make_shared<std::iostream>(this));

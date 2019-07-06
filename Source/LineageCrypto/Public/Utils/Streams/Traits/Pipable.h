@@ -34,10 +34,10 @@ public:
 	};
 
 private:
-	template<class P>
+	template<typename P>
 	void SetNextPipe(const std::shared_ptr<P>& pipe)
 	{
-		this->nextPipe = std::static_pointer_cast<TStreamable>(pipe);
+		nextPipe = std::static_pointer_cast<TStreamable>(pipe);
 	}
 
 	std::shared_ptr<TStreamable> nextPipe;

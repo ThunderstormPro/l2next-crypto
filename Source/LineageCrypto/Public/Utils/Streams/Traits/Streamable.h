@@ -20,22 +20,19 @@ public:
 	TStreamable() {};
 	~TStreamable() {};
 
-	bool IsStreaming();
-
-	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream);
+	bool bIsStreaming = false;
 
 	// TODO Implement this properly.
 	void Start();
 	void Pause() {};
 	void Stop();
 
+	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream);
 protected:
 	virtual void Exec(std::shared_ptr<std::iostream> stream) = 0;
 
 protected:
-	bool bIsStreaming = false;
 	std::shared_ptr<std::iostream> nextStream;
-
 	/**
 	* Call this method from derived class to set the read buffer.
 	* @param std::vector<char> buffer buffer containing char data. 

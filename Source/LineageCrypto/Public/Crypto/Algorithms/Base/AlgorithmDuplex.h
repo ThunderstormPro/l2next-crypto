@@ -5,32 +5,42 @@
 #include <iostream>
 #include "Crypto/Enums/CryptType.h"
 #include "Crypto/Enums/HeaderVersion.h"
+#include "Crypto/Algorithms/Base/Algorithm.h"
+#include "Crypto/Algorithms/AlgorithmRegistry.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
+#include "Shared/Structs/LineageFileSchema.h"
 
 using namespace::LineageCryptoStreams;
 
 class AlgorithmDuplex : public DuplexStream
 {
+public:
+	void SetFileSchema(SLineageFileSchema schema)
+	{
+		_schema = schema;
+	}
+private:
+	SLineageFileSchema _schema;
+
 	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final
 	{
-		auto transformed = std::make_shared<std::iostream>(this);
-
-		std::vector<char> buffer;
-
-		while (!stream->eof())
+		Algorithm* algorithm = nullptr;
+		
+		if (!AlgorithmRegistry::GetInstance().Get(_schema.version, algorithm))
 		{
-			std::vector<char> chunk(8, 0);
-			stream->read(chunk.data(), chunk.size());
-
-			// TODO Modify chunk here. Remove this example :)
-			// Replaces each first char in chunk with Z character.
-
-			buffer.insert(buffer.end(), chunk.data(), chunk.data() + stream->gcount());
+			Stop();
 		}
 
-		SetBuffer(buffer);
-
-		return transformed;
+		switch (_schema.type)
+		{
+			case ECryptType::DEC:
+				return algorithm->GetDuplex().decrypt->Transform(stream);
+			case ECryptType::ENC:
+				return algorithm->GetDuplex().encrypt->Transform(stream);
+			default:
+				std::cout << "No explicit crypt type was provided." << std::endl;
+				return std::make_shared<std::iostream>(this);
+		}
 	}
 };
 

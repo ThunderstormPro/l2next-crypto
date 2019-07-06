@@ -181,12 +181,12 @@ int main()
 		{
 			case ECryptoCommands::ENCRYPT:
 				cout << "Task for ENCRYPT command failed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version  : " << result.version << "\n";
 				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 			case ECryptoCommands::DECRYPT:
 				cout << "\nTask for DECRYPT command failed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version  : " << result.version << "\n";
 				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 		}
