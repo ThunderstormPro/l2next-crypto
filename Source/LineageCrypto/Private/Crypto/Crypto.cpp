@@ -15,12 +15,24 @@ SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input,
 	schema.type = ECryptType::DEC;
 
 	// Bind events.
+	// Validator.
 	validator->Bind_OnValidationPassed([&](SValidationResult res) {
 		schema.version = res.version;
 		algorithm->SetFileSchema(schema);
 	});
 
 	validator->Bind_OnValidationFailed([&](SValidationResult res) {
+		schema.version = res.version;
+		schema.errorMsg = res.message;
+	});
+
+	// Algorithm.
+	algorithm->Bind_OnDecryptionPassed([&](SDecryptionResult res) {
+		schema.version = res.version;
+		algorithm->SetFileSchema(schema);
+	});
+
+	algorithm->Bind_OnDecryptionFailed([&](SValidationResult res) {
 		schema.version = res.version;
 		schema.errorMsg = res.message;
 	});

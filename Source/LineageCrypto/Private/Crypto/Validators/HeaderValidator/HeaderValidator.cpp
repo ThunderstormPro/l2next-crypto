@@ -19,6 +19,12 @@ bool HeaderValidator::GetHeader(std::string& headerRef) const
 
 bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 {
+	if (headerString.empty())
+	{
+		versionRef = EHeaderVersion::INVALID;
+		return false;
+	}
+
 	try {
 		std::string versionString = headerString;
 		versionString.erase(versionString.begin(), versionString.end() - LINEAGE_VERSION_LENGTH);

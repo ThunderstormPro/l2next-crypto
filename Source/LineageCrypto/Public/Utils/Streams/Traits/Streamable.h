@@ -3,9 +3,12 @@
 
 #include <memory>
 #include <cassert>
-#include <istream>
 #include <fstream>
+#include <istream>
 #include <iostream>
+#include <sstream>
+#include <streambuf>
+#include <stdio.h>
 #include <ios>
 #include <functional>
 #include <vector>

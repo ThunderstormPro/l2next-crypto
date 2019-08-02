@@ -1,1 +1,0 @@
-﻿#include "Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"

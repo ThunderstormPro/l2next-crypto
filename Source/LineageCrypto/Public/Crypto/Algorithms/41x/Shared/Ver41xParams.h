@@ -7,8 +7,9 @@ using namespace::std;
 
 struct Ver41xParams
 {
-	std::vector<unsigned char> publicModulus;
-	unsigned long privateExponent;
+	
+	std::vector<unsigned char> modulus;
+	unsigned long exponent;
 
 };
 

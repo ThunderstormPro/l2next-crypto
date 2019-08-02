@@ -55,9 +55,7 @@ add_source_group(Source.Crypto.Validators.HeaderValidator.Duplex
 
 add_source_group(Source.Crypto.Validators.HeaderValidator.Events
 	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"
-	"Private/Crypto/Validators/HeaderValidator/Events/OnValidationPassed.cpp"
 	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationFailed.h"
-	"Private/Crypto/Validators/HeaderValidator/Events/OnValidationFailed.cpp"
 )
 
 # Crypto structs.
@@ -82,10 +80,24 @@ add_source_group(Source.Crypto.Algorithms
 add_source_group(Source.Crypto.Algorithms.Base
 	"Public/Crypto/Algorithms/Base/Algorithm.h"
 	"Private/Crypto/Algorithms/Base/Algorithm.cpp"
-	"Public/Crypto/Algorithms/Base/AlgorithmDuplex.h"
-	"Private/Crypto/Algorithms/Base/AlgorithmDuplex.cpp"
 )
 
+# Base duplex.
+add_source_group(Source.Crypto.Algorithms.Base.Duplex
+	"Public/Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
+	"Private/Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.cpp"
+)
+
+# Base events.
+add_source_group(Source.Crypto.Algorithms.Base.Events
+	"Public/Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
+	"Public/Crypto/Algorithms/Base/Events/OnDecryptPassed.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Base.Structs
+	"Public/Crypto/Algorithms/Base/Structs/DecryptResult.h"
+)
+	
 # Shared.
 add_source_group(Source.Crypto.Algorithms.Shared
 	"Public/Crypto/Algorithms/Shared/InflateDuplex.h"

@@ -10,23 +10,12 @@
 
 # Enqueue following files for decrypt.
 decrypt: 
-  - src: 'C:\Projects\playground\test.txt'
-    out: 'C:\Projects\playground\dec-test.txt'
-   # Ver - 000 (invalid)
-  - src: 'C:\Projects\playground\ver000-armorgrp.dat'
-    out: 'C:\Projects\playground\dec-ver000-armorgrp.dat'
-    # Ver - 111
-  - src: 'C:\Projects\playground\ver111-editor.u'
-    out: 'C:\Projects\playground\dec-ver111-editor.u'
-    # Ver - 121 
-  - src: 'C:\Projects\playground\ver121-dropItemsTex.utx'
-    out: 'C:\Projects\playground\dec-ver121-dropItemsTex.utx'
     # Ver - 413
-  - src: 'C:\Projects\playground\ver413-armorgrp.dat'
-    out: 'C:\Projects\playground\dec-ver413-armorgrp.dat'
+  - src: 'C:\Projects\playground\system-hf-p5\chargrp.dat'
+    out: 'C:\Projects\playground\system-hf-p5-dec\dec-chargrp.dat'
+    # Ver - 413
+  - src: 'C:\Projects\playground\system-hf-p5\armorgrp.dat'
+    out: 'C:\Projects\playground\system-hf-p5-dec\dec-armorgrp.dat.dat'
 
 # Enqueue following files for encrypt.
-encrypt: 
-  # Ver - 111
-  - src: 'C:\Projects\playground\ver111-editor.u'
-    out: 'C:\Projects\playground\dec-ver111-editor.u'
+encrypt: []

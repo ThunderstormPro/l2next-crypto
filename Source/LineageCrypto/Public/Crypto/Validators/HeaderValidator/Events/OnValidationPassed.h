@@ -9,14 +9,13 @@ namespace CryptoEvents
 	class OnValidationPassed
 		: public EventTemplate<SValidationResult>
 	{
-
 	public:
 		virtual void Bind_OnValidationPassed(const Functor& func)
 		{
 			Add(func);
 		}
 
-		virtual void Exec_OnValidationPassed(SValidationResult result)
+		virtual void Exec_OnValidationPassed(const SValidationResult& result)
 		{
 			Call(result);
 		}
