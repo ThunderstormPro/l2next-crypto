@@ -2,7 +2,6 @@
 #define H_CRYPTO
 
 #include <string>
-#include <iostream>
 #include <memory>
 #include <regex>
 #include <vector>
@@ -11,7 +10,7 @@
 #include "Shared/Structs/LineageFileSchema.h"
 #include "Algorithms/AlgorithmRegistry.h"
 #include "Algorithms/Base/Algorithm.h"
-#include "Algorithms/Base/AlgorithmDuplex.h"
+#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
 #include "Algorithms/Shared/InflateDuplex.h"
 #include "Algorithms/Shared/DeflateDuplex.h"
 #include "Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"

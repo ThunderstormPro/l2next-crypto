@@ -2,10 +2,8 @@
 #define H_VER41XDEC
 
 #include <algorithm>
-#include <string>
 #include "gmp.h"
-#include <string.h>
-#include <assert.h>
+#include <cassert>
 #include <vector>
 #include "zlib.h"
 #include "Crypto/Algorithms/41x/Shared/Ver41xParams.h"
@@ -120,12 +118,19 @@ public:
 	Ver41xDecDuplex(Ver41xParams& params);
 	~Ver41xDecDuplex();
 
-public:
+	/**
+	 * Returns a new stream from new stream or an empty string when failed.
+	 */
 	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final;
+
+	void SetExecResult(const SStreamExecResult& err) override;
+	SStreamExecResult GetExecResult() override;
 
 private:
 	Ver41xParams params;
 	int decompressedSize = 0;
+
+	SStreamExecResult result;
 };
 
 #endif // H_VER41XDEC

@@ -7,8 +7,8 @@
 template<class T>
 struct EventTemplate
 {
-public:
-	typedef std::function<void(T)> Functor;
+virtual ~EventTemplate() = default;
+typedef std::function<void(T)> Functor;
 
 protected:
 	void Add(Functor func)

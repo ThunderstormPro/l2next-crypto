@@ -1,6 +1,11 @@
 #include "Crypto/Algorithms/Base/Algorithm.h"
 
-EHeaderVersion Algorithm::GetVersion()
+const DuplexTypes& Algorithm::GetDuplex() const
+{
+	return duplex;
+}
+
+EHeaderVersion Algorithm::GetVersion() const
 {
 	return version;
 }
@@ -13,21 +18,6 @@ void Algorithm::SetBuffer(const char* inBuffer)
 const char* Algorithm::GetBuffer() const
 {
 	return buffer;
-}
-
-void Algorithm::GetResult(ECryptType type, char *& outBuffer)
-{
-	/*const char* inBuffer = GetBuffer();
-
-	if (type == ECryptType::ENC && duplex.encrypt != nullptr)
-	{
-		return duplex.encrypt->Transform(inBuffer, outBuffer);
-	}
-
-	if (type == ECryptType::DEC && duplex.decrypt != nullptr)
-	{
-		return duplex.decrypt->Transform(inBuffer, outBuffer);
-	}*/
 }
 
 void Algorithm::Reset()

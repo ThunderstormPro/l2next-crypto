@@ -1,4 +1,5 @@
 #include "Crypto/Algorithms/41x/Duplex/Ver41xDecDuplex.h"
+#include <Utils/Streams/Structs/StreamExecResult.h>
 
 Ver41xDecDuplex::Ver41xDecDuplex(Ver41xParams& params)
 	: params(params)
@@ -15,12 +16,17 @@ std::shared_ptr<std::iostream> Ver41xDecDuplex::Transform(const std::shared_ptr<
 	const auto decrypted = std::make_shared<std::stringstream>();
 	
 	RSAEncryptedBlock header(stream, params.modulus, params.exponent, BLOCK_SIZE);
-	decompressedSize = ((unsigned int *)&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
+	decompressedSize = reinterpret_cast<unsigned int *>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
 
 	if (decompressedSize <= 0)
 	{
+		SStreamExecResult res;
+		res.errorCode = -1;
+		res.msg = "Cannot get decompressed size. Aborting decrypting.";
+
+		SetExecResult(res);
 		Stop();
-		return stream;
+		return std::make_shared<std::stringstream>();
 	}
 
 	decrypted->write(&(header.GetBuffer())[(header.GetBlockStartPosition())], header.GetBlockSize());
@@ -41,4 +47,14 @@ std::shared_ptr<std::iostream> Ver41xDecDuplex::Transform(const std::shared_ptr<
 
 
 	return decrypted;
+}
+
+void Ver41xDecDuplex::SetExecResult(const SStreamExecResult& _result)
+{
+	result = _result;
+}
+
+SStreamExecResult Ver41xDecDuplex::GetExecResult()
+{
+	return result;
 }

@@ -180,6 +180,7 @@ add_source_group(Source.Utils.Streams.Traits
 
 # Structs.
 add_source_group(Source.Utils.Streams.Structs
+	"Public/Utils/Streams/Structs/StreamExecResult.h"
 	"Public/Utils/Streams/Structs/StreamOptions.h"
 	"Public/Utils/Streams/Structs/BufStreamOptions.h"
 	"Public/Utils/Streams/Structs/FileStreamOptions.h"

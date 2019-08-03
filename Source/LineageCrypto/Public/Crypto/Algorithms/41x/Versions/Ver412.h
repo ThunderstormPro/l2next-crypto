@@ -15,11 +15,7 @@ class Ver412 : public Algorithm, public Ver41xParams
 public:
 	Ver412()
 	{
-		version = EHeaderVersion::VER_412;
-		//duplex = {
-		//	Duplex::Construct<Ver41xEnc>(this),
-		//	Duplex::Construct<Ver41xDec>(this)
-		//};
+		version = VER_412;
 	}
 };
 

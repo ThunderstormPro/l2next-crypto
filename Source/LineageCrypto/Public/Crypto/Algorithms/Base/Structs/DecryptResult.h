@@ -1,24 +1,13 @@
-#ifndef H_ON_DECRYPT_PASSED
-#define H_ON_DECRYPT_PASSED
-#include "Shared/Templates/EventTemplate.h"
+#ifndef H_DECRYPT_RESULT
+#define H_DECRYPT_RESULT
 
-namespace CryptoEvents
+#include "Utils/Streams/Structs/StreamExecResult.h"
+
+struct SDecryptResult : SStreamExecResult
 {
-	class OnDecryptPassed
-		: public EventTemplate<SValidationResult>
-	{
+	int blocks = 0;
+	size_t fileSize = 0;
+};
 
-	public:
-		virtual void Bind_OnValidationPassed(const Functor& func)
-		{
-			Add(func);
-		}
 
-		virtual void Exec_OnValidationPassed(SValidationResult result)
-		{
-			Call(result);
-		}
-	};
-}
-
-#endif // H_ON_DECRYPT_PASSED
+#endif // H_VALIDATION_RESULT

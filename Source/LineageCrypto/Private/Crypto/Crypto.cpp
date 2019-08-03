@@ -1,10 +1,10 @@
 ﻿#include "Crypto/Crypto.h"
-
+#include "Crypto/Algorithms/Base/Structs/DecryptResult.h"
 
 
 SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output)
 {
-	//TODO Performance optimisations.
+	//TODO Performance optimizations.
 
 	SLineageFileSchema schema;
 
@@ -16,25 +16,25 @@ SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input,
 
 	// Bind events.
 	// Validator.
-	validator->Bind_OnValidationPassed([&](SValidationResult res) {
+	validator->Bind_OnValidationPassed([&](const SValidationResult& res) {
 		schema.version = res.version;
 		algorithm->SetFileSchema(schema);
 	});
 
-	validator->Bind_OnValidationFailed([&](SValidationResult res) {
+	validator->Bind_OnValidationFailed([&](const SValidationResult& res) {
 		schema.version = res.version;
 		schema.errorMsg = res.message;
 	});
 
 	// Algorithm.
-	algorithm->Bind_OnDecryptionPassed([&](SDecryptionResult res) {
-		schema.version = res.version;
-		algorithm->SetFileSchema(schema);
+	algorithm->Bind_OnDecryptPassed([&](const SDecryptResult& res) {
+		//schema.version = res.version;
+		//algorithm->SetFileSchema(schema);
 	});
 
-	algorithm->Bind_OnDecryptionFailed([&](SValidationResult res) {
-		schema.version = res.version;
-		schema.errorMsg = res.message;
+	algorithm->Bind_OnDecryptFailed([&](const SDecryptResult& res) {
+		//schema.version = res.version;
+		//schema.errorMsg = res.message;
 	});
 
 	// Pipe the duplex streams.

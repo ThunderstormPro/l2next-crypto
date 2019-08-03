@@ -15,13 +15,15 @@
 #include <map>
 #include "Utils/Streams/Structs/FileStreamOptions.h"
 #include "Utils/Streams/Structs/BufStreamOptions.h"
+#include <Utils/Streams/Structs/StreamExecResult.h>
+
 
 class TStreamable
 	: public std::streambuf
 {
 public:
-	TStreamable() {};
-	~TStreamable() {};
+	TStreamable() = default;
+	~TStreamable() = default;
 
 	bool bIsStreaming = false;
 
@@ -31,10 +33,11 @@ public:
 	void Stop();
 
 	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream);
+	virtual SStreamExecResult GetExecResult() { return SStreamExecResult(); };
 protected:
 	virtual void Exec(std::shared_ptr<std::iostream> stream) = 0;
-
-protected:
+	virtual void SetExecResult(const SStreamExecResult& result) {};
+	
 	std::shared_ptr<std::iostream> nextStream;
 	/**
 	* Call this method from derived class to set the read buffer.
@@ -42,11 +45,10 @@ protected:
 	*/
 	void SetBuffer(std::vector<char> buffer);
 
-protected:
 	/** Stream flow control. */
-	virtual std::streambuf::int_type overflow(std::streambuf::int_type ch) override;
-	virtual std::streambuf::int_type underflow() override;
-	virtual std::streambuf::int_type uflow() override;
+	std::streambuf::int_type overflow(std::streambuf::int_type ch) override;
+	std::streambuf::int_type underflow() override;
+	std::streambuf::int_type uflow() override;
 
 private:
 	/** Stream flow control pointers for tracking positioning. */

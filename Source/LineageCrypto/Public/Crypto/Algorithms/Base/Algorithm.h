@@ -2,8 +2,6 @@
 #define H_ALGORITHM
 
 #include <memory>
-#include <iostream>
-#include "Crypto/Enums/CryptType.h"
 #include "Crypto/Enums/HeaderVersion.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
 
@@ -18,14 +16,14 @@ struct DuplexTypes
 class Algorithm
 {
 public:
-	~Algorithm() {};
+	virtual ~Algorithm() = default;
 
 	/**
 	 * Get instance header version.
 	 *
 	 * @return EHeaderVersion header version
 	 */
-	EHeaderVersion GetVersion();
+	EHeaderVersion GetVersion() const;
 
 	/**
 	 * Sets internal input buffer.
@@ -35,17 +33,10 @@ public:
 	void SetBuffer(const char* inBuffer);
 
 	/**
-	 * Gets algorithm result.
-	 * @param ECryptType type operation encrypt or decrypt.
-	 * @param char*& outBuffer output buffer to write the results to.
-	 * @return void
+	 * Gets duplex that are related to this algorithm.
+	 * @return const DuplexTypes&
 	 */
-	void GetResult(ECryptType type, char*& outBuffer);
-
-	const DuplexTypes& GetDuplex()
-	{
-		return duplex;
-	}
+	const DuplexTypes& GetDuplex() const;
 
 	/**
 	 * Override & call this to reset/cleanup any unmanaged code.
@@ -53,7 +44,7 @@ public:
 	virtual void Reset();
 
 protected:
-	EHeaderVersion version = EHeaderVersion::NOT_IMPL;
+	EHeaderVersion version = NOT_IMPL;
 	DuplexTypes duplex;
 
 	/**
