@@ -22,7 +22,7 @@ namespace LineageCryptoStreams
 		DuplexStream(const DuplexStream& _self);
 		~DuplexStream();
 
-		virtual void Exec(std::shared_ptr<std::iostream> stream) final;
+		void Exec(std::shared_ptr<std::iostream> stream) override;
 	};
 }
 

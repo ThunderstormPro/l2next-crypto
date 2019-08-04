@@ -2,7 +2,10 @@
 
 AlgorithmRegistry::AlgorithmRegistry()
 {
-	Add<Ver41x>();
+	Add<Ver411>();
+	Add<Ver412>();
+	Add<Ver413>();
+	Add<Ver414>();
 }
 
 AlgorithmRegistry::~AlgorithmRegistry()
@@ -22,7 +25,7 @@ bool AlgorithmRegistry::IsSupported(const int& version)
 	return false;
 }
 
-bool AlgorithmRegistry::Get(const int& version, AlgorithmBase*& algorithm)
+bool AlgorithmRegistry::Get(const int& version, Algorithm*& algorithm)
 {
 	for (auto& obj : algorithms)
 	{

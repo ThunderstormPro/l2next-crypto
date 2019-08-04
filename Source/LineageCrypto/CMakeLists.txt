@@ -10,13 +10,15 @@ project(${PROJECT_NAME} VERSION 1.0.0)
 # Add sources.
 include(Library/Sources)
 
+# Enqueue mpir for download.
+include("ThirdParty/mpir" REQUIRED)
+
+# Enqueue zlib for download.
+include("ThirdParty/zlib" REQUIRED)
+
 # Adds a static & dynamic library target.
 add_library_targets(${PROJECT_NAME} "${LineageCrypto_SOURCES}")
 
 # Set library properties.
 set_shared_library_properties()
 set_static_library_properties()
-
-# Link third party dependencies. 
-link_external_dependency(zlib)
-link_external_dependency(mpir)

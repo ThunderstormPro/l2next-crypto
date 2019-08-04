@@ -10,10 +10,12 @@
 
 # Enqueue following files for decrypt.
 decrypt: 
-  - src: 'C:/import/filename.dat'
-    out: 'C:/export/dec-filename.dat'
-  - src: 'C:/import/filename_awesome.dat'
-    out: 'C:/export/dec-filename_awesome.dat'
+    # Ver - 413
+  - src: 'C:\Projects\playground\system-hf-p5\chargrp.dat'
+    out: 'C:\Projects\playground\system-hf-p5-dec\dec-chargrp.dat'
+    # Ver - 413
+  - src: 'C:\Projects\playground\system-hf-p5\armorgrp.dat'
+    out: 'C:\Projects\playground\system-hf-p5-dec\dec-armorgrp.dat.dat'
 
 # Enqueue following files for encrypt.
 encrypt: []

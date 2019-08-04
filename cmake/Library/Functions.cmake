@@ -45,6 +45,12 @@ endfunction()
 function(set_shared_library_properties)
 	check_library(${LIB_SHARED_NAME})
 	set_common_library_props(${LIB_SHARED_NAME})
+	
+	# Link third party dependencies. 
+	link_external_dependency(zlib ${LIB_SHARED_NAME})
+	link_external_dependency(mpir ${LIB_SHARED_NAME})
+	
+
 endfunction()
 
 # Set static library properties.
@@ -52,6 +58,10 @@ function(set_static_library_properties)
 	check_library(${LIB_STATIC_NAME})
 	set_common_library_props(${LIB_STATIC_NAME})
 	
+	# Link third party dependencies. 
+	link_external_dependency(zlib ${LIB_STATIC_NAME})
+	link_external_dependency(mpir ${LIB_STATIC_NAME})
+	
 	# Build shared library first.
-	add_dependencies(${LIB_STATIC_NAME} ${LIB_SHARED_NAME})
+	#add_dependencies(${LIB_STATIC_NAME} ${LIB_SHARED_NAME})
 endfunction()

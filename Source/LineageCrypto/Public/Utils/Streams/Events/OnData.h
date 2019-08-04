@@ -1,7 +1,7 @@
 #ifndef H_ON_DATA
 #define H_ON_DATA
 
-#include "EventTemplate.h"
+#include "Shared/Templates/EventTemplate.h"
 
 namespace StreamEvents {
 

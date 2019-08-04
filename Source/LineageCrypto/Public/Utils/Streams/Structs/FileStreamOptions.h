@@ -7,6 +7,13 @@
 struct SFileStreamOptions : public StreamOptions
 {
 public:
+	SFileStreamOptions(const SFileStreamOptions& options)
+		: inputFile(options.inputFile)
+		, outputFile(options.outputFile)
+	{
+
+	}
+
 	SFileStreamOptions(std::string input, std::string output)
 		: inputFile(input)
 		, outputFile(output)
