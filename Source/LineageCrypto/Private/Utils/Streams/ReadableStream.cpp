@@ -2,7 +2,7 @@
 
 using namespace LineageCryptoStreams;
 
-ReadableStream::ReadableStream(const ReadableStream & _self) 
+ReadableStream::ReadableStream(const ReadableStream& _self) 
 	: options(_self.options)
 {
 }
@@ -30,5 +30,5 @@ void ReadableStream::Exec(std::shared_ptr<std::iostream> _self)
 		break;
 	}
 
-	TReadable::Propagate(GetPipe(), nextStream);
+	Propagate(GetPipe(), nextStream);
 }

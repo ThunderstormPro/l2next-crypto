@@ -1,4 +1,5 @@
 #include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
+#include "Crypto/Algorithms/AlgorithmRegistry.h"
 
 std::shared_ptr<std::iostream> AlgorithmDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
 {
@@ -13,7 +14,7 @@ std::shared_ptr<std::iostream> AlgorithmDuplex::Transform(const std::shared_ptr<
 	{
 		schema.errorMsg = "Supported algorithm for this version could not be found.";
 		Stop();
-		return std::make_shared<std::iostream>(this);
+		return nullptr;
 	}
 
 	switch (schema.type)
@@ -27,7 +28,7 @@ std::shared_ptr<std::iostream> AlgorithmDuplex::Transform(const std::shared_ptr<
 				if (result->fileSize <= 0)
 				{
 					Exec_OnDecryptFailed(*result.get());
-					return std::make_shared<std::iostream>(this);
+					return nullptr;
 				}
 
 				if (result)
@@ -39,9 +40,10 @@ std::shared_ptr<std::iostream> AlgorithmDuplex::Transform(const std::shared_ptr<
 				return transformed;
 			}
 		case ECryptType::ENC:
+			// TODO Impl.
 			return algorithm->GetDuplex().encrypt->Transform(stream);
 		default:
 			std::cout << "No explicit crypt type was provided." << std::endl;
-			return std::make_shared<std::iostream>(this);
+			return nullptr;
 	}
 }

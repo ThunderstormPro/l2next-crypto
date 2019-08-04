@@ -1,14 +1,11 @@
 #ifndef H_READABLE_STREAM
 #define H_READABLE_STREAM
 
-#include <vector>
-#include <iostream>
 #include <memory>
 #include "DuplexStream.h"
 #include "WritableStream.h"
 #include "Traits/Readable.h"
 #include "Traits/Pipable.h"
-#include "Structs/FileStreamOptions.h"
 #include "Structs/BufStreamOptions.h"
 
 namespace LineageCryptoStreams {
@@ -25,7 +22,7 @@ namespace LineageCryptoStreams {
 		~ReadableStream();
 
 	protected:
-		virtual void Exec(std::shared_ptr<std::iostream> _self) final;
+		void Exec(std::shared_ptr<std::iostream> _self) override final;
 
 	private:
 		StreamOptions& options;

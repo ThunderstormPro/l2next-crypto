@@ -1,6 +1,7 @@
 #include "Crypto/Algorithms/Shared/Rsa/RsaEncryptedBlock.h"
+#include <iostream>
 
-RSAEncryptedBlock::RSAEncryptedBlock(const std::shared_ptr<std::iostream>& stream, std::vector<unsigned char> mod, unsigned long exp, size_t bufferSize)
+RSAEncryptedBlock::RSAEncryptedBlock(const std::shared_ptr<std::iostream>& stream, std::vector<unsigned char> mod, const unsigned long exp, size_t bufferSize)
 	: RSABlock(stream, bufferSize)
 {
 	// Initialize buffers.
@@ -21,10 +22,7 @@ RSAEncryptedBlock::RSAEncryptedBlock(const std::shared_ptr<std::iostream>& strea
 	mpz_init(modPowedBlock);
 	mpz_powm_ui(modPowedBlock, readBlock, exp, modulus);
 
-	// Do we need this?
-	count = 32;
 	exportBuffer.resize(128);
-
 	mpz_export(exportBuffer.data(), &count, 1, sizeof(int), 1, 0, modPowedBlock);
 }
 
@@ -37,7 +35,7 @@ RSAEncryptedBlock::~RSAEncryptedBlock()
 
 size_t RSAEncryptedBlock::GetBlockSize()
 {
-	return ReverseBytes(exportBuffer.at(0)); //((char*)exportBuffer.data())[3] & 0xff;
+	return reinterpret_cast<char*>(exportBuffer.data())[3];
 }
 
 size_t RSAEncryptedBlock::GetBufferSize()

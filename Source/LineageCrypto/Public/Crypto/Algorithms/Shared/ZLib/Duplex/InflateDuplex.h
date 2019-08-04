@@ -2,9 +2,7 @@
 #define H_INFLATE_DUPLEX
 
 #include <memory>
-#include <vector>
-#include <zlib.h>
-#include <iostream>
+
 #include "Shared/Structs/LineageFileSchema.h"
 #include "Utils/Streams/DuplexStream.h"
 #include "Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"

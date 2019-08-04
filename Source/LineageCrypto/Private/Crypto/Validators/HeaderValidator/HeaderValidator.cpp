@@ -1,4 +1,5 @@
 ﻿#include "Crypto/Validators/HeaderValidator/HeaderValidator.h"
+#include "Crypto/Algorithms/AlgorithmRegistry.h"
 
 HeaderValidator::HeaderValidator(const std::shared_ptr<std::iostream>& stream)
 {
