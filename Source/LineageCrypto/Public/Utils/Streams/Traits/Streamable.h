@@ -23,7 +23,7 @@ class TStreamable
 {
 public:
 	TStreamable() = default;
-	~TStreamable() = default;
+	//~TStreamable() = default;
 
 	bool bIsStreaming = false;
 
@@ -32,11 +32,11 @@ public:
 	void Pause() {};
 	void Stop();
 
-	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream);
-	virtual SStreamExecResult GetExecResult() { return SStreamExecResult(); };
+	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream) const;
+	std::shared_ptr<SStreamExecResult> TStreamable::GetExecResult() const;
 protected:
 	virtual void Exec(std::shared_ptr<std::iostream> stream) = 0;
-	virtual void SetExecResult(const SStreamExecResult& result) {};
+	virtual void SetExecResult(const std::shared_ptr<SStreamExecResult>& result);
 	
 	std::shared_ptr<std::iostream> nextStream;
 	/**
@@ -58,6 +58,8 @@ private:
 
 	/** Internal buffer. */
 	std::vector<char> internalBuffer;
+
+	std::shared_ptr<SStreamExecResult> execResult;
 };
 
 #endif // H_STREAMABLE

@@ -2,10 +2,7 @@
 #define H_HEADER_VALIDATOR_DUPLEX
 
 #include <string>
-#include <vector>
 #include <memory>
-#include <algorithm>
-#include <iostream>
 #include "Shared/Structs/LineageFileSchema.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
 #include "Crypto/Enums/HeaderVersion.h"
@@ -27,6 +24,14 @@ class HeaderValidatorDuplex
 	, public OnValidationPassed
 	, public OnValidationFailed
 {
+public:
+	HeaderValidatorDuplex(SLineageFileSchema& schema)
+		:schema(schema)
+	{
+		
+	}
+
+protected:
 	bool ValidateHeader(const std::shared_ptr<std::iostream>& stream)
 	{
 		string header;
@@ -34,35 +39,33 @@ class HeaderValidatorDuplex
 
 		auto validator = HeaderValidator(stream);
 
-		bool bIsValidHeader = validator.GetHeader(header);
-		bool bIsValidVersion = validator.GetVersion(version);
+		const bool bIsValidHeader = validator.GetHeader(header);
+		const bool bIsValidVersion = validator.GetVersion(version);
 
 		if (!bIsValidHeader)
 		{
-			SValidationResult result;
-			result.version = (EHeaderVersion)version;
-			result.message = "Invalid Lineage2 header signature.";
+			schema.version = static_cast<EHeaderVersion>(version);
+			schema.errorMsg = "Invalid Lineage2 header signature.";
 
-			Exec_OnValidationFailed(result);
+			Exec_OnValidationFailed(SValidationResult{ schema.version, schema.errorMsg });
 		}
 		else if (!bIsValidVersion)
 		{
-			SValidationResult result;
-			result.version = (EHeaderVersion)version;
-			result.message = "This Lineage2 header version is not supported yet.";
+			schema.version = static_cast<EHeaderVersion>(version);
+			schema.errorMsg = "This Lineage2 header version is not supported yet.";
 
-			Exec_OnValidationFailed(result);
+			Exec_OnValidationFailed(SValidationResult{ schema.version, schema.errorMsg });
 		}
 
-		SValidationResult result;
-		result.version = (EHeaderVersion)version;
+		schema.version = static_cast<EHeaderVersion>(version);
+		schema.header = header;
 
-		Exec_OnValidationPassed(result);
+		Exec_OnValidationPassed(SValidationResult{ schema.version });
 
 		return bIsValidHeader && bIsValidVersion;
 	}
 
-	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final
+	std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) override final
 	{
 		if (!ValidateHeader(stream))
 		{
@@ -71,6 +74,9 @@ class HeaderValidatorDuplex
 
 		return stream;
 	}
+
+private:
+	SLineageFileSchema& schema;
 };
 
 #endif // H_HEADER_VALIDATOR_DUPLEX

@@ -1,40 +1,43 @@
 ﻿#include "Crypto/Crypto.h"
 #include "Crypto/Algorithms/Base/Structs/DecryptResult.h"
+#include "Crypto/Validators/HeaderValidator/Structs/ValidationResult.h"
+#include "Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
 
 
 SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output)
 {
-	//TODO Performance optimizations.
-
 	SLineageFileSchema schema;
-
-	auto validator = StreamFactory::Make(HeaderValidatorDuplex());
-	auto algorithm = StreamFactory::Make(AlgorithmDuplex());
-	auto inflator = StreamFactory::Make(InflateDuplex());
-
 	schema.type = ECryptType::DEC;
 
-	// Bind events.
-	// Validator.
+	auto validator = StreamFactory::Make(HeaderValidatorDuplex(schema));
+	auto algorithm = StreamFactory::Make(AlgorithmDuplex(schema));
+	auto inflator = StreamFactory::Make(InflateDuplex(schema));
+
+	// Log steps
+
+	LogCurrentStep("Header validation", 0);
 	validator->Bind_OnValidationPassed([&](const SValidationResult& res) {
-		schema.version = res.version;
-		algorithm->SetFileSchema(schema);
+		// Do stuff if header validation passed.
+		std::cout << "Header validation passed, using:" << schema.header << std::endl;
 	});
 
 	validator->Bind_OnValidationFailed([&](const SValidationResult& res) {
-		schema.version = res.version;
-		schema.errorMsg = res.message;
+		// Do stuff if header validation failed.
 	});
 
-	// Algorithm.
+	LogCurrentStep("Decrypt operation", 1);
 	algorithm->Bind_OnDecryptPassed([&](const SDecryptResult& res) {
-		//schema.version = res.version;
-		//algorithm->SetFileSchema(schema);
+		 //Do stuff if when decrypt passed.
+		//step++;
 	});
 
 	algorithm->Bind_OnDecryptFailed([&](const SDecryptResult& res) {
-		//schema.version = res.version;
-		//schema.errorMsg = res.message;
+		// Do stuff if when decrypt failed.
+	});
+
+	LogCurrentStep("Inflate operation :", 2);
+	inflator->Bind_OnInflatePassed([&](const SZlibResult& res) {
+		// Do stuff if when inflate passed.
 	});
 
 	// Pipe the duplex streams.
@@ -53,68 +56,12 @@ SLineageFileSchema Crypto::Encrypt(const char* inBuffer)
 {
 	SLineageFileSchema schema;
 
-	/*schema.type = ECryptType::ENC;
-
-	if (!ValidateHeader(schema, inBuffer))
-	{
-		return schema;
-	}
-
-	if (!SetCryptResultToBuffer(schema, inBuffer))
-	{
-		return schema;
-	}*/
+	// TODO Not yet implemented.
 
 	return schema;
 }
-/*
-bool Crypto::ValidateHeader(SLineageFileSchema& schema, const char*& inBuffer)
+
+void Crypto::LogCurrentStep(std::string title, short step)
 {
-	string header;
-	int version;
-
-	auto validator = HeaderValidator(inBuffer);
-
-	bool bIsValidHeader = validator.GetHeader(header);
-	bool bIsValidVersion = validator.GetVersion(version);
-
-	schema.header = header;
-	schema.version = version;
-
-	if (!bIsValidHeader)
-	{
-		schema.errorMsg = "Invalid Lineage2 header signature.";
-	}
-	else if (!bIsValidVersion)
-	{
-		schema.errorMsg = "This Lineage2 header version is not supported yet.";
-	}
-	
-	return bIsValidHeader && bIsValidVersion;
+	std::cout << "" << title << " | step [" << step << "/" << maxSteps << "]" << std::endl;
 }
-
-bool Crypto::SetCryptResultToBuffer(SLineageFileSchema& schema, const char*& inBuffer)
-{
-	Algorithm* algorithm = nullptr;
-	char* outBuffer = nullptr;
-
-	if (!AlgorithmRegistry::GetInstance().Get(schema.version, algorithm))
-	{
-		schema.errorMsg = "This Lineage2 header version is not supported by any algorithm.";
-		return false;
-	}
-	
-	algorithm->SetBuffer(inBuffer);
-	algorithm->GetResult(schema.type, outBuffer);
-
-	if (outBuffer == nullptr)
-	{
-		schema.errorMsg = "An error occured while performing crypt operation on this file.";
-		return false;
-	}
-
-	schema.buffer = outBuffer;
-	algorithm->Reset();
-
-	return true;
-}*/

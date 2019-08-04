@@ -15,7 +15,7 @@ namespace CryptoEvents
 			Add(func);
 		}
 
-		virtual void Exec_OnDecryptPassed(SDecryptResult result)
+		virtual void Exec_OnDecryptPassed(const SDecryptResult& result)
 		{
 			Call(result);
 		}

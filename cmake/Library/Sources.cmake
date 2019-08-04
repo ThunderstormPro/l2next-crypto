@@ -99,12 +99,29 @@ add_source_group(Source.Crypto.Algorithms.Base.Structs
 )
 	
 # Shared.
-add_source_group(Source.Crypto.Algorithms.Shared
-	"Public/Crypto/Algorithms/Shared/InflateDuplex.h"
-	"Private/Crypto/Algorithms/Shared/InflateDuplex.cpp"
-	"Public/Crypto/Algorithms/Shared/DeflateDuplex.h"
-	"Private/Crypto/Algorithms/Shared/DeflateDuplex.cpp"
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Duplex
+	"Public/Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+	"Private/Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.cpp"
+	"Public/Crypto/Algorithms/Shared/ZLib/Duplex/DeflateDuplex.h"
+	"Private/Crypto/Algorithms/Shared/ZLib/Duplex/DeflateDuplex.cpp"
 )
+
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Events
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Structs
+	"Public/Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Shared.Rsa
+	"Public/Crypto/Algorithms/Shared/Rsa/RsaBlock.h"
+	"Private/Crypto/Algorithms/Shared/Rsa/RsaBlock.cpp"
+	"Public/Crypto/Algorithms/Shared/Rsa/RsaEncryptedBlock.h"
+	"Private/Crypto/Algorithms/Shared/Rsa/RsaEncryptedBlock.cpp"
+)
+
 
 # 41x
 add_source_group(Source.Crypto.Algorithms.41x.Versions

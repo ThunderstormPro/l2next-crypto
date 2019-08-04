@@ -1,11 +1,21 @@
 #include "Utils/Streams/Traits/Streamable.h"
 
-void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream)
+void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream) const
 {
 	if (pipe != nullptr && bIsStreaming)
 	{
 		pipe->Exec(stream);
 	}
+}
+
+std::shared_ptr<SStreamExecResult> TStreamable::GetExecResult() const
+{
+	return execResult;
+}
+
+void TStreamable::SetExecResult(const std::shared_ptr<SStreamExecResult>& result)
+{
+	execResult = result;
 }
 
 void TStreamable::Start()

@@ -4,17 +4,28 @@
 #include <string>
 #include "Crypto/Enums/HeaderVersion.h"
 #include "Crypto/Enums/CryptType.h"
+#include <string>
 
 using namespace std;
 
 struct SLineageFileSchema
 {
-public:
 	ECryptType type;
-	string header;
+	std::string header;
 	EHeaderVersion version;
-	char* buffer = nullptr;
-	string errorMsg;
+	size_t fileSize;
+	char* buffer;
+	std::string errorMsg;
+
+	SLineageFileSchema()
+	{
+		type = ECryptType::ENC;
+		header = "none";
+		version = NOT_IMPL;
+		fileSize = 0;
+		buffer = nullptr;
+		errorMsg = "none";
+	}
 };
 
 

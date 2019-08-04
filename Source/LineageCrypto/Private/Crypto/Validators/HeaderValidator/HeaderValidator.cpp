@@ -21,7 +21,7 @@ bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 {
 	if (headerString.empty())
 	{
-		versionRef = EHeaderVersion::INVALID;
+		versionRef = INVALID;
 		return false;
 	}
 
@@ -42,7 +42,7 @@ bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 	}
 	catch (std::exception e)
 	{
-		versionRef = EHeaderVersion::INVALID;
+		versionRef = INVALID;
 		return false;
 	}
 }

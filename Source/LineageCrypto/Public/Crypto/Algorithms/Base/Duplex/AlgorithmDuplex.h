@@ -16,12 +16,13 @@ class AlgorithmDuplex
 	, public CryptoEvents::OnDecryptFailed
 {
 public:
-	void SetFileSchema(const SLineageFileSchema& schema);
-
-
-
+	AlgorithmDuplex(SLineageFileSchema& schema)
+		: schema(schema)
+	{
+		
+	}
 private:
-	SLineageFileSchema schema = SLineageFileSchema();
+	SLineageFileSchema& schema;
 	std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) override;
 };
 
