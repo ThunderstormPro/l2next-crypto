@@ -14,28 +14,22 @@ SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input,
 	auto inflator = StreamFactory::Make(InflateDuplex(schema));
 
 	// Log steps
-
-	LogCurrentStep("Header validation", 0);
 	validator->Bind_OnValidationPassed([&](const SValidationResult& res) {
-		// Do stuff if header validation passed.
-		std::cout << "Header validation passed, using:" << schema.header << std::endl;
+		// Do stuff if header validation failed.
 	});
 
 	validator->Bind_OnValidationFailed([&](const SValidationResult& res) {
 		// Do stuff if header validation failed.
 	});
 
-	LogCurrentStep("Decrypt operation", 1);
 	algorithm->Bind_OnDecryptPassed([&](const SDecryptResult& res) {
 		 //Do stuff if when decrypt passed.
-		//step++;
 	});
 
 	algorithm->Bind_OnDecryptFailed([&](const SDecryptResult& res) {
 		// Do stuff if when decrypt failed.
 	});
 
-	LogCurrentStep("Inflate operation :", 2);
 	inflator->Bind_OnInflatePassed([&](const SZlibResult& res) {
 		// Do stuff if when inflate passed.
 	});

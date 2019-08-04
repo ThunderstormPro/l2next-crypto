@@ -14,7 +14,6 @@ struct SLineageFileSchema
 	std::string header;
 	EHeaderVersion version;
 	size_t fileSize;
-	char* buffer;
 	std::string errorMsg;
 
 	SLineageFileSchema()
@@ -23,8 +22,7 @@ struct SLineageFileSchema
 		header = "none";
 		version = NOT_IMPL;
 		fileSize = 0;
-		buffer = nullptr;
-		errorMsg = "none";
+		errorMsg = "";
 	}
 };
 
