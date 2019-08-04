@@ -2,7 +2,6 @@
 #define H_ALGORITHM_DUPLEX
 
 #include <memory>
-#include "Crypto/Algorithms/AlgorithmRegistry.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
 #include "Shared/Structs/LineageFileSchema.h"
 #include "Crypto/Algorithms/Base/Events/OnDecryptPassed.h"

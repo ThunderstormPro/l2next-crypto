@@ -1,17 +1,18 @@
 #ifndef H_VER41XENC
 #define H_VER41XENC
 
-#include <string>
 #include "Crypto/Algorithms/41x/Shared/Ver41xParams.h"
+#include "Utils/Streams/DuplexStream.h"
 
-class Ver41xEnc
+class Ver41xEncDuplex
+	: public LineageCryptoStreams::DuplexStream
 {
 public:
-	Ver41xEnc(Ver41xParams params);
-	~Ver41xEnc();
+	Ver41xEncDuplex(Ver41xParams& params);
+	~Ver41xEncDuplex();
+private:
+	Ver41xParams params;
 
-
-	//void Transform(const char*& inBuffer, char*& outBuffer) override;
 };
 
 #endif // H_VER41XENC

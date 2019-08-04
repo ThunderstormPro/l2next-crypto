@@ -1,9 +1,8 @@
-#ifndef H_INFLATE_DUPLEX
-#define H_INFLATE_DUPLEX
+#ifndef H_RSA_ENCRYPTED_BLOCK
+#define H_RSA_ENCRYPTED_BLOCK
 
 #include <memory>
 #include <vector>
-#include <iostream>
 #include "RsaBlock.h"
 
 
@@ -26,4 +25,4 @@ public:
 };
 
 
-#endif // H_INFLATE_DUPLEX
+#endif // H_RSA_ENCRYPTED_BLOCK

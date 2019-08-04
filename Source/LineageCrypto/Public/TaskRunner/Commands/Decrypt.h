@@ -23,14 +23,12 @@ namespace LineageCryptoCommands
 	{
 	public:
 		CDecrypt(std::shared_ptr<StreamOptions> options);
-		~CDecrypt();
+		~CDecrypt() = default;
 
-		virtual bool Execute() override;
-		virtual void Release() override;
+		bool Execute() override;
+		void Release() override;
 	private:
-		void ReadStream(ifstream& inStream);
-
-		std::shared_ptr<StreamOptions> _options;
+		std::shared_ptr<StreamOptions> options;
 	};
 }
 

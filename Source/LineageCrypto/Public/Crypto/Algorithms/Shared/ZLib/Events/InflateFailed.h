@@ -10,12 +10,12 @@ namespace CryptoEvents
 		: public EventTemplate<SZlibResult>
 	{
 	public:
-		virtual void Bind_OnOnInflateFailed(const Functor& func)
+		virtual void Bind_OnInflateFailed(const Functor& func)
 		{
 			Add(func);
 		}
 
-		virtual void Exec_OnOnInflateFailed(const SZlibResult& result)
+		virtual void Exec_OnInflateFailed(const SZlibResult& result)
 		{
 			Call(result);
 		}
