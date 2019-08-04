@@ -8,9 +8,9 @@
 #include <regex>
 #include <iostream>
 #include "Crypto/Algorithms/AlgorithmRegistry.h"
-#include "Crypto/Algorithms/Base/AlgorithmBase.h"
+#include "Crypto/Algorithms/Base/Algorithm.h"
 #include "Crypto/Enums/HeaderVersion.h"
-#include "Crypto/Algorithms/41x/Ver41x.h"
+#include "Utils/Streams/Factory/StreamFactory.h"
 
 const char NULL_TERMINATOR_CHR = '\0';
 const char LINEAGE_HEADER_SIZE = 28;
@@ -23,7 +23,7 @@ class HeaderValidator
 {
 
 public:
-	HeaderValidator(const char*& buffer);
+	HeaderValidator(const std::shared_ptr<std::iostream>& stream);
 
 	/**
 	 * Get header string.
@@ -39,7 +39,7 @@ public:
 	 * @param int& versionRef pass supported version. Returns -1 if is not supported or could not be parsed.
 	 * @return bool success status.
 	 */
-	bool GetVersion(int& versionRef);
+	bool GetVersion(EHeaderVersion& versionRef);
 
 	/**
 	 * Gets header string from buffer.
@@ -47,7 +47,7 @@ public:
 	 * @param const char*& buffer input buffer.
 	 * @return string retrieved header.
 	 */
-	std::string ReadHeader(const char*& buffer) const;
+	std::string ReadHeader(const std::shared_ptr<std::iostream>& stream) const;
 
 	/**
 	 * Check if version has more then 3 digits and is supported by lib.

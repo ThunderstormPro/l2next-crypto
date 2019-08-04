@@ -6,32 +6,6 @@
 using namespace LineageCryptoStreams;
 using namespace LineageCryptoCommands;
 
-// TODO Just an usage example. Remove this.
-class Custom41xStream : public DuplexStream
-{
-	virtual std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) override
-	{
-		auto transformed = std::make_shared<std::iostream>(this);
-		std::vector<char> buffer;
-
-		while (!stream->eof())
-		{
-			std::vector<char> chunk(8, 0);
-			stream->read(chunk.data(), chunk.size());
-
-			// TODO Modify chunk here. Remove this example :)
-			// Replaces each first char in chunk with Z character.
-			chunk.at(0) = 'Z';
-
-			buffer.insert(buffer.end(), chunk.data(), chunk.data() + stream->gcount());
-		}
-
-		SetBuffer(buffer);
-
-		return transformed;
-	}
-};
-
 unique_ptr<LineageCryptoApp> LineageCryptoApp::getRef()
 {
 	return make_unique<LineageCryptoApp>();
@@ -95,67 +69,13 @@ int main()
 		return 0;
 	}
 
-	/*
-	* TODO Just an example, remove this chunk of code.
-	* Pipable file stream example.
-	*/
-	{
-		SFileStreamOptions options{ "D:/readable.dat", "D:/writable.dat" };
-
-		auto input = StreamFactory::Make(ReadableStream(options));
-		auto output = StreamFactory::Make(WritableStream(options));
-
-		input
-			->Pipe(StreamFactory::Make(Custom41xStream()))
-			->Pipe(output);
-
-		input->Bind_OnEnd([&](double duration) {
-			printf("Time taken: %.2fs\n", duration);
-		});
-
-		input->Start();
-
-
-	}
-	/*--------------------------*/
-
-	/*
-	* TODO Just an example, remove this chunk of code.
-	* Pipable buffer stream example.
-	*/
-	{
-		char data[] = "Input data to be readed from.";
-
-		SBufStreamOptions options(data, data + sizeof(data));
-
-		auto input = StreamFactory::Make(ReadableStream(options));
-		auto output = StreamFactory::Make(WritableStream(options));
-
-		input
-			->Pipe(StreamFactory::Make(Custom41xStream()))
-			->Pipe(output);
-
-		input->Bind_OnEnd([&](double duration) {
-			printf("Time taken: %.2fs\n", duration);
-		});
-
-		input->Start();
-	}
-	/*--------------------------*/
-
 	// Decrypt task.
 	if (!config->Decrypt.empty())
 	{
 		for (ConfigPaths cp : config->Decrypt)
 		{
-			ifstream inStream(cp.src, ios::binary);
-			ofstream outStream(cp.out, ios::binary);
-
-			auto command = LineageCrypto::Create<CDecrypt>(
-				inStream,
-				outStream
-			);
-
+			const auto options = StreamFactory::Options(SFileStreamOptions{ cp.src, cp.out });
+			auto command = LineageCrypto::Create<CDecrypt>(options);
 			LineageCrypto::Enqueue(command);
 		}
 	}
@@ -178,7 +98,7 @@ int main()
 	}
 
 	LineageCrypto::OnPassed([&](L2Command& command) -> void {
-		auto result = command.GetResult<SLineageFileSchema>();
+		const auto result = command.GetResult<SLineageFileSchema>();
 
 		// TODO Cleanup
 		switch (command.GetId())
@@ -187,40 +107,29 @@ int main()
 				cout << "Task for ENCRYPT command passed." << "\n";
 				cout << "# Header  : " << result.header << "\n";
 				cout << "# Version : " << result.version << "\n";
-
-				if (result.buffer != nullptr)
-				{
-					cout << "# Buffer  : " << result.buffer << "\n";
-				}
-
 				break;
 			case ECryptoCommands::DECRYPT:
 				cout << "\nTask for DECRYPT command passed." << "\n";
 				cout << "# Header  : " << result.header << "\n";
 				cout << "# Version : " << result.version << "\n";
-
-				if (result.buffer != nullptr)
-				{
-					cout << "# Buffer  : " << result.buffer << "\n";
-				}
-
+				cout << "# Output file size : " << result.fileSize << "\n";
 				break;
 		}
 	});
 
 	LineageCrypto::OnFailed([&](L2Command& command) -> void {
-		auto result = command.GetResult<SLineageFileSchema>();
+		const auto result = command.GetResult<SLineageFileSchema>();
 
 		switch (command.GetId())
 		{
 			case ECryptoCommands::ENCRYPT:
 				cout << "Task for ENCRYPT command failed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version  : " << result.version << "\n";
 				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 			case ECryptoCommands::DECRYPT:
 				cout << "\nTask for DECRYPT command failed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
+				cout << "# Version  : " << result.version << "\n";
 				cout << "# Error   : " << result.errorMsg << "\n";
 				break;
 		}

@@ -43,10 +43,26 @@ add_source_group(Source.Crypto
 )
 
 # Crypto validators.
-add_source_group(Source.Crypto.Validators
-	"Public/Crypto/Validators/HeaderValidator.h"
-	"Private/Crypto/Validators/HeaderValidator.cpp"
+add_source_group(Source.Crypto.Validators.HeaderValidator
+	"Public/Crypto/Validators/HeaderValidator/HeaderValidator.h"
+	"Private/Crypto/Validators/HeaderValidator/HeaderValidator.cpp"
 )
+
+add_source_group(Source.Crypto.Validators.HeaderValidator.Duplex
+	"Public/Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
+	"Private/Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.cpp"
+)
+
+add_source_group(Source.Crypto.Validators.HeaderValidator.Events
+	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"
+	"Public/Crypto/Validators/HeaderValidator/Events/OnValidationFailed.h"
+)
+
+# Crypto structs.
+add_source_group(Source.Crypto.Validators.HeaderValidator.Structs
+	"Public/Crypto/Validators/HeaderValidator/Structs/ValidationResult.h"
+)
+
 
 # Crypto enums.
 add_source_group(Source.Crypto.Enums
@@ -60,18 +76,70 @@ add_source_group(Source.Crypto.Algorithms
 	"Private/Crypto/Algorithms/AlgorithmRegistry.cpp"
 )
 
-
+# Base algorithm.
 add_source_group(Source.Crypto.Algorithms.Base
-	"Public/Crypto/Algorithms/Base/AlgorithmBase.h"
-	"Private/Crypto/Algorithms/Base/AlgorithmBase.cpp"
+	"Public/Crypto/Algorithms/Base/Algorithm.h"
+	"Private/Crypto/Algorithms/Base/Algorithm.cpp"
 )
 
-add_source_group(Source.Crypto.Algorithms.41x
-	"Public/Crypto/Algorithms/41x/Ver41x.h"
-	"Public/Crypto/Algorithms/41x/Ver41xDec.h"
-	"Private/Crypto/Algorithms/41x/Ver41xDec.cpp"
-	"Public/Crypto/Algorithms/41x/Ver41xEnc.h"
-	"Private/Crypto/Algorithms/41x/Ver41xEnc.cpp"
+# Base duplex.
+add_source_group(Source.Crypto.Algorithms.Base.Duplex
+	"Public/Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
+	"Private/Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.cpp"
+)
+
+# Base events.
+add_source_group(Source.Crypto.Algorithms.Base.Events
+	"Public/Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
+	"Public/Crypto/Algorithms/Base/Events/OnDecryptPassed.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Base.Structs
+	"Public/Crypto/Algorithms/Base/Structs/DecryptResult.h"
+)
+	
+# Shared.
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Duplex
+	"Public/Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+	"Private/Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.cpp"
+	"Public/Crypto/Algorithms/Shared/ZLib/Duplex/DeflateDuplex.h"
+	"Private/Crypto/Algorithms/Shared/ZLib/Duplex/DeflateDuplex.cpp"
+)
+
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Events
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Structs
+	"Public/Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.Shared.Rsa
+	"Public/Crypto/Algorithms/Shared/Rsa/RsaBlock.h"
+	"Private/Crypto/Algorithms/Shared/Rsa/RsaBlock.cpp"
+	"Public/Crypto/Algorithms/Shared/Rsa/RsaEncryptedBlock.h"
+	"Private/Crypto/Algorithms/Shared/Rsa/RsaEncryptedBlock.cpp"
+)
+
+
+# 41x
+add_source_group(Source.Crypto.Algorithms.41x.Versions
+	"Public/Crypto/Algorithms/41x/Versions/Ver411.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver412.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver413.h"
+	"Public/Crypto/Algorithms/41x/Versions/Ver414.h"
+)
+
+add_source_group(Source.Crypto.Algorithms.41x.Duplex
+	"Public/Crypto/Algorithms/41x/Duplex/Ver41xDecDuplex.h"
+	"Private/Crypto/Algorithms/41x/Duplex/Ver41xDecDuplex.cpp"
+	"Public/Crypto/Algorithms/41x/Duplex/Ver41xEncDuplex.h"
+	"Private/Crypto/Algorithms/41x/Duplex/Ver41xEncDuplex.cpp"
+)
+
+add_source_group(Source.Crypto.Algorithms.41x.Shared
+	"Public/Crypto/Algorithms/41x/Shared/Ver41xParams.h"
 )
 
 # Common.
@@ -81,6 +149,10 @@ add_source_group(Source.Shared.Structs
 
 add_source_group(Source.Shared.Enums
 	"Public/Shared/Enums/CryptoCommands.h"
+)
+
+add_source_group(Source.Shared.Templates
+	"Public/Shared/Templates/EventTemplate.h"
 )
 
 # Utils.
@@ -97,8 +169,6 @@ add_source_group(Source.Utils.Streams
 
 # Events.
 add_source_group(Source.Utils.Streams.Events
-	"Public/Utils/Streams/Events/EventTemplate.h"
-	"Private/Utils/Streams/Events/EventTemplate.cpp"
 	"Public/Utils/Streams/Events/OnData.h"
 	"Private/Utils/Streams/Events/OnData.cpp"
 	"Public/Utils/Streams/Events/OnEnd.h"
@@ -127,6 +197,7 @@ add_source_group(Source.Utils.Streams.Traits
 
 # Structs.
 add_source_group(Source.Utils.Streams.Structs
+	"Public/Utils/Streams/Structs/StreamExecResult.h"
 	"Public/Utils/Streams/Structs/StreamOptions.h"
 	"Public/Utils/Streams/Structs/BufStreamOptions.h"
 	"Public/Utils/Streams/Structs/FileStreamOptions.h"

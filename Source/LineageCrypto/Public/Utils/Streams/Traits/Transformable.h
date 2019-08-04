@@ -15,7 +15,6 @@ public:
 
 	}
 
-protected:
 	/** 
 	* Override this method for custom transform implementation.
 	* By default just returns the input stream passes to this method.

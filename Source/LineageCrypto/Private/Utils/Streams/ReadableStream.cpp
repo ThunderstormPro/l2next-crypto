@@ -7,7 +7,7 @@ ReadableStream::ReadableStream(const ReadableStream & _self)
 {
 }
 
-ReadableStream::ReadableStream(StreamOptions & options)
+ReadableStream::ReadableStream(StreamOptions& options)
 	: options(options)
 {
 }

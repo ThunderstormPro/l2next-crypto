@@ -26,6 +26,11 @@ macro(enqueue_external_dependency)
 	set(_INSTALL_DIR 	"${THIRD_PARTY_LIBS_PATH}/${LIBRARY_NAME}/install")
 	set(_LOG_DIR 		"${THIRD_PARTY_LIBS_PATH}/${LIBRARY_NAME}/logs")
 	
+	# Globals.
+	if(IS_DIRECTORY "${_INSTALL_DIR}/lib")
+		set(${LIBRARY_NAME}_LIB_PATH "${_INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME}")
+	endif()
+	
 	# Arguments.
 	list(APPEND _CMAKE_ARGS	
 		-DCMAKE_INSTALL_PREFIX=${_INSTALL_DIR}
@@ -81,21 +86,20 @@ macro(link_internal_dependency dependency_name)
 endmacro()
 
 # Links external dependency to required project.
-macro(link_external_dependency name)
-	# Try to load library configuration.
-	include("ThirdParty/${name}" REQUIRED)
-	
+macro(link_external_dependency dependency_name project_name)
 	# Get installation directory of the library.
-	ExternalProject_Get_property(${name} INSTALL_DIR)
+	ExternalProject_Get_property(${dependency_name} INSTALL_DIR)
 
 	# Add as a dependency to the project.
-	add_dependencies(${PROJECT_NAME} ${name})
+	if(DEFINED ${dependency_name}_LIB_PATH)
+		target_link_libraries(${project_name} PUBLIC ${${dependency_name}_LIB_PATH})
+		include_directories(${project_name} "${INSTALL_DIR}/include" "${INSTALL_DIR}/bin")
+	endif()
 	
-	# Lib path.
-	target_link_libraries(${PROJECT_NAME} PUBLIC "${INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME}")
+	add_dependencies(${project_name} ${dependency_name})
 	
 	# Include directories.
-	target_include_directories(${PROJECT_NAME} PUBLIC "${INSTALL_DIR}/include")
+	target_include_directories(${project_name} PUBLIC "${INSTALL_DIR}/include")
 endmacro()
 
 # Add source group.
@@ -135,30 +139,43 @@ macro(add_source_group group_name)
 endmacro()
 
 macro(add_resources output_path)
-	set(_PROJECT_RSRC_PATH "${PROJECT_RSRC_PATH}/${target}")
 	set(_PROJECT_BIN_PATH "${PROJECT_BIN_PATH}/${target}")
 	set(_RESOURCES ${ARGN})
 	set(_COMMANDS)
 	
-	# Add command to remove directory if exist.
-	list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E remove_directory 
-		${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
 	
-	# Add command to create directory for specified output path.
-	list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory 
-		${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
 	
-	# Add command to copy every file to binary folder.
-	foreach(path ${_RESOURCES})
-		list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E copy
-			${_PROJECT_RSRC_PATH}/${path} ${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
-	endforeach()
+	if(${output_path} STREQUAL "Root")
+
+		#list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E remove ${_RESOURCES})	
+
+		# Add command to copy every file to binary folder.
+		foreach(path ${_RESOURCES})
+			list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E copy
+				${path} ${_PROJECT_BIN_PATH}/$<CONFIG>)
+		endforeach()			
+	else()
+		# Add command to remove folder from binaries.
+		list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E remove_directory 
+			${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+	
+		# Add command to create directory for specified output path.
+		list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory 
+			${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+			
+		# Add command to copy every file to binary folder.
+		foreach(path ${_RESOURCES})
+			list(APPEND _COMMANDS COMMAND ${CMAKE_COMMAND} -E copy
+				${path} ${_PROJECT_BIN_PATH}/$<CONFIG>/${output_path})
+		endforeach()
+	endif()
+	
+	
 	
 	# Add commands.
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			   ${_COMMANDS})
 	
-	unset(_PROJECT_RSRC_PATH)
 	unset(_PROJECT_BIN_PATH)
 	unset(_RESOURCES)
 endmacro()

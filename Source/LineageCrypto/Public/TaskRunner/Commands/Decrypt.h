@@ -6,26 +6,31 @@
 #include <functional>
 #include <iterator>
 #include <memory>
-#include "Shared/Structs/LineageFileSchema.h"
+#include "Crypto/Crypto.h"
+#include "Utils/Streams/Factory/StreamFactory.h"
 #include "TaskRunner/Commands/BaseCommand.h"
 #include "Shared/Enums/CryptoCommands.h"
-#include "Crypto/Crypto.h"
+#include "Shared/Structs/LineageFileSchema.h"
+#include "Utils/Streams/Structs/BufStreamOptions.h"
+#include "Utils/Streams/Structs/FileStreamOptions.h"
 
 using namespace::std;
+using namespace::LineageCryptoStreams;
 
 namespace LineageCryptoCommands
 {
 	class CDecrypt: public BaseCommand
 	{
 	public:
-		CDecrypt(ifstream& inStream, ofstream& outStream);
+		CDecrypt(std::shared_ptr<StreamOptions> options);
 		~CDecrypt();
 
 		virtual bool Execute() override;
 		virtual void Release() override;
 	private:
-		char* decryptBuffer;
 		void ReadStream(ifstream& inStream);
+
+		std::shared_ptr<StreamOptions> _options;
 	};
 }
 

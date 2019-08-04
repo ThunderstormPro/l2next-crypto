@@ -6,20 +6,23 @@
 #include <algorithm>
 #include <unordered_set> 
 #include <iostream>
-#include "Base/AlgorithmBase.h"
-#include "41x/Ver41x.h"
+#include "Base/Algorithm.h"
+#include "41x/Versions/Ver411.h"
+#include "41x/Versions/Ver412.h"
+#include "41x/Versions/Ver413.h"
+#include "41x/Versions/Ver414.h"
 
 class AlgorithmRegistry
 {
 public:
 	struct AlgorithmHasher {
-		size_t operator()(const std::unique_ptr<AlgorithmBase>& ptr) const {
+		size_t operator()(const std::unique_ptr<Algorithm>& ptr) const {
 			return std::hash<int>()(ptr->GetVersion());
 		}
 	};
 
 	struct AlgorithmComparator {
-		bool operator()(const std::unique_ptr<AlgorithmBase>& ptr1, const std::unique_ptr<AlgorithmBase>& ptr2) const {
+		bool operator()(const std::unique_ptr<Algorithm>& ptr1, const std::unique_ptr<Algorithm>& ptr2) const {
 			return ptr1->GetVersion() == ptr2->GetVersion() ? true : false;
 		}
 	};
@@ -43,7 +46,7 @@ public:
 	 * @param AlgorithmBase& algorithm ref to pass the algorithm to.
 	 * @return bool was found or not.
 	 */
-	bool Get(const int& version, AlgorithmBase*& algorithm);
+	bool Get(const int& version, Algorithm*& algorithm);
 
 
 public:
@@ -57,7 +60,7 @@ public:
 
 private:
 	/* All supported crypt algorithms for Lineage2 files */
-	std::unordered_set<std::unique_ptr<AlgorithmBase>, AlgorithmHasher, AlgorithmComparator> algorithms;
+	std::unordered_set<std::unique_ptr<Algorithm>, AlgorithmHasher, AlgorithmComparator> algorithms;
 
 	template<class T>
 	void Add()
