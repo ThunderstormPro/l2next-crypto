@@ -13,7 +13,7 @@ std::shared_ptr<std::iostream> Ver41xDecDuplex::Transform(const std::shared_ptr<
 	const auto decrypted = std::make_shared<std::stringstream>();
 
 	RSAEncryptedBlock header(stream, params.modulus, params.exponent, BLOCK_SIZE);
-	decompressedSize = reinterpret_cast<unsigned int *>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
+	decompressedSize = reinterpret_cast<unsigned int*>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
 
 	result = std::make_shared<SDecryptResult>();
 

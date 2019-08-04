@@ -18,8 +18,6 @@ public:
 	virtual std::vector<int> GetRaw() = 0;
 
 protected:
-	static int ReverseBytes(int value);
-
 	std::vector<char> importBuffer;
 	std::vector<int> exportBuffer;
 	const std::shared_ptr<std::iostream>& stream;

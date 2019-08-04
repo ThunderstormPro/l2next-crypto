@@ -2,13 +2,8 @@
 #define H_LINEAGE_HEADER
 
 #include <string>
-#include <vector>
 #include <memory>
-#include <algorithm>
 #include <regex>
-#include <iostream>
-#include "Crypto/Algorithms/AlgorithmRegistry.h"
-#include "Crypto/Algorithms/Base/Algorithm.h"
 #include "Crypto/Enums/HeaderVersion.h"
 #include "Utils/Streams/Factory/StreamFactory.h"
 
@@ -28,7 +23,7 @@ public:
 	/**
 	 * Get header string.
 	 *
-	 * @param std::string& headerRef pass result header.
+	 * @param headerRef headerRef pass result header.
 	 * @return bool success status.
 	 */
 	bool GetHeader(std::string& headerRef) const;
@@ -36,7 +31,7 @@ public:
 	/** 
 	 * Get header version.
 	 *
-	 * @param int& versionRef pass supported version. Returns -1 if is not supported or could not be parsed.
+	 * @param versionRef pass supported version. Returns -1 if is not supported or could not be parsed.
 	 * @return bool success status.
 	 */
 	bool GetVersion(EHeaderVersion& versionRef);
@@ -44,7 +39,7 @@ public:
 	/**
 	 * Gets header string from buffer.
 	 *
-	 * @param const char*& buffer input buffer.
+	 * @param stream input stream to get header from.
 	 * @return string retrieved header.
 	 */
 	std::string ReadHeader(const std::shared_ptr<std::iostream>& stream) const;
@@ -52,10 +47,10 @@ public:
 	/**
 	 * Check if version has more then 3 digits and is supported by lib.
 	 *
-	 * @param int& version to check.
+	 * @param version version to check.
 	 * @return bool is supported or not.
 	 */
-	bool IsVersionSupported(const int& version);
+	static bool IsVersionSupported(const int& version);
 
 private:
 	std::string headerString;

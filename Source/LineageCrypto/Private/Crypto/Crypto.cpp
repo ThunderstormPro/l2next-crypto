@@ -2,6 +2,9 @@
 #include "Crypto/Algorithms/Base/Structs/DecryptResult.h"
 #include "Crypto/Validators/HeaderValidator/Structs/ValidationResult.h"
 #include "Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
+#include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
+#include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
 
 
 SLineageFileSchema Crypto::Decrypt(const std::shared_ptr<ReadableStream>& input, const std::shared_ptr<WritableStream>& output)
@@ -53,9 +56,4 @@ SLineageFileSchema Crypto::Encrypt(const char* inBuffer)
 	// TODO Not yet implemented.
 
 	return schema;
-}
-
-void Crypto::LogCurrentStep(std::string title, short step)
-{
-	std::cout << "" << title << " | step [" << step << "/" << maxSteps << "]" << std::endl;
 }

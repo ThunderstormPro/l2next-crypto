@@ -1,10 +1,7 @@
 #ifndef H_DUPLEX_STREAM
 #define H_DUPLEX_STREAM
 
-#include <iostream>
-#include <fstream>
 #include <memory>
-#include <streambuf>
 #include "WritableStream.h"
 #include "Traits/Transformable.h"
 #include "Traits/Pipable.h"

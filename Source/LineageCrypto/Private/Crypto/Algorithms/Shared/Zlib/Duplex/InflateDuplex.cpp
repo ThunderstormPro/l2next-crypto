@@ -1,4 +1,5 @@
 #include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+#include <zlib.h>
 
 std::shared_ptr<std::iostream> InflateDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
 {
@@ -7,7 +8,6 @@ std::shared_ptr<std::iostream> InflateDuplex::Transform(const std::shared_ptr<st
 
 	int status = 0;
 
-	// Reference : https://stackoverflow.com/questions/1374468/stringstream-string-and-char-conversion-confusion
 	const std::string& tmp = decrypted->str();
 	const char* nextAvailInBuff = tmp.c_str();
 
@@ -26,11 +26,13 @@ std::shared_ptr<std::iostream> InflateDuplex::Transform(const std::shared_ptr<st
 	status = inflate(&decompressedStream, Z_NO_FLUSH);
 	inflateEnd(&decompressedStream);
 
-	std::cout << "zlib decompression status: " << status << std::endl;
-
-	if (decompressedStream.msg)
+	if (status < 0)
 	{
-		std::cout << "zlib decompression report msg: " << decompressedStream.msg << std::endl;
+		schema.errorMsg = decompressedStream.msg;
+		Exec_OnInflateFailed(SZlibResult{ status, decompressedStream.msg });
+
+		Stop();
+		return nullptr;
 	}
 
 	decompressed->write(decompressedData.data(), decompressedData.size());
