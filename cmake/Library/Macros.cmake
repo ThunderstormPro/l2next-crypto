@@ -11,12 +11,8 @@
 # Utility function to add both shared & static library targets.
 macro(add_library_targets name sources)
 	# Set global name variables for internal use.
-	set(LIB_SHARED_NAME "${name}")
-	set(LIB_STATIC_NAME "${name}${LIB_STATIC_POSTFIX}")
+	set(LIB_NAME "${name}")
 
-	# Add shared library target.
-	add_library(${LIB_SHARED_NAME} SHARED ${sources})
-	
 	# Add static libary target.
-	add_library(${LIB_STATIC_NAME} STATIC ${sources})
+	add_library(${LIB_NAME} STATIC ${sources})
 endmacro()

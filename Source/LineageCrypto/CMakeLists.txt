@@ -20,5 +20,4 @@ include("ThirdParty/zlib" REQUIRED)
 add_library_targets(${PROJECT_NAME} "${LineageCrypto_SOURCES}")
 
 # Set library properties.
-set_shared_library_properties()
 set_static_library_properties()

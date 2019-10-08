@@ -20,10 +20,10 @@ add_executable(${PROJECT_NAME} WIN32 ${LineageCryptoApp_SOURCES})
 include(App/Resources)
 
 # Set test app properties.
-set_test_app_properties(LineageCrypto_Static)
+set_test_app_properties(LineageCrypto)
 
 # Add project dependencies.
-link_internal_dependency(LineageCrypto_Static)
+link_internal_dependency(LineageCrypto)
 
 # Link third party dependencies. 
 link_external_dependency(yaml ${PROJECT_NAME})

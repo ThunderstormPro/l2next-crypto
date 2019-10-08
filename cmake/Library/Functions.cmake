@@ -34,34 +34,19 @@ function(set_common_library_props target)
 	# Set binaries output path.
 	if (PROJECT_BIN_PATH)
 		set_target_properties(${target} PROPERTIES
-			ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_SHARED_NAME}"
-			LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_SHARED_NAME}"
-			RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_SHARED_NAME}"
+			ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_NAME}"
+			LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_NAME}"
+			RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BIN_PATH}/${LIB_NAME}"
 		)
 	endif()
 endfunction()
 
-# Set shared library properties.
-function(set_shared_library_properties)
-	check_library(${LIB_SHARED_NAME})
-	set_common_library_props(${LIB_SHARED_NAME})
-	
-	# Link third party dependencies. 
-	link_external_dependency(zlib ${LIB_SHARED_NAME})
-	link_external_dependency(mpir ${LIB_SHARED_NAME})
-	
-
-endfunction()
-
 # Set static library properties.
 function(set_static_library_properties)
-	check_library(${LIB_STATIC_NAME})
-	set_common_library_props(${LIB_STATIC_NAME})
+	check_library(${LIB_NAME})
+	set_common_library_props(${LIB_NAME})
 	
 	# Link third party dependencies. 
-	link_external_dependency(zlib ${LIB_STATIC_NAME})
-	link_external_dependency(mpir ${LIB_STATIC_NAME})
-	
-	# Build shared library first.
-	#add_dependencies(${LIB_STATIC_NAME} ${LIB_SHARED_NAME})
+	link_external_dependency(zlib ${LIB_NAME})
+	link_external_dependency(mpir ${LIB_NAME})
 endfunction()

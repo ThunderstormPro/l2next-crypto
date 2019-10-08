@@ -12,6 +12,3 @@ endif()
 #
 # Library variables.
 #
-
-# Static library postfix.
-set(LIB_STATIC_POSTFIX "_Static")
