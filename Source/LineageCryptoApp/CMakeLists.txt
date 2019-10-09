@@ -27,3 +27,10 @@ link_internal_dependency(LineageCrypto)
 
 # Link third party dependencies. 
 link_external_dependency(yaml ${PROJECT_NAME})
+
+install(TARGETS ${PROJECT_NAME}
+        CONFIGURATIONS Debug
+        RUNTIME DESTINATION Debug/bin)
+install(TARGETS ${PROJECT_NAME}
+        CONFIGURATIONS Release
+        RUNTIME DESTINATION Release/bin)
