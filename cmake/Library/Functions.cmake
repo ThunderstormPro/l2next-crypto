@@ -24,7 +24,10 @@ function(set_common_library_props target)
 	set_target_properties(${target} PROPERTIES LINKER_LANGUAGE CXX)
 	
 	# Includes.
-	target_include_directories(${target} PUBLIC Public)
+	target_include_directories(${target} PUBLIC 
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Public>  
+		$<INSTALL_INTERFACE:Public>
+	)
 	
 	# Compiler flags.
 	target_compile_options(${target} PRIVATE ${COMPILER_FLAGS_SHARED})

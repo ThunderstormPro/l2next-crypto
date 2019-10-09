@@ -57,6 +57,8 @@ include(Shared/Functions)
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(ExternalProject)
+include(CMakeDependentOption)
+include(GNUInstallDirs)
 
 # Prevent further solution generation if launched not on Windows OS
 if(NOT OS_WINDOWS)
@@ -67,6 +69,12 @@ endif()
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# Set dependent options.
+cmake_dependent_option(LINEGE_NEXT_CPP_INSTALL
+  "Enable generation of LineageNext install targets" ON
+  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR" OFF)
+
+
 # Add target projects to solution.
 message("\n-- Projects --\n")
 
@@ -74,4 +82,6 @@ message("\n-- Projects --\n")
 find_package(LineageCrypto REQUIRED)
 
 # Load test application package.
-find_package(LineageCryptoApp REQUIRED)
+if (NOT LINEGE_NEXT_CPP_INSTALL)
+	find_package(LineageCryptoApp REQUIRED)
+endif()
