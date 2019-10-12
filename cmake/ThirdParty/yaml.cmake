@@ -8,13 +8,13 @@
 set(LIBRARY_NAME yaml)
 
 # Set library URL.
-set(LIBRARY_URL https://github.com/jbeder/yaml-cpp/archive/master.zip)
+set(LIBRARY_URL https://github.com/jbeder/yaml-cpp/archive/yaml-cpp-0.6.3.zip)
 
 # Set library URL hash.
-set(LIBRARY_URL_HASH 974bdcd5bf916735d97311db525ef3e7)
+set(LIBRARY_URL_HASH 8da85c6d513cfd233ffe957c1da497dd)
 
 # Set custom CMake args.
-set(LIBRARY_CMAKE_ARGS -DYAML_CPP_BUILD_TESTS=OFF)
+set(LIBRARY_CMAKE_ARGS -DYAML_CPP_BUILD_TESTS=OFF -DYAML_BUILD_SHARED_LIBS=OFF)
 
 # Set library static name.
 set(LIBRARY_STATIC_NAME libyaml-cppmdd.lib)

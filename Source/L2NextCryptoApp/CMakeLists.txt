@@ -27,3 +27,8 @@ link_internal_dependency(L2NextCrypto)
 
 # Link third party dependencies. 
 link_external_dependency(yaml ${PROJECT_NAME})
+
+# Install export.
+if (L2NEXT_CPP_INSTALL)
+	export_install_configs()
+endif()

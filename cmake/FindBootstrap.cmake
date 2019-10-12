@@ -69,12 +69,6 @@ endif()
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Set dependent options.
-cmake_dependent_option(LINEGE_NEXT_CPP_INSTALL
-  "Enable generation of LineageNext install targets" ON
-  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR" OFF)
-
-
 # Add target projects to solution.
 message("\n-- Projects --\n")
 
@@ -82,6 +76,6 @@ message("\n-- Projects --\n")
 find_package(L2NextCrypto REQUIRED)
 
 # Load test application package.
-if (NOT LINEGE_NEXT_CPP_INSTALL)
-find_package(L2NextCryptoApp REQUIRED)
+if (BUILD_TEST_APP)
+	find_package(L2NextCryptoApp REQUIRED)
 endif()
