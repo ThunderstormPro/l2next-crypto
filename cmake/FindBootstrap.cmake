@@ -79,9 +79,9 @@ cmake_dependent_option(LINEGE_NEXT_CPP_INSTALL
 message("\n-- Projects --\n")
 
 # Load shared & static library package.
-find_package(LineageCrypto REQUIRED)
+find_package(L2NextCrypto REQUIRED)
 
 # Load test application package.
 if (NOT LINEGE_NEXT_CPP_INSTALL)
-	find_package(LineageCryptoApp REQUIRED)
+find_package(L2NextCryptoApp REQUIRED)
 endif()

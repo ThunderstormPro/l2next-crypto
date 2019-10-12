@@ -37,4 +37,4 @@ Below is the list of supported VS versions:
 # Building solution
 
 To perform a Windows build using a 32/64-bit:
-Open ./Build/LineageCrypto.sln in Visual Studio and select **Build > Build Solution**.
+Open ./Build/L2NextCrypto.sln in Visual Studio and select **Build > Build Solution**.
