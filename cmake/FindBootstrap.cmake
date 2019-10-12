@@ -71,7 +71,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 message("\n-- Projects --\n")
 
 # Load shared & static library package.
-find_package(LineageCrypto REQUIRED)
+find_package(L2NextCrypto REQUIRED)
 
 # Load test application package.
-find_package(LineageCryptoApp REQUIRED)
+find_package(L2NextCryptoApp REQUIRED)
