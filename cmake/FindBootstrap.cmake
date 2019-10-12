@@ -65,6 +65,14 @@ if(NOT OS_WINDOWS)
 	message(FATAL_ERROR "Only Windows OS is supported for solution generation at the moment.")
 endif()
 
+# Set options.
+option(BUILD_TEST_APP "Enable build of test application" OFF)
+
+cmake_dependent_option(L2NEXT_CPP_INSTALL
+  "Enable installation from other projects" ON
+  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR" OFF)
+
+
 # Use folders in the resulting project files.
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
