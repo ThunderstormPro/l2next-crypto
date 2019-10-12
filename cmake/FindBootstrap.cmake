@@ -57,6 +57,8 @@ include(Shared/Functions)
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(ExternalProject)
+include(CMakeDependentOption)
+include(GNUInstallDirs)
 
 # Prevent further solution generation if launched not on Windows OS
 if(NOT OS_WINDOWS)
@@ -74,4 +76,6 @@ message("\n-- Projects --\n")
 find_package(L2NextCrypto REQUIRED)
 
 # Load test application package.
-find_package(L2NextCryptoApp REQUIRED)
+if (BUILD_TEST_APP)
+	find_package(L2NextCryptoApp REQUIRED)
+endif()

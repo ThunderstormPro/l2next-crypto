@@ -22,9 +22,7 @@ add_library_targets(${PROJECT_NAME} "${L2NextCrypto_SOURCES}")
 # Set library properties.
 set_static_library_properties()
 
-install(TARGETS ${PROJECT_NAME}
-        CONFIGURATIONS Debug
-        RUNTIME DESTINATION Debug/bin)
-install(TARGETS ${PROJECT_NAME}
-        CONFIGURATIONS Release
-        RUNTIME DESTINATION Release/bin)
+# Install export.
+if (L2NEXT_CPP_INSTALL)
+	export_install_configs()
+endif()
