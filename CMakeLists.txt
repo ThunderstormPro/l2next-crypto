@@ -17,7 +17,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
 endif()
 
 # Project name.
-project(LineageCrypto)
+project(L2NextCrypto)
 
 # Only generate Debug and Release configuration types.
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -30,5 +30,5 @@ set(CMAKE_MODULE_PATH "${ROOT_PATH}/cmake")
 # Load configuration.
 #
 
-# Execute FindLineageCrypto.cmake which must exist in CMAKE_MODULE_PATH.
+# Execute FindL2NextCrypto.cmake which must exist in CMAKE_MODULE_PATH.
 find_package(Bootstrap REQUIRED)

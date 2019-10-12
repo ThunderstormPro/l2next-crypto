@@ -57,6 +57,8 @@ include(Shared/Functions)
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(ExternalProject)
+include(CMakeDependentOption)
+include(GNUInstallDirs)
 
 # Prevent further solution generation if launched not on Windows OS
 if(NOT OS_WINDOWS)
@@ -71,7 +73,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 message("\n-- Projects --\n")
 
 # Load shared & static library package.
-find_package(LineageCrypto REQUIRED)
+find_package(L2NextCrypto REQUIRED)
 
 # Load test application package.
-find_package(LineageCryptoApp REQUIRED)
+if (BUILD_TEST_APP)
+	find_package(L2NextCryptoApp REQUIRED)
+endif()

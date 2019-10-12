@@ -6,8 +6,8 @@
 
 # Index group.
 add_source_group(Source
-	"Public/LineageCryptoApp.h"
-	"Private/LineageCryptoApp.cpp"
+	"Public/L2NextCryptoApp.h"
+	"Private/L2NextCryptoApp.cpp"
 )
 
 # Config reader.

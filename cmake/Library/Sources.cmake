@@ -6,8 +6,8 @@
 
 # Index group.
 add_source_group(Source
-	"Public/LineageCrypto.h"
-	"Private/LineageCrypto.cpp"
+	"Public/L2NextCrypto.h"
+	"Private/L2NextCrypto.cpp"
 )
 
 # Task runner.
