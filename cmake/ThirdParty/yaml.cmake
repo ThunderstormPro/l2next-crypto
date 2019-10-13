@@ -14,10 +14,13 @@ set(LIBRARY_URL https://github.com/jbeder/yaml-cpp/archive/yaml-cpp-0.6.3.zip)
 set(LIBRARY_URL_HASH 8da85c6d513cfd233ffe957c1da497dd)
 
 # Set custom CMake args.
-set(LIBRARY_CMAKE_ARGS -DYAML_CPP_BUILD_TESTS=OFF -DYAML_BUILD_SHARED_LIBS=OFF)
+set(LIBRARY_CMAKE_ARGS -DYAML_CPP_BUILD_TESTS=OFF -DYAML_BUILD_SHARED_LIBS=OFF -DBUILD_SHARED_LIBS=OFF)
 
-# Set library static name.
-set(LIBRARY_STATIC_NAME libyaml-cppmdd.lib)
+# Debug lib.
+set(LIBRARY_STATIC_NAME_DEBUG libyaml-cppmdd.lib)
+
+# Release lib.
+set(LIBRARY_STATIC_NAME_RELEASE libyaml-cppmd.lib)
 
 # Enqueue to download, build & install.
 enqueue_external_dependency()

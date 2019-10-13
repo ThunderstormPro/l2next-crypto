@@ -27,8 +27,16 @@ macro(enqueue_external_dependency)
 	set(_LOG_DIR 		"${THIRD_PARTY_LIBS_PATH}/${LIBRARY_NAME}/logs")
 	
 	# Globals.
-	if(IS_DIRECTORY "${_INSTALL_DIR}/lib")
+	if(IS_DIRECTORY "${_INSTALL_DIR}/lib" AND DEFINED LIBRARY_STATIC_NAME)
 		set(${LIBRARY_NAME}_LIB_PATH "${_INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME}")
+	endif()
+	
+	if(IS_DIRECTORY "${_INSTALL_DIR}/lib" AND DEFINED LIBRARY_STATIC_NAME_DEBUG)
+		set(${LIBRARY_NAME}_LIB_PATH_DEBUG "${_INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME_DEBUG}")
+	endif()
+	
+	if(IS_DIRECTORY "${_INSTALL_DIR}/lib" AND DEFINED LIBRARY_STATIC_NAME_RELEASE)
+		set(${LIBRARY_NAME}_LIB_PATH_RELEASE "${_INSTALL_DIR}/lib/${LIBRARY_STATIC_NAME_RELEASE}")
 	endif()
 	
 	# Arguments.
@@ -89,17 +97,31 @@ endmacro()
 macro(link_external_dependency dependency_name project_name)
 	# Get installation directory of the library.
 	ExternalProject_Get_property(${dependency_name} INSTALL_DIR)
+	
+	# Set lib paths.
+	set(LIB_PATH ${${dependency_name}_LIB_PATH})
+	set(LIB_DEBUG_PATH ${${dependency_name}_LIB_PATH_DEBUG})
+	set(LIB_RELEASE_PATH ${${dependency_name}_LIB_PATH_RELEASE})
 
+	include_directories(${project_name}
+		"${INSTALL_DIR}/include"
+		"${INSTALL_DIR}/bin"
+		"${INSTALL_DIR}/lib")
+	
 	# Add as a dependency to the project.
-	if(DEFINED ${dependency_name}_LIB_PATH)
-		target_link_libraries(${project_name} PUBLIC ${${dependency_name}_LIB_PATH})
-		include_directories(${project_name} "${INSTALL_DIR}/include" "${INSTALL_DIR}/bin")
+	if(DEFINED LIB_PATH)
+		target_link_libraries(${project_name} PUBLIC ${LIB_PATH})
+	endif()
+
+	if(DEFINED LIB_DEBUG_PATH)
+		target_link_libraries(${project_name} PUBLIC $<$<CONFIG:Debug>:${LIB_DEBUG_PATH}>)
+	endif()
+	
+	if(DEFINED LIB_RELEASE_PATH)
+		target_link_libraries(${project_name} PUBLIC $<$<CONFIG:Release>:${LIB_RELEASE_PATH}>)
 	endif()
 	
 	add_dependencies(${project_name} ${dependency_name})
-	
-	# Include directories.
-	target_include_directories(${project_name} PUBLIC "${INSTALL_DIR}/include")
 endmacro()
 
 # Add source group.
