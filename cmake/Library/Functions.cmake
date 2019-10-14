@@ -51,5 +51,4 @@ function(set_static_library_properties)
 	
 	# Link third party dependencies. 
 	link_external_dependency(zlib ${LIB_NAME})
-	#link_external_dependency(mpir ${LIB_NAME})
 endfunction()

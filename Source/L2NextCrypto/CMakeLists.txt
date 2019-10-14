@@ -10,9 +10,6 @@ project(${PROJECT_NAME} VERSION 1.0.0)
 # Add sources.
 include(Library/Sources)
 
-# Enqueue mpir for download.
-#include("ThirdParty/mpir" REQUIRED)
-
 # Enqueue zlib for download.
 include("ThirdParty/zlib" REQUIRED)
 
