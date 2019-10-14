@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <vector>
-#include <gmp.h>
+#include "Libs/mini-gmp.h"
+
 
 class RSABlock
 {

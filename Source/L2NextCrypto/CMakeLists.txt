@@ -11,7 +11,7 @@ project(${PROJECT_NAME} VERSION 1.0.0)
 include(Library/Sources)
 
 # Enqueue mpir for download.
-include("ThirdParty/mpir" REQUIRED)
+#include("ThirdParty/mpir" REQUIRED)
 
 # Enqueue zlib for download.
 include("ThirdParty/zlib" REQUIRED)

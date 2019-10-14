@@ -2,7 +2,7 @@
 
 void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream) const
 {
-	if (pipe != nullptr && bIsStreaming)
+	if (stream && pipe != nullptr && bIsStreaming)
 	{
 		pipe->Exec(stream);
 	}

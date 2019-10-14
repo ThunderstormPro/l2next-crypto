@@ -10,6 +10,12 @@ add_source_group(Source
 	"Private/L2NextCrypto.cpp"
 )
 
+# Pre-compiled libs.
+add_source_group(Libs
+	"Public/Libs/mini-gmp.h"
+	"Private/Libs/mini-gmp.c"
+)
+
 # Task runner.
 add_source_group(Source.TaskRunner
 	"Public/TaskRunner/TaskRunner.h"
