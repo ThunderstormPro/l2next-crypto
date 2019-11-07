@@ -3,13 +3,14 @@
 
 #include <memory>
 #include <vector>
+#include <sstream>
 #include "RsaBlock.h"
 
 
 class RSAEncryptedBlock : public RSABlock
 {
 public:
-	RSAEncryptedBlock(const std::shared_ptr<std::iostream>& stream, std::vector<unsigned char> mod, unsigned long exp, size_t bufferSize);
+	RSAEncryptedBlock(std::stringstream&, std::vector<unsigned char> mod, unsigned long exp, size_t bufferSize);
 
 	~RSAEncryptedBlock();
 

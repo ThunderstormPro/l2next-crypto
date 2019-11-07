@@ -7,7 +7,36 @@ Ver41xDecDuplex::Ver41xDecDuplex(Ver41xParams& params)
 {
 }
 
+std::stringstream& Ver41xDecDuplex::Transform(std::stringstream& input)
+{
+	SAlgorithmResult result;
+	RSAEncryptedBlock header(input, params.modulus, params.exponent, BLOCK_SIZE);
+	decompressedSize = reinterpret_cast<unsigned int*>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
 
+	if (decompressedSize <= 0)
+	{
+		return input;
+	}
+
+	current.write(&(header.GetBuffer())[(header.GetBlockStartPosition() + 4)], header.GetBlockSize() - 4);
+
+	while (!input.eof())
+	{
+		RSAEncryptedBlock block(input, params.modulus, params.exponent, BLOCK_SIZE);
+
+		if (block.GetBlockSize() > BLOCK_SIZE)
+		{
+			break;
+		}
+
+		current.write(&(block.GetBuffer())[block.GetBlockStartPosition()], block.GetBlockSize());
+	}
+
+	//result.fileSize = decompressedSize;
+
+	return current;
+}
+/*
 std::shared_ptr<std::iostream> Ver41xDecDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
 {
 	const auto decrypted = std::make_shared<std::stringstream>();
@@ -46,3 +75,4 @@ std::shared_ptr<std::iostream> Ver41xDecDuplex::Transform(const std::shared_ptr<
 
 	return decrypted;
 }
+*/

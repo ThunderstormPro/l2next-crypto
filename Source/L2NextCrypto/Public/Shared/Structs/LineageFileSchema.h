@@ -13,8 +13,8 @@ struct SLineageFileSchema
 	ECryptType type;
 	std::string header;
 	EHeaderVersion version;
-	size_t fileSize;
 	std::string errorMsg;
+	size_t fileSize;
 
 	SLineageFileSchema()
 	{

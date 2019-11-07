@@ -8,25 +8,14 @@
 #include "Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
 #include "Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
 
+#define CHUNK 16384
+
 using namespace::L2NextCryptoStreams;
 
-class InflateDuplex 
-	: public DuplexStream
-	, public CryptoEvents::OnInflatePassed
-	, public CryptoEvents::OnInflateFailed
+class InflateDuplex: public DuplexStream
 {
 public:
-
-	InflateDuplex(SLineageFileSchema& schema)
-		: schema(schema)
-	{
-		
-	}
-
-	std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final;
-
-private:
-	SLineageFileSchema& schema;
+	std::stringstream& Transform(std::stringstream& input);
 };
 
 #endif // H_INFLATE_DUPLEX

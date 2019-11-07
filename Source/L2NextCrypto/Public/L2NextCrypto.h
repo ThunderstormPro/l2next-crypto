@@ -1,47 +1,156 @@
 #ifndef H_LINEAGE_CRYPTO
 #define H_LINEAGE_CRYPTO
 
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
-#include <memory>
-#include <functional>
-#include "TaskRunner/TaskRunner.h"
-#include "TaskRunner/Commands/BaseCommand.h"
+#include <algorithm>
+#include <iterator>
+#include <sstream>
+#include <ostream>
+#include <fstream>
+#include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
+#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
+#include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+#include "Utils/Streams/InputStream.h"
+#include "Utils/Streams/OutputStream.h"
+#include "Utils/Streams/DuplexStream.h"
+#include "Crypto/Enums/HeaderVersion.h"
+#include "Crypto/Enums/CryptType.h"
+#include <iostream>
 
-// Public export
-#include "TaskRunner/Commands/Encrypt.h"
-#include "TaskRunner/Commands/Decrypt.h"
-#include "Shared/Structs/LineageFileSchema.h"
-#include "Utils/Streams/Factory/StreamFactory.h"
-
+using namespace L2NextCryptoStreams;
 using namespace::std;
+
+enum class EDecryptStatus
+{
+	SUCCESS,
+	INVALID_HEADER,
+	OPERATION_FAILED,
+	VERSION_NOT_SUPPORTED,
+	NONE
+};
+
+enum class EEncryptStatus
+{
+	SUCCESS,
+	INVALID_FILE,
+	OPERATION_FAILED,
+	NONE
+};
+
+struct SFileData {
+	std::string contents;
+
+	SFileData()
+		: contents("") {}
+
+	void operator = (const SFileData& fd) {
+		contents = fd.contents;
+	};
+
+	SFileData(const std::string contents) 
+		: contents(contents) {}
+
+	const char* GetData() {
+		return contents.c_str();
+	}
+
+	const size_t GetSize() {
+		return contents.size();
+	}
+};
+
+struct SDecryptResult 
+{
+	int version;
+	SFileData content;
+};
+
+struct SEncryptResult
+{
+	EEncryptStatus status;
+	std::string data;
+
+	SEncryptResult()
+		: data("")
+		, status(EEncryptStatus::NONE) {}
+};
+
+class L2NextCryptoUtils
+{
+public:
+	static SFileData ReadFromFile(std::string filepath) {
+		std::ifstream file(filepath, std::ios::in | std::ios::binary);
+
+		if (file)
+		{
+			std::string contents;
+			file.seekg(0, std::ios::end);
+			contents.resize(file.tellg());
+			file.seekg(0, std::ios::beg);
+			file.read(&contents[0], contents.size());
+			file.close();
+			return SFileData(contents);
+		}
+		throw(errno);
+
+		return SFileData("");
+	}
+
+	static bool WriteToFile(std::string filepath, const char* data, const int size) {
+
+		std::ofstream file(filepath, std::ios::out | std::ios::binary);
+
+		if (file)
+		{
+			file.write(data, size);
+			file.close();
+			return true;
+		}
+		throw(errno);
+
+		return true;
+	}
+};
 
 class L2NextCrypto
 {
 public:
-	static void Enqueue(unique_ptr<BaseCommand>& cmnd);
-	// API 
-	// Methods.
-	template<class T, class A1>
-	static unique_ptr<BaseCommand> Create(A1 a1) {
-		return make_unique<T>(a1);
-	};
+	static SDecryptResult Decrypt(const char* encrypted, const int size)
+	{
+		SDecryptResult result;
 
-	template<class T, class A1, class A2>
-	static unique_ptr<BaseCommand> Create(A1& a1, A2& a2) {
-		return make_unique<T>(a1, a2);
-	};
-	static void ExecuteAll();
-	static void ReleaseAll();
+		// Streams.
+		InputStream input(encrypted, size);
+		HeaderValidatorDuplex validator;
+		AlgorithmDuplex algorithm(ECryptType::DEC);
+		InflateDuplex inflator;
+		OutputStream output;
 
-	// Delegates.
-	static void OnPassed(const function<void(L2Command&)> callback);
-	static void OnFailed(const function<void(L2Command&)> callback);
-	
-public:
-	~L2NextCrypto() {};
+		validator.Bind_OnValidationPassed([&](const SValidationResult& res) {
+			result.version = res.version;
+			algorithm.SetVersion(res.version);
+		});
+
+		validator.Bind_OnValidationFailed([&](const SValidationResult& res) {
+			if (res.version == INVALID) {
+				throw EDecryptStatus::INVALID_HEADER;
+			} else if (res.version == NOT_IMPL) {
+				throw EDecryptStatus::VERSION_NOT_SUPPORTED;
+			}
+		});
+
+		input >> validator >> algorithm >> inflator >> output;
+
+		result.content = SFileData(output.GetData());
+
+		return result;
+	}
+
+	static SEncryptResult Encrypt(std::string decrypted)
+	{
+		return SEncryptResult();
+	}
 };
 
 #endif

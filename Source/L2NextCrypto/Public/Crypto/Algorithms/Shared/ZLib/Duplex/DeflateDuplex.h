@@ -8,7 +8,8 @@ using namespace::L2NextCryptoStreams;
 
 class DeflateDuplex : public DuplexStream
 {
-
+public:
+	std::stringstream& Transform(std::stringstream& input);
 	
 };
 

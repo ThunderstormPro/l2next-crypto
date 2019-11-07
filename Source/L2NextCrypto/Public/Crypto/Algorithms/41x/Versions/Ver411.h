@@ -37,8 +37,8 @@ public:
 		exponent = 0x1d;
 
 		duplex = {
-			StreamFactory::Make<Ver41xEncDuplex>(*this),
-			StreamFactory::Make<Ver41xDecDuplex>(*this)
+			std::make_shared<Ver41xEncDuplex>(*this),
+			std::make_shared<Ver41xDecDuplex>(*this)
 		};
 	}
 };

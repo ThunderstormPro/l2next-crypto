@@ -3,12 +3,12 @@
 
 #include "Utils/Streams/Structs/StreamExecResult.h"
 
-struct SDecryptResult : SStreamExecResult
+struct SAlgorithmResult : SStreamExecResult
 {
 	int blocks = 0;
 	size_t fileSize = 0;
 
-	~SDecryptResult() = default;
+	~SAlgorithmResult() = default;
 };
 
 

@@ -6,7 +6,7 @@
 namespace CryptoEvents
 {
 	class OnDecryptPassed
-		: public EventTemplate<SDecryptResult>
+		: public EventTemplate<SAlgorithmResult>
 	{
 
 	public:
@@ -15,7 +15,7 @@ namespace CryptoEvents
 			Add(func);
 		}
 
-		virtual void Exec_OnDecryptPassed(const SDecryptResult& result)
+		virtual void Exec_OnDecryptPassed(const SAlgorithmResult& result)
 		{
 			Call(result);
 		}

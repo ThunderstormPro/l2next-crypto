@@ -2,8 +2,8 @@
 #define H_ALGORITHM
 
 #include <memory>
+#include "Utils/Streams/DuplexStream.h"
 #include "Crypto/Enums/HeaderVersion.h"
-#include "Utils/Streams/Factory/StreamFactory.h"
 
 using namespace::L2NextCryptoStreams;
 

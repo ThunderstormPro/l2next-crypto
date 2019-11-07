@@ -16,38 +16,6 @@ add_source_group(Libs
 	"Private/Libs/mini-gmp.c"
 )
 
-# Task runner.
-add_source_group(Source.TaskRunner
-	"Public/TaskRunner/TaskRunner.h"
-	"Private/TaskRunner/TaskRunner.cpp"
-)
-
-add_source_group(Source.TaskRunner.Tasks
-	"Public/TaskRunner/Tasks/BaseTask.h"
-	"Private/TaskRunner/Tasks/BaseTask.cpp"
-	"Public/TaskRunner/Tasks/AsyncTask.h"
-	"Private/TaskRunner/Tasks/AsyncTask.cpp"
-)
-
-add_source_group(Source.TaskRunner.Commands
-	"Public/TaskRunner/Commands/BaseCommand.h"
-	"Private/TaskRunner/Commands/BaseCommand.cpp"
-	"Public/TaskRunner/Commands/Encrypt.h"
-	"Private/TaskRunner/Commands/Encrypt.cpp"
-	"Public/TaskRunner/Commands/Decrypt.h"
-	"Private/TaskRunner/Commands/Decrypt.cpp"
-)
-
-add_source_group(Source.TaskRunner.Interfaces
-	"Public/TaskRunner/Interfaces/Task.h"
-)
-
-# Crypto.
-add_source_group(Source.Crypto
-	"Public/Crypto/Crypto.h"
-	"Private/Crypto/Crypto.cpp"
-)
-
 # Crypto validators.
 add_source_group(Source.Crypto.Validators.HeaderValidator
 	"Public/Crypto/Validators/HeaderValidator/HeaderValidator.h"
@@ -165,10 +133,10 @@ add_source_group(Source.Shared.Templates
 
 # BufferedStream.
 add_source_group(Source.Utils.Streams
-	"Public/Utils/Streams/ReadableStream.h"
-	"Private/Utils/Streams/ReadableStream.cpp"
-	"Public/Utils/Streams/WritableStream.h"
-	"Private/Utils/Streams/WritableStream.cpp"
+	"Public/Utils/Streams/InputStream.h"
+	"Private/Utils/Streams/InputStream.cpp"
+	"Public/Utils/Streams/OutputStream.h"
+	"Private/Utils/Streams/OutputStream.cpp"
 	"Public/Utils/Streams/DuplexStream.h"
 	"Private/Utils/Streams/DuplexStream.cpp"
 )
@@ -179,12 +147,6 @@ add_source_group(Source.Utils.Streams.Events
 	"Private/Utils/Streams/Events/OnData.cpp"
 	"Public/Utils/Streams/Events/OnEnd.h"
 	"Private/Utils/Streams/Events/OnEnd.cpp"
-)
-
-# Event factory.
-add_source_group(Source.Utils.Streams.Factory
-	"Public/Utils/Streams/Factory/StreamFactory.h"
-	"Private/Utils/Streams/Factory/StreamFactory.cpp"
 )
 
 # Stream traits.

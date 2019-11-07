@@ -4,7 +4,6 @@
 #include "L2NextCryptoApp.h"
 
 using namespace L2NextCryptoStreams;
-using namespace L2NextCryptoCommands;
 
 unique_ptr<L2NextCryptoApp> L2NextCryptoApp::getRef()
 {
@@ -74,74 +73,24 @@ int main()
 	{
 		for (ConfigPaths cp : config->Decrypt)
 		{
-			const auto options = StreamFactory::Options(SFileStreamOptions{ cp.src, cp.out });
-			auto command = L2NextCrypto::Create<CDecrypt>(options);
-			L2NextCrypto::Enqueue(command);
+			try
+			{
+				auto encrypted = L2NextCryptoUtils::ReadFromFile(cp.src);
+				auto decrypted = L2NextCrypto::Decrypt(encrypted.GetData(), encrypted.GetSize()).content;
+				L2NextCryptoUtils::WriteToFile(cp.out, decrypted.GetData(), decrypted.GetSize());
+			}
+			catch (int e)
+			{
+				cout << e << std::endl;
+			}
 		}
 	}
-
-	// Encrypt task.
-	if (!config->Encrypt.empty())
-	{
-		for (ConfigPaths cp : config->Encrypt)
-		{
-			ifstream inStream(cp.src, ios::binary);
-			ofstream outStream(cp.out, ofstream::binary);
-
-			auto command = L2NextCrypto::Create<CEncrypt>(
-				inStream,
-				outStream
-			);
-
-			L2NextCrypto::Enqueue(command);
-		}
-	}
-
-	L2NextCrypto::OnPassed([&](L2Command& command) -> void {
-		const auto result = command.GetResult<SLineageFileSchema>();
-
-		// TODO Cleanup
-		switch (command.GetId())
-		{
-			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command passed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
-				cout << "# Version : " << result.version << "\n";
-				break;
-			case ECryptoCommands::DECRYPT:
-				cout << "\nTask for DECRYPT command passed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
-				cout << "# Version : " << result.version << "\n";
-				cout << "# Output file size : " << result.fileSize << "\n";
-				break;
-		}
-	});
-
-	L2NextCrypto::OnFailed([&](L2Command& command) -> void {
-		const auto result = command.GetResult<SLineageFileSchema>();
-
-		switch (command.GetId())
-		{
-			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command failed." << "\n";
-				cout << "# Version  : " << result.version << "\n";
-				cout << "# Error   : " << result.errorMsg << "\n";
-				break;
-			case ECryptoCommands::DECRYPT:
-				cout << "\nTask for DECRYPT command failed." << "\n";
-				cout << "# Version  : " << result.version << "\n";
-				cout << "# Error   : " << result.errorMsg << "\n";
-				break;
-		}
-	});
-
-	L2NextCrypto::ExecuteAll();
 
 	// Await user input.
 	app->awaitClosing();
 	
 	// Cleanup.
-	L2NextCrypto::ReleaseAll();
+	//L2NextCrypto::ReleaseAll();
 	config.reset();
 	app.reset();
 
