@@ -8,16 +8,6 @@ void TStreamable::Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> st
 	}
 }
 
-std::shared_ptr<SStreamExecResult> TStreamable::GetExecResult() const
-{
-	return execResult;
-}
-
-void TStreamable::SetExecResult(const std::shared_ptr<SStreamExecResult>& result)
-{
-	execResult = result;
-}
-
 void TStreamable::Start()
 {
 	if (!bIsStreaming)

@@ -33,10 +33,8 @@ public:
 	void Stop();
 
 	void Propagate(TStreamable* pipe, std::shared_ptr<std::iostream> stream) const;
-	std::shared_ptr<SStreamExecResult> TStreamable::GetExecResult() const;
 protected:
 	virtual void Exec(std::shared_ptr<std::iostream> stream) = 0;
-	virtual void SetExecResult(const std::shared_ptr<SStreamExecResult>& result);
 	
 	std::shared_ptr<std::iostream> nextStream;
 	/**

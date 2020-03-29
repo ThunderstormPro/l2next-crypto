@@ -117,10 +117,6 @@ add_source_group(Source.Crypto.Algorithms.41x.Shared
 )
 
 # Common.
-add_source_group(Source.Shared.Structs
-	"Public/Shared/Structs/LineageFileSchema.h"
-)
-
 add_source_group(Source.Shared.Enums
 	"Public/Shared/Enums/CryptoCommands.h"
 )

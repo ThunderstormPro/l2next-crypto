@@ -38,6 +38,9 @@ function(set_test_app_properties)
 	# Includes.
 	target_include_directories(${PROJECT_NAME} PUBLIC Public)
 	
+	# Link third party dependencies. 
+	link_external_dependency(yaml ${PROJECT_NAME})
+	
 	# Set executable linker flags.
 	if(EXE_LINKER_FLAGS)
 		string(REPLACE ";" " " _LINK_FLAGS "${EXE_LINKER_FLAGS}")

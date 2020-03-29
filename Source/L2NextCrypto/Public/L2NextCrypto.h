@@ -60,7 +60,7 @@ struct SFileData {
 	}
 };
 
-struct SDecryptResult 
+struct SDecryptResult
 {
 	int version;
 	SFileData content;
@@ -116,41 +116,8 @@ public:
 class L2NextCrypto
 {
 public:
-	static SDecryptResult Decrypt(const char* encrypted, const int size)
-	{
-		SDecryptResult result;
-
-		// Streams.
-		InputStream input(encrypted, size);
-		HeaderValidatorDuplex validator;
-		AlgorithmDuplex algorithm(ECryptType::DEC);
-		InflateDuplex inflator;
-		OutputStream output;
-
-		validator.Bind_OnValidationPassed([&](const SValidationResult& res) {
-			result.version = res.version;
-			algorithm.SetVersion(res.version);
-		});
-
-		validator.Bind_OnValidationFailed([&](const SValidationResult& res) {
-			if (res.version == INVALID) {
-				throw EDecryptStatus::INVALID_HEADER;
-			} else if (res.version == NOT_IMPL) {
-				throw EDecryptStatus::VERSION_NOT_SUPPORTED;
-			}
-		});
-
-		input >> validator >> algorithm >> inflator >> output;
-
-		result.content = SFileData(output.GetData());
-
-		return result;
-	}
-
-	static SEncryptResult Encrypt(std::string decrypted)
-	{
-		return SEncryptResult();
-	}
+	static SDecryptResult Decrypt(const char* encrypted, const int size);
+	static SEncryptResult Encrypt(std::string decrypted);
 };
 
 #endif

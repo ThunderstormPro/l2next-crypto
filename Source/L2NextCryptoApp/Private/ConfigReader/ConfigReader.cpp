@@ -44,7 +44,7 @@ unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(const string& path)
 		cout << "-- File with the given path was not find.\n";
 		cout << MSG_ERROR_LOAD_CONFIG + e.msg + "\n";
 
-		return nullptr;
+		return nullptr; 
 	}
 	catch (const ParserException e)
 	{

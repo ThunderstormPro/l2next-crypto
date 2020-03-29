@@ -19,9 +19,6 @@ public:
 	virtual std::stringstream& Transform(std::stringstream& input) override final;
 private:
 	Ver41xParams params;
-	int decompressedSize = 0;
-	/*int decompressedSize = 0;
-	std::shared_ptr<SAlgorithmResult> result;*/
 };
 
 #endif // H_VER41XDEC
