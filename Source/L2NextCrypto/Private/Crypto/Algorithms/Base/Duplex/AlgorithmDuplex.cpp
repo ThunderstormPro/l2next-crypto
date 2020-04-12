@@ -17,7 +17,7 @@ std::stringstream& AlgorithmDuplex::Transform(std::stringstream& stream)
 
 	if (!AlgorithmRegistry::GetInstance().Get(version, algorithm))
 	{
-		Exec_OnDecryptFailed(SAlgorithmResult());
+		Exec_OnDecryptFailed(version);
 		return stream;
 	}
 

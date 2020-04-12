@@ -21,26 +21,23 @@
 using namespace L2NextCryptoStreams;
 using namespace::std;
 
-enum class EDecryptStatus
+enum class EDecryptErrorStatus
 {
-	SUCCESS,
-	INVALID_HEADER,
-	OPERATION_FAILED,
 	VERSION_NOT_SUPPORTED,
+	INVALID_HEADER,
+	INFLATE_FAILED,
 	NONE
 };
 
-enum class EEncryptStatus
+enum class EEncryptErrorStatus
 {
-	SUCCESS,
-	INVALID_FILE,
-	OPERATION_FAILED,
+	VERSION_NOT_SUPPORTED,
+	INVALID_HEADER,
+	DEFLATE_FAILED,
 	NONE
 };
 
 struct SFileData {
-	std::string contents;
-
 	SFileData()
 		: contents("") {}
 
@@ -58,6 +55,9 @@ struct SFileData {
 	const size_t GetSize() {
 		return contents.size();
 	}
+
+private:
+	std::string contents;
 };
 
 struct SDecryptResult
@@ -68,12 +68,8 @@ struct SDecryptResult
 
 struct SEncryptResult
 {
-	EEncryptStatus status;
-	std::string data;
-
-	SEncryptResult()
-		: data("")
-		, status(EEncryptStatus::NONE) {}
+	int version;
+	SFileData content;
 };
 
 class L2NextCryptoUtils
@@ -97,14 +93,17 @@ public:
 		return SFileData("");
 	}
 
-	static bool WriteToFile(std::string filepath, const char* data, const int size) {
+	static bool WriteToFile(std::string filepath, SDecryptResult decryptedResult) {
 
 		std::ofstream file(filepath, std::ios::out | std::ios::binary);
 
 		if (file)
 		{
-			file.write(data, size);
+			SFileData content = decryptedResult.content;
+
+			file.write(content.GetData(), content.GetSize());
 			file.close();
+
 			return true;
 		}
 		throw(errno);
@@ -116,8 +115,8 @@ public:
 class L2NextCrypto
 {
 public:
-	static SDecryptResult Decrypt(const char* encrypted, const int size);
-	static SEncryptResult Encrypt(std::string decrypted);
+	static SDecryptResult Decrypt(SFileData encrypted);
+	static SEncryptResult Encrypt(SFileData decrypted);
 };
 
 #endif

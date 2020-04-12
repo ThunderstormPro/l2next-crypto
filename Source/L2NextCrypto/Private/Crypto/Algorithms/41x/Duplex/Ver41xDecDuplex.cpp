@@ -9,11 +9,10 @@ Ver41xDecDuplex::Ver41xDecDuplex(Ver41xParams& params)
 
 std::stringstream& Ver41xDecDuplex::Transform(std::stringstream& input)
 {
-	SAlgorithmResult result;
 	RSAEncryptedBlock header(input, params.modulus, params.exponent, BLOCK_SIZE);
-	int decompressedSize = reinterpret_cast<unsigned int*>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
+	int predefinedDecSize = reinterpret_cast<unsigned int*>(&(header.GetBuffer())[header.GetBlockStartPosition()])[0];
 
-	if (decompressedSize <= 0)
+	if (predefinedDecSize <= 0)
 	{
 		return input;
 	}

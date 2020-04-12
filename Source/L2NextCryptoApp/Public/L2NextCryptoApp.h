@@ -14,8 +14,6 @@
 
 #include "ConfigReader/ConfigReader.h"
 
-using namespace std;
-
 class L2NextCryptoApp
 {
 public:
@@ -23,6 +21,7 @@ public:
 	static unique_ptr<L2NextCryptoApp> getRef();
 
 	void PrintIntro();
+	void PrintDecryptResult(std::string path, EDecryptErrorStatus error);
 	void ReadCustomConfigPath();
 
 	// TODO Extract to utils

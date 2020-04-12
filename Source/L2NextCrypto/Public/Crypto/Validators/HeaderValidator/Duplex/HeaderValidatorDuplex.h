@@ -3,7 +3,6 @@
 
 #include <memory>
 #include "Utils/Streams/DuplexStream.h"
-#include "Shared/Structs/LineageFileSchema.h"
 #include "Crypto/Validators/HeaderValidator/HeaderValidator.h"
 #include "Crypto/Validators/HeaderValidator/Events/OnValidationPassed.h"
 #include "Crypto/Validators/HeaderValidator/Events/OnValidationFailed.h"

@@ -65,11 +65,6 @@ add_source_group(Source.Crypto.Algorithms.Base.Duplex
 # Base events.
 add_source_group(Source.Crypto.Algorithms.Base.Events
 	"Public/Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
-	"Public/Crypto/Algorithms/Base/Events/OnDecryptPassed.h"
-)
-
-add_source_group(Source.Crypto.Algorithms.Base.Structs
-	"Public/Crypto/Algorithms/Base/Structs/DecryptResult.h"
 )
 	
 # Shared.
@@ -81,12 +76,7 @@ add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Duplex
 )
 
 add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Events
-	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
-	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
-)
-
-add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Structs
-	"Public/Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/OnInflateFailed.h"
 )
 
 add_source_group(Source.Crypto.Algorithms.Shared.Rsa
@@ -117,10 +107,6 @@ add_source_group(Source.Crypto.Algorithms.41x.Shared
 )
 
 # Common.
-add_source_group(Source.Shared.Enums
-	"Public/Shared/Enums/CryptoCommands.h"
-)
-
 add_source_group(Source.Shared.Templates
 	"Public/Shared/Templates/EventTemplate.h"
 )

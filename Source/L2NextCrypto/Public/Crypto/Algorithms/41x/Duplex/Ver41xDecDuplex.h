@@ -2,7 +2,6 @@
 #define H_VER41XDEC
 
 #include "Crypto/Algorithms/41x/Shared/Ver41xParams.h"
-#include "Crypto/Algorithms/Base/Structs/DecryptResult.h"
 #include "Utils/Streams/DuplexStream.h"
 
 #define BLOCK_SIZE 128
