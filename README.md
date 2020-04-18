@@ -7,21 +7,29 @@ The below requirements must be met to build this library.
 
 * Windows 7 or newer OS
 * CMake version 3.1
-* Visual Studio 2010 or newer. Visual Studio 2015 Update 3 and Windows 10 64-bit are recommended.
+* Visual Studio 2010 or newer. Visual Studio 2019 and Windows 10 64-bit are recommended.
  
 # Generating solution
 
 To generate Visual Studio solution the following command must be executed in
 bash from the project root directory:
 
+Ex.
+
 * For Windows x32
 ```bash
- cmake -B Build -G "Visual Studio 15"
+ cmake -B Build -G "Visual Studio 16 2019" -A x32
 ```
 
 - For Windows x64
 ```bash
  cmake -B Build -G "Visual Studio 15 Win64"
+```
+
+Additional argument can be provided to enable/disable building of test application.
+
+```bash
+ cmake -B Build -G "Visual Studio 15 Win64" -DBUILD_TEST_APP=on
 ```
 
  (!) Please note that the version of the IDE must match with the version of
@@ -33,6 +41,7 @@ Below is the list of supported VS versions:
 * Visual Studio 12 (2013)
 * Visual Studio 14 (2015)
 * Visual Studio 15 (2017)
+* Visual Studio 16 (2019)
 
 # Building solution
 
