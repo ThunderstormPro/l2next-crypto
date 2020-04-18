@@ -133,33 +133,3 @@ add_source_group(Source.Utils.Streams
 	"Public/Utils/Streams/DuplexStream.h"
 	"Private/Utils/Streams/DuplexStream.cpp"
 )
-
-# Events.
-add_source_group(Source.Utils.Streams.Events
-	"Public/Utils/Streams/Events/OnData.h"
-	"Private/Utils/Streams/Events/OnData.cpp"
-	"Public/Utils/Streams/Events/OnEnd.h"
-	"Private/Utils/Streams/Events/OnEnd.cpp"
-)
-
-# Stream traits.
-add_source_group(Source.Utils.Streams.Traits
-	"Public/Utils/Streams/Traits/Readable.h"
-	"Private/Utils/Streams/Traits/Readable.cpp"
-	"Public/Utils/Streams/Traits/Transformable.h"
-	"Private/Utils/Streams/Traits/Transformable.cpp"
-	"Public/Utils/Streams/Traits/Writable.h"
-	"Private/Utils/Streams/Traits/Writable.cpp"
-	"Public/Utils/Streams/Traits/Pipable.h"
-	"Private/Utils/Streams/Traits/Pipable.cpp"
-	"Public/Utils/Streams/Traits/Streamable.h"
-	"Private/Utils/Streams/Traits/Streamable.cpp"
-)
-
-# Structs.
-add_source_group(Source.Utils.Streams.Structs
-	"Public/Utils/Streams/Structs/StreamExecResult.h"
-	"Public/Utils/Streams/Structs/StreamOptions.h"
-	"Public/Utils/Streams/Structs/BufStreamOptions.h"
-	"Public/Utils/Streams/Structs/FileStreamOptions.h"
-)
