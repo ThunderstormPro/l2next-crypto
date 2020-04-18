@@ -2,14 +2,10 @@
 #include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
 #include "Crypto/Enums/HeaderVersion.h"
 
-
-HeaderValidatorDuplex::HeaderValidatorDuplex(SLineageFileSchema& schema): schema(schema)
+std::stringstream& HeaderValidatorDuplex::Transform(std::stringstream& stream)
 {
-}
-
-bool HeaderValidatorDuplex::ValidateHeader(const std::shared_ptr<std::iostream>& stream)
-{
-	string header;
+	std::string header;
+	std::string errorMsg;
 	EHeaderVersion version;
 
 	auto validator = HeaderValidator(stream);
@@ -19,33 +15,16 @@ bool HeaderValidatorDuplex::ValidateHeader(const std::shared_ptr<std::iostream>&
 
 	if (!bIsValidHeader)
 	{
-		schema.version = static_cast<EHeaderVersion>(version);
-		schema.errorMsg = "Invalid Lineage2 header signature.";
-
-		Exec_OnValidationFailed(SValidationResult{schema.version, schema.errorMsg});
+		errorMsg = "Invalid Lineage2 header signature.";
+		Exec_OnValidationFailed(SValidationResult{ version, errorMsg });
 	}
 	else if (!bIsValidVersion)
 	{
-		schema.version = static_cast<EHeaderVersion>(version);
-		schema.errorMsg = "This Lineage2 header version is not supported yet.";
-
-		Exec_OnValidationFailed(SValidationResult{schema.version, schema.errorMsg});
+		errorMsg = "Invalid or unsupported Lineage2 header version.";
+		Exec_OnValidationFailed(SValidationResult{ version, errorMsg });
 	}
 
-	schema.version = static_cast<EHeaderVersion>(version);
-	schema.header = header;
-
-	Exec_OnValidationPassed(SValidationResult{schema.version});
-
-	return bIsValidHeader && bIsValidVersion;
-}
-
-std::shared_ptr<std::iostream> HeaderValidatorDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
-{
-	if (!ValidateHeader(stream))
-	{
-		Stop();
-	}
+	Exec_OnValidationPassed(SValidationResult{ version });
 
 	return stream;
 }

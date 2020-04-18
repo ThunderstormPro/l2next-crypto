@@ -1,12 +1,11 @@
 #ifndef H_ON_DECRYPT_FAILED
 #define H_ON_DECRYPT_FAILED
 #include "Shared/Templates/EventTemplate.h"
-#include "Crypto/Algorithms/Base/Structs/DecryptResult.h"
 
 namespace CryptoEvents
 {
 	class OnDecryptFailed
-		: public EventTemplate<SDecryptResult>
+		: public EventTemplate<int>
 	{
 
 	public:
@@ -15,7 +14,7 @@ namespace CryptoEvents
 			Add(func);
 		}
 
-		virtual void Exec_OnDecryptFailed(SDecryptResult result)
+		virtual void Exec_OnDecryptFailed(int& result)
 		{
 			Call(result);
 		}

@@ -2,12 +2,11 @@
 #define H_ON_INFLATE_FAILED
 
 #include "Shared/Templates/EventTemplate.h"
-#include "Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
 
 namespace CryptoEvents
 {
 	class OnInflateFailed
-		: public EventTemplate<SZlibResult>
+		: public EventTemplate<int>
 	{
 	public:
 		virtual void Bind_OnInflateFailed(const Functor& func)
@@ -15,9 +14,9 @@ namespace CryptoEvents
 			Add(func);
 		}
 
-		virtual void Exec_OnInflateFailed(const SZlibResult& result)
+		virtual void Exec_OnInflateFailed(const int& errorCode)
 		{
-			Call(result);
+			Call(errorCode);
 		}
 	};
 }

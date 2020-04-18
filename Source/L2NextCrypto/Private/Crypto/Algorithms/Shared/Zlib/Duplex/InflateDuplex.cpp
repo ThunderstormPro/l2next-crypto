@@ -1,40 +1,65 @@
 #include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
 #include <zlib.h>
+#include <assert.h>
 
-std::shared_ptr<std::iostream> InflateDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
+std::stringstream& InflateDuplex::Transform(std::stringstream& input)
 {
-	const auto decrypted = static_pointer_cast<std::stringstream>(stream);
-	const auto decompressed = std::make_shared<std::stringstream>();
+	int returnCode;
+	unsigned int currentBlockSize = 0;
+	z_stream strm;
 
-	int status = 0;
+	strm.zalloc = Z_NULL;
+	strm.zfree = Z_NULL;
+	strm.opaque = Z_NULL;
+	returnCode = inflateInit(&strm);
 
-	const std::string& tmp = decrypted->str();
-	const char* nextAvailInBuff = tmp.c_str();
-
-	std::vector<char> decompressedData(schema.fileSize);
-
-	z_stream decompressedStream;
-	decompressedStream.zalloc = Z_NULL;
-	decompressedStream.zfree = Z_NULL;
-	decompressedStream.opaque = Z_NULL;
-	decompressedStream.avail_in = (uInt)decrypted->str().size();
-	decompressedStream.next_in = (Bytef*)nextAvailInBuff;
-	decompressedStream.avail_out = (uInt)decompressedData.size();
-	decompressedStream.next_out = (Bytef*)decompressedData.data();
-
-	inflateInit(&decompressedStream);
-	status = inflate(&decompressedStream, Z_NO_FLUSH);
-	inflateEnd(&decompressedStream);
-
-	if (status < 0)
+	if (returnCode != Z_OK)
 	{
-		schema.errorMsg = decompressedStream.msg;
-		Exec_OnInflateFailed(SZlibResult{ status, decompressedStream.msg });
-
-		Stop();
-		return nullptr;
+		Exec_OnInflateFailed(returnCode);
 	}
+	
+	do {
+		input.read(in.data(), CHUNK);
 
-	decompressed->write(decompressedData.data(), decompressedData.size());
-	return decompressed;
+		strm.avail_in = input.gcount();
+
+		if (input.bad()) {
+			(void)inflateEnd(&strm);
+			Exec_OnInflateFailed(Z_ERRNO);
+		}
+
+		if (strm.avail_in == 0)
+			break;
+
+		strm.next_in = (Bytef*)in.data();
+
+		do {
+			strm.avail_out = CHUNK;
+			strm.next_out = (Bytef*)out.data();
+			returnCode = inflate(&strm, Z_NO_FLUSH);
+
+			assert(returnCode != Z_STREAM_ERROR);
+
+			switch (returnCode) {
+			case Z_NEED_DICT:
+				returnCode = Z_DATA_ERROR;
+			case Z_DATA_ERROR:
+			case Z_MEM_ERROR:
+				(void)inflateEnd(&strm);
+				Exec_OnInflateFailed(returnCode);
+			}
+
+			currentBlockSize = CHUNK - strm.avail_out;
+			current.write(out.data(), currentBlockSize);
+
+			if (current.bad()) {
+				(void)inflateEnd(&strm);
+				Exec_OnInflateFailed(Z_ERRNO);
+			}
+
+		} while (strm.avail_out == 0);
+	} while (returnCode != Z_STREAM_END);
+	
+	(void)inflateEnd(&strm);
+	return current;
 }

@@ -22,11 +22,11 @@ include(App/Resources)
 # Set test app properties.
 set_test_app_properties(L2NextCrypto)
 
-# Add project dependencies.
-link_internal_dependency(L2NextCrypto)
-
 # Link third party dependencies. 
 link_external_dependency(yaml ${PROJECT_NAME})
+
+# Add project dependencies.
+link_internal_dependency(L2NextCrypto)
 
 # Install export.
 if (L2NEXT_CPP_INSTALL)

@@ -2,24 +2,29 @@
 #define H_DUPLEX_STREAM
 
 #include <memory>
-#include "WritableStream.h"
-#include "Traits/Transformable.h"
-#include "Traits/Pipable.h"
+#include <sstream>
 
 namespace L2NextCryptoStreams
 {
 	class DuplexStream
-		: public TTransformable
-		, public TPipable<DuplexStream, WritableStream>
 	{
-	public:
-		using PipableTypes = TPipable<DuplexStream, WritableStream>;
+		public:
+			DuplexStream()
+			{}
 
-		DuplexStream();
-		DuplexStream(const DuplexStream& _self);
-		~DuplexStream();
+			virtual std::stringstream& Transform(std::stringstream& input)
+			{
+				return input;
+			};
 
-		void Exec(std::shared_ptr<std::iostream> stream) override;
+			DuplexStream& operator >> (DuplexStream& pipe)
+			{
+				pipe.next << pipe.Transform(next).rdbuf();
+				return pipe;
+			}
+
+			std::stringstream current;
+			std::stringstream next;
 	};
 }
 

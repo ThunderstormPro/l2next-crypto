@@ -4,7 +4,7 @@
 #include "L2NextCryptoApp.h"
 
 using namespace L2NextCryptoStreams;
-using namespace L2NextCryptoCommands;
+
 
 unique_ptr<L2NextCryptoApp> L2NextCryptoApp::getRef()
 {
@@ -20,48 +20,64 @@ void L2NextCryptoApp::PrintIntro()
 	cout << "# Enter custom yaml config path, to skip just press ENTER:\n";
 }
 
-string L2NextCryptoApp::GetCurrentWorkingDirectory()
-{
-	char* Filename = new char[MAX_PATH];
-	GetModuleFileNameA(NULL, Filename, MAX_PATH);
+void L2NextCryptoApp::PrintDecryptResult(std::string path, EDecryptErrorStatus error) {
 
-	char* LastDirectorySeparator = strrchr(Filename, '\\');
-	*LastDirectorySeparator = '\0';
+	const std::string filename = path.substr(path.find_last_of("/\\") + 1);
 
-	return string(Filename);
+	if (error == EDecryptErrorStatus::NONE) {
+		cout << "-------------------------------------------------------------" << std::endl;
+		cout << "File decryption succeeded: " << filename << std::endl;
+		cout << "-------------------------------------------------------------" << std::endl;
+
+		return;
+	}
+
+	cout << "-------------------------------------------------------------" << std::endl;
+	cout << "File decryption failed:" << filename << std::endl;
+
+	switch (error)
+	{
+	case EDecryptErrorStatus::INVALID_HEADER:
+		cout << "Reason: Input file has invalid header" << std::endl;
+		break;
+	case EDecryptErrorStatus::VERSION_NOT_SUPPORTED:
+		cout << "Reason: Input file with this version is not supported" << std::endl;
+		break;
+	case EDecryptErrorStatus::INFLATE_FAILED:
+		cout << "Reason: zlib inflate operation failed" << std::endl;
+		break;
+	}
+
+	cout << "-------------------------------------------------------------" << std::endl;
 }
+
 
 string L2NextCryptoApp::GetConfigPath()
 {
-	return customYamlConfig.empty() 
-		? GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
-		: GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
+	return customYamlConfig.empty()
+		? Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
+		: Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
 }
 
 void L2NextCryptoApp::ReadCustomConfigPath()
 {
-	// Read custom config path.
 	getline(cin, customYamlConfig);
 }
 
 void L2NextCryptoApp::awaitClosing()
 {
 	cout << "Press any key to exit program.";
-	string awaitClosing = "";
-	getline(cin, awaitClosing);
+	std::string await = "";
+	getline(cin, await);
 }
 
 int main()
 {
 	auto app = L2NextCryptoApp::getRef();
 
-	// Print intro.
 	app->PrintIntro();
-
-	// Wait for user input.
 	app->ReadCustomConfigPath();
 
-	// Try to load yaml config file.
 	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
 	if (config == nullptr)
@@ -69,92 +85,28 @@ int main()
 		return 0;
 	}
 
-	// Decrypt task.
 	if (!config->Decrypt.empty())
 	{
 		for (ConfigPaths cp : config->Decrypt)
 		{
-			const auto options = StreamFactory::Options(SFileStreamOptions{ cp.src, cp.out });
-			auto command = L2NextCrypto::Create<CDecrypt>(options);
-			L2NextCrypto::Enqueue(command);
+			try
+			{
+				auto encrypted = Utils::FileHelper::ReadFromFile(cp.src);
+				auto decrypted = L2NextCrypto::Decrypt(encrypted);
+				Utils::FileHelper::WriteToFile(cp.out, decrypted);
+
+				app->PrintDecryptResult(cp.src, EDecryptErrorStatus::NONE);
+			}
+			catch (EDecryptErrorStatus error)
+			{
+				app->PrintDecryptResult(cp.src, error);
+			}
 		}
 	}
 
-	// Encrypt task.
-	if (!config->Encrypt.empty())
-	{
-		for (ConfigPaths cp : config->Encrypt)
-		{
-			ifstream inStream(cp.src, ios::binary);
-			ofstream outStream(cp.out, ofstream::binary);
-
-			auto command = L2NextCrypto::Create<CEncrypt>(
-				inStream,
-				outStream
-			);
-
-			L2NextCrypto::Enqueue(command);
-		}
-	}
-
-	L2NextCrypto::OnPassed([&](L2Command& command) -> void {
-		const auto result = command.GetResult<SLineageFileSchema>();
-
-		// TODO Cleanup
-		switch (command.GetId())
-		{
-			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command passed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
-				cout << "# Version : " << result.version << "\n";
-				break;
-			case ECryptoCommands::DECRYPT:
-				cout << "\nTask for DECRYPT command passed." << "\n";
-				cout << "# Header  : " << result.header << "\n";
-				cout << "# Version : " << result.version << "\n";
-				cout << "# Output file size : " << result.fileSize << "\n";
-				break;
-		}
-	});
-
-	L2NextCrypto::OnFailed([&](L2Command& command) -> void {
-		const auto result = command.GetResult<SLineageFileSchema>();
-
-		switch (command.GetId())
-		{
-			case ECryptoCommands::ENCRYPT:
-				cout << "Task for ENCRYPT command failed." << "\n";
-				cout << "# Version  : " << result.version << "\n";
-				cout << "# Error   : " << result.errorMsg << "\n";
-				break;
-			case ECryptoCommands::DECRYPT:
-				cout << "\nTask for DECRYPT command failed." << "\n";
-				cout << "# Version  : " << result.version << "\n";
-				cout << "# Error   : " << result.errorMsg << "\n";
-				break;
-		}
-	});
-
-	L2NextCrypto::ExecuteAll();
-
-	// Await user input.
 	app->awaitClosing();
-	
-	// Cleanup.
-	L2NextCrypto::ReleaseAll();
 	config.reset();
 	app.reset();
 
 	return 1;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

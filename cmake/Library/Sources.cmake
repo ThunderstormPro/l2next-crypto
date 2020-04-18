@@ -16,38 +16,6 @@ add_source_group(Libs
 	"Private/Libs/mini-gmp.c"
 )
 
-# Task runner.
-add_source_group(Source.TaskRunner
-	"Public/TaskRunner/TaskRunner.h"
-	"Private/TaskRunner/TaskRunner.cpp"
-)
-
-add_source_group(Source.TaskRunner.Tasks
-	"Public/TaskRunner/Tasks/BaseTask.h"
-	"Private/TaskRunner/Tasks/BaseTask.cpp"
-	"Public/TaskRunner/Tasks/AsyncTask.h"
-	"Private/TaskRunner/Tasks/AsyncTask.cpp"
-)
-
-add_source_group(Source.TaskRunner.Commands
-	"Public/TaskRunner/Commands/BaseCommand.h"
-	"Private/TaskRunner/Commands/BaseCommand.cpp"
-	"Public/TaskRunner/Commands/Encrypt.h"
-	"Private/TaskRunner/Commands/Encrypt.cpp"
-	"Public/TaskRunner/Commands/Decrypt.h"
-	"Private/TaskRunner/Commands/Decrypt.cpp"
-)
-
-add_source_group(Source.TaskRunner.Interfaces
-	"Public/TaskRunner/Interfaces/Task.h"
-)
-
-# Crypto.
-add_source_group(Source.Crypto
-	"Public/Crypto/Crypto.h"
-	"Private/Crypto/Crypto.cpp"
-)
-
 # Crypto validators.
 add_source_group(Source.Crypto.Validators.HeaderValidator
 	"Public/Crypto/Validators/HeaderValidator/HeaderValidator.h"
@@ -69,11 +37,18 @@ add_source_group(Source.Crypto.Validators.HeaderValidator.Structs
 	"Public/Crypto/Validators/HeaderValidator/Structs/ValidationResult.h"
 )
 
-
 # Crypto enums.
 add_source_group(Source.Crypto.Enums
 	"Public/Crypto/Enums/CryptType.h"
 	"Public/Crypto/Enums/HeaderVersion.h"
+	"Public/Crypto/Enums/DecryptErrorStatus.h"
+	"Public/Crypto/Enums/EncryptErrorStatus.h"
+)
+
+# Crypto structs.
+add_source_group(Source.Crypto.Structs
+	"Public/Crypto/Structs/DecryptResult.h"
+	"Public/Crypto/Structs/EncryptResult.h"
 )
 
 # Crypto algorithms.
@@ -97,11 +72,6 @@ add_source_group(Source.Crypto.Algorithms.Base.Duplex
 # Base events.
 add_source_group(Source.Crypto.Algorithms.Base.Events
 	"Public/Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
-	"Public/Crypto/Algorithms/Base/Events/OnDecryptPassed.h"
-)
-
-add_source_group(Source.Crypto.Algorithms.Base.Structs
-	"Public/Crypto/Algorithms/Base/Structs/DecryptResult.h"
 )
 	
 # Shared.
@@ -113,12 +83,7 @@ add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Duplex
 )
 
 add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Events
-	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
-	"Public/Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
-)
-
-add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Structs
-	"Public/Crypto/Algorithms/Shared/ZLib/Structs/zlibResult.h"
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/OnInflateFailed.h"
 )
 
 add_source_group(Source.Crypto.Algorithms.Shared.Rsa
@@ -148,63 +113,23 @@ add_source_group(Source.Crypto.Algorithms.41x.Shared
 	"Public/Crypto/Algorithms/41x/Shared/Ver41xParams.h"
 )
 
-# Common.
-add_source_group(Source.Shared.Structs
-	"Public/Shared/Structs/LineageFileSchema.h"
-)
-
-add_source_group(Source.Shared.Enums
-	"Public/Shared/Enums/CryptoCommands.h"
-)
-
+# Shared.
 add_source_group(Source.Shared.Templates
 	"Public/Shared/Templates/EventTemplate.h"
+)
+
+add_source_group(Source.Shared.Structs
+	"Public/Shared/Structs/FileData.h"
 )
 
 # Utils.
 
 # BufferedStream.
 add_source_group(Source.Utils.Streams
-	"Public/Utils/Streams/ReadableStream.h"
-	"Private/Utils/Streams/ReadableStream.cpp"
-	"Public/Utils/Streams/WritableStream.h"
-	"Private/Utils/Streams/WritableStream.cpp"
+	"Public/Utils/Streams/InputStream.h"
+	"Private/Utils/Streams/InputStream.cpp"
+	"Public/Utils/Streams/OutputStream.h"
+	"Private/Utils/Streams/OutputStream.cpp"
 	"Public/Utils/Streams/DuplexStream.h"
 	"Private/Utils/Streams/DuplexStream.cpp"
-)
-
-# Events.
-add_source_group(Source.Utils.Streams.Events
-	"Public/Utils/Streams/Events/OnData.h"
-	"Private/Utils/Streams/Events/OnData.cpp"
-	"Public/Utils/Streams/Events/OnEnd.h"
-	"Private/Utils/Streams/Events/OnEnd.cpp"
-)
-
-# Event factory.
-add_source_group(Source.Utils.Streams.Factory
-	"Public/Utils/Streams/Factory/StreamFactory.h"
-	"Private/Utils/Streams/Factory/StreamFactory.cpp"
-)
-
-# Stream traits.
-add_source_group(Source.Utils.Streams.Traits
-	"Public/Utils/Streams/Traits/Readable.h"
-	"Private/Utils/Streams/Traits/Readable.cpp"
-	"Public/Utils/Streams/Traits/Transformable.h"
-	"Private/Utils/Streams/Traits/Transformable.cpp"
-	"Public/Utils/Streams/Traits/Writable.h"
-	"Private/Utils/Streams/Traits/Writable.cpp"
-	"Public/Utils/Streams/Traits/Pipable.h"
-	"Private/Utils/Streams/Traits/Pipable.cpp"
-	"Public/Utils/Streams/Traits/Streamable.h"
-	"Private/Utils/Streams/Traits/Streamable.cpp"
-)
-
-# Structs.
-add_source_group(Source.Utils.Streams.Structs
-	"Public/Utils/Streams/Structs/StreamExecResult.h"
-	"Public/Utils/Streams/Structs/StreamOptions.h"
-	"Public/Utils/Streams/Structs/BufStreamOptions.h"
-	"Public/Utils/Streams/Structs/FileStreamOptions.h"
 )

@@ -1,47 +1,35 @@
 #ifndef H_LINEAGE_CRYPTO
 #define H_LINEAGE_CRYPTO
 
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
-#include <memory>
-#include <functional>
-#include "TaskRunner/TaskRunner.h"
-#include "TaskRunner/Commands/BaseCommand.h"
+#include <algorithm>
+#include <iterator>
+#include <sstream>
+#include <ostream>
+#include <fstream>
+#include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
+#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
+#include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
+#include "Utils/Streams/InputStream.h"
+#include "Utils/Streams/OutputStream.h"
+#include "Utils/Streams/DuplexStream.h"
+#include "Crypto/Enums/HeaderVersion.h"
+#include "Crypto/Enums/CryptType.h"
+#include "Crypto/Enums/DecryptErrorStatus.h"
+#include "Crypto/Enums/EncryptErrorStatus.h"
+#include "Crypto/Structs/DecryptResult.h"
+#include "Crypto/Structs/EncryptResult.h"
+#include "Shared/Structs/FileData.h"
+#include <iostream>
 
-// Public export
-#include "TaskRunner/Commands/Encrypt.h"
-#include "TaskRunner/Commands/Decrypt.h"
-#include "Shared/Structs/LineageFileSchema.h"
-#include "Utils/Streams/Factory/StreamFactory.h"
-
-using namespace::std;
+using namespace L2NextCryptoStreams;
 
 class L2NextCrypto
 {
 public:
-	static void Enqueue(unique_ptr<BaseCommand>& cmnd);
-	// API 
-	// Methods.
-	template<class T, class A1>
-	static unique_ptr<BaseCommand> Create(A1 a1) {
-		return make_unique<T>(a1);
-	};
-
-	template<class T, class A1, class A2>
-	static unique_ptr<BaseCommand> Create(A1& a1, A2& a2) {
-		return make_unique<T>(a1, a2);
-	};
-	static void ExecuteAll();
-	static void ReleaseAll();
-
-	// Delegates.
-	static void OnPassed(const function<void(L2Command&)> callback);
-	static void OnFailed(const function<void(L2Command&)> callback);
-	
-public:
-	~L2NextCrypto() {};
+	static SDecryptResult Decrypt(SFileData encrypted);
+	static SEncryptResult Encrypt(SFileData decrypted);
 };
 
 #endif

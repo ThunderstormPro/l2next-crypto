@@ -3,30 +3,24 @@
 
 #include <memory>
 
-#include "Shared/Structs/LineageFileSchema.h"
 #include "Utils/Streams/DuplexStream.h"
-#include "Crypto/Algorithms/Shared/ZLib/Events/InflatePassed.h"
-#include "Crypto/Algorithms/Shared/ZLib/Events/InflateFailed.h"
+#include "Crypto/Algorithms/Shared/ZLib/Events/OnInflateFailed.h"
+
+constexpr unsigned int CHUNK = 16384;
 
 using namespace::L2NextCryptoStreams;
+using namespace::CryptoEvents;
 
-class InflateDuplex 
+class InflateDuplex
 	: public DuplexStream
-	, public CryptoEvents::OnInflatePassed
-	, public CryptoEvents::OnInflateFailed
+	, public OnInflateFailed
 {
 public:
-
-	InflateDuplex(SLineageFileSchema& schema)
-		: schema(schema)
-	{
-		
-	}
-
-	std::shared_ptr<std::iostream> Transform(const std::shared_ptr<std::iostream>& stream) final;
+	std::stringstream& Transform(std::stringstream& input);
 
 private:
-	SLineageFileSchema& schema;
+	std::vector<char> in = std::vector<char>(CHUNK);
+	std::vector<char> out = std::vector<char>(CHUNK);
 };
 
 #endif // H_INFLATE_DUPLEX

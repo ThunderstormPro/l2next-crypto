@@ -1,49 +1,34 @@
 #include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
 #include "Crypto/Algorithms/AlgorithmRegistry.h"
 
-std::shared_ptr<std::iostream> AlgorithmDuplex::Transform(const std::shared_ptr<std::iostream>& stream)
+void AlgorithmDuplex::SetVersion(const int ver)
+{
+	version = ver;
+}
+
+std::stringstream& AlgorithmDuplex::Transform(std::stringstream& stream)
 {
 	Algorithm* algorithm = nullptr;
 
-	if (!schema.version)
+	if (!version)
 	{
-		throw std::runtime_error("Required schema param: \"version\" is not passed to this duplex.");
+		throw std::runtime_error("Required param: \"version\" is not passed to this duplex.");
 	}
 
-	if (!AlgorithmRegistry::GetInstance().Get(schema.version, algorithm))
+	if (!AlgorithmRegistry::GetInstance().Get(version, algorithm))
 	{
-		schema.errorMsg = "Supported algorithm for this version could not be found.";
-		Stop();
-		return nullptr;
+		Exec_OnDecryptFailed(version);
+		return stream;
 	}
 
-	switch (schema.type)
+	switch (type)
 	{
-		case ECryptType::DEC:
-			{
-				// TODO revise this, use schema.
-				const auto transformed = algorithm->GetDuplex().decrypt->Transform(stream);
-				auto result = static_pointer_cast<SDecryptResult>(algorithm->GetDuplex().decrypt->GetExecResult());
-
-				if (result->fileSize <= 0)
-				{
-					Exec_OnDecryptFailed(*result.get());
-					return nullptr;
-				}
-
-				if (result)
-				{
-					schema.fileSize = result->fileSize;
-					Exec_OnDecryptPassed(*result.get());
-				}
-
-				return transformed;
-			}
-		case ECryptType::ENC:
-			// TODO Impl.
-			return algorithm->GetDuplex().encrypt->Transform(stream);
-		default:
-			std::cout << "No explicit crypt type was provided." << std::endl;
-			return nullptr;
+	case ECryptType::DEC:
+	{
+		auto duplex = algorithm->GetDuplex().decrypt;
+		return duplex->Transform(stream);
+	}
+	default:
+		return stream;
 	}
 }

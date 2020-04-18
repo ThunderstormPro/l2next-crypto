@@ -5,7 +5,6 @@
 #include <memory>
 #include <regex>
 #include "Crypto/Enums/HeaderVersion.h"
-#include "Utils/Streams/Factory/StreamFactory.h"
 
 const char NULL_TERMINATOR_CHR = '\0';
 const char LINEAGE_HEADER_SIZE = 28;
@@ -18,7 +17,7 @@ class HeaderValidator
 {
 
 public:
-	HeaderValidator(const std::shared_ptr<std::iostream>& stream);
+	HeaderValidator(std::stringstream& stream);
 
 	/**
 	 * Get header string.
@@ -42,7 +41,7 @@ public:
 	 * @param stream input stream to get header from.
 	 * @return string retrieved header.
 	 */
-	std::string ReadHeader(const std::shared_ptr<std::iostream>& stream) const;
+	std::string ReadHeader(std::stringstream& stream) const;
 
 	/**
 	 * Check if version has more then 3 digits and is supported by lib.

@@ -1,7 +1,7 @@
 ﻿#include "Crypto/Validators/HeaderValidator/HeaderValidator.h"
 #include "Crypto/Algorithms/AlgorithmRegistry.h"
 
-HeaderValidator::HeaderValidator(const std::shared_ptr<std::iostream>& stream)
+HeaderValidator::HeaderValidator(std::stringstream& stream)
 {
 	headerString = ReadHeader(stream);
 }
@@ -48,11 +48,11 @@ bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 	}
 }
 
-std::string HeaderValidator::ReadHeader(const std::shared_ptr<std::iostream>& stream) const
+std::string HeaderValidator::ReadHeader(std::stringstream& stream) const
 {
 	// Read stream to get the header.
 	std::vector<char> header(LINEAGE_HEADER_SIZE, 0);
-	stream->read(header.data(), header.size());
+	stream.read(header.data(), header.size());
 
 	// Transform it to plain string.
 	std::string headerStr(header.data(), header.size());
