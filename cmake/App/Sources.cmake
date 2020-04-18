@@ -24,6 +24,12 @@ add_source_group(Source.ConfigReader.Struct
 	"Private/ConfigReader/Struct/ConfigPaths.cpp"
 )
 
+# Utils.
+add_source_group(Source.Utils
+	"Public/Utils/FileHelper.h"
+	"Private/Utils/FileHelper.cpp"
+)
+
 add_source_group(Source.PrecompiledHeaders
 	"Public/pch.h"
 	"Private/pch.cpp"

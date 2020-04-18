@@ -5,6 +5,7 @@
 
 using namespace L2NextCryptoStreams;
 
+
 unique_ptr<L2NextCryptoApp> L2NextCryptoApp::getRef()
 {
 	return make_unique<L2NextCryptoApp>();
@@ -36,36 +37,26 @@ void L2NextCryptoApp::PrintDecryptResult(std::string path, EDecryptErrorStatus e
 
 	switch (error)
 	{
-		case EDecryptErrorStatus::INVALID_HEADER:
-			cout << "Reason: Input file has invalid header" << std::endl;
-			break;
-		case EDecryptErrorStatus::VERSION_NOT_SUPPORTED:
-			cout << "Reason: Input file with this version is not supported" << std::endl;
-			break;
-		case EDecryptErrorStatus::INFLATE_FAILED:
-			cout << "Reason: zlib inflate operation failed" << std::endl;
-			break;
+	case EDecryptErrorStatus::INVALID_HEADER:
+		cout << "Reason: Input file has invalid header" << std::endl;
+		break;
+	case EDecryptErrorStatus::VERSION_NOT_SUPPORTED:
+		cout << "Reason: Input file with this version is not supported" << std::endl;
+		break;
+	case EDecryptErrorStatus::INFLATE_FAILED:
+		cout << "Reason: zlib inflate operation failed" << std::endl;
+		break;
 	}
 
 	cout << "-------------------------------------------------------------" << std::endl;
 }
 
-string L2NextCryptoApp::GetCurrentWorkingDirectory()
-{
-	char* Filename = new char[MAX_PATH];
-	GetModuleFileNameA(NULL, Filename, MAX_PATH);
-
-	char* LastDirectorySeparator = strrchr(Filename, '\\');
-	*LastDirectorySeparator = '\0';
-
-	return string(Filename);
-}
 
 string L2NextCryptoApp::GetConfigPath()
 {
-	return customYamlConfig.empty() 
-		? GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
-		: GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
+	return customYamlConfig.empty()
+		? Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
+		: Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
 }
 
 void L2NextCryptoApp::ReadCustomConfigPath()
@@ -76,8 +67,8 @@ void L2NextCryptoApp::ReadCustomConfigPath()
 void L2NextCryptoApp::awaitClosing()
 {
 	cout << "Press any key to exit program.";
-	string awaitClosing = "";
-	getline(cin, awaitClosing);
+	std::string await = "";
+	getline(cin, await);
 }
 
 int main()
@@ -100,12 +91,11 @@ int main()
 		{
 			try
 			{
-				auto encrypted = L2NextCryptoUtils::ReadFromFile(cp.src);
+				auto encrypted = Utils::FileHelper::ReadFromFile(cp.src);
 				auto decrypted = L2NextCrypto::Decrypt(encrypted);
-				L2NextCryptoUtils::WriteToFile(cp.out, decrypted);
+				Utils::FileHelper::WriteToFile(cp.out, decrypted);
 
 				app->PrintDecryptResult(cp.src, EDecryptErrorStatus::NONE);
-				
 			}
 			catch (EDecryptErrorStatus error)
 			{

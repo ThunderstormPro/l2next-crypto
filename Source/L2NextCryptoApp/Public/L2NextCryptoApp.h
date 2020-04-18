@@ -4,33 +4,26 @@
 #include "pch.h"
 #include <string>
 #include <iostream>
-#include <sstream>
-#include <fstream>
-#include <Windows.h>
 #include <functional>
 #include <memory>
 #include <typeinfo>
-#include "L2NextCrypto.h"
 
+#include "L2NextCrypto.h"
+#include "Utils/FileHelper.h"
 #include "ConfigReader/ConfigReader.h"
 
 class L2NextCryptoApp
 {
 public:
-	/* Methods */
 	static unique_ptr<L2NextCryptoApp> getRef();
 
 	void PrintIntro();
 	void PrintDecryptResult(std::string path, EDecryptErrorStatus error);
-	void ReadCustomConfigPath();
-
-	// TODO Extract to utils
-	string GetCurrentWorkingDirectory();
-	string GetConfigPath();
-
 	void awaitClosing();
 
-	/* Fields */
+	void ReadCustomConfigPath();
+	string GetConfigPath();
+
 	const string defaultYamlConfig = "config\\config.yaml";
 	string customYamlConfig = "";
 	string ConfigPath = "";
