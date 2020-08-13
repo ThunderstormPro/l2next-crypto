@@ -1,4 +1,4 @@
-# lineage-crypto
+# l2next-crypto
 Encrypt / Decrypt C++ library for Lineage 2 files.
 
 # Requirements
@@ -36,9 +36,6 @@ Additional argument can be provided to enable/disable building of test applicati
 Visual Studio installed on your PC.
 Below is the list of supported VS versions:
 
-* Visual Studio 10 (2010)
-* Visual Studio 11 (2012)
-* Visual Studio 12 (2013)
 * Visual Studio 14 (2015)
 * Visual Studio 15 (2017)
 * Visual Studio 16 (2019)
