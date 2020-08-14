@@ -1,4 +1,4 @@
-# l2next-crypto
+# L2NextCrypto
 Encrypt / Decrypt C++ library for Lineage 2 files.
 
 # Requirements
