@@ -6,17 +6,13 @@
 #include <vector>
 #include <memory>
 #include "Struct/ConfigBase.h"
+#include "Utils/Logging.h"
 #include "yaml-cpp/yaml.h"
-
-using namespace std;
-
-const string MSG_ERROR_LOAD_CONFIG = "-- Error message output: ";
 
 class ConfigReader
 {
-// API
 public:
-	static unique_ptr<ConfigBase> TryLoadConfig(const string& path);
+	static std::unique_ptr<ConfigBase> TryLoadConfig(const std::string& path);
 };
 
 #endif //H_CONFIG_READER

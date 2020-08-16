@@ -6,21 +6,29 @@
 #include <sstream>
 #include "DuplexStream.h"
 
+constexpr int BUFFER_SIZE = 8192;
+
 namespace L2NextCryptoStreams
 {
 	class InputStream
 	{
-		public:
-			InputStream(const char* data, const int size)
-				: current(std::string(data, size)) {}
+	public:
+		InputStream(const std::stringstream& stream)
+		{
+			char buffer[BUFFER_SIZE];
 
-			DuplexStream& operator >> (DuplexStream& pipe)
-			{
-				pipe.next << pipe.Transform(current).rdbuf();
-				return pipe;
-			}
-		private:
-			std::stringstream current;
-		};
+			stream.rdbuf()->pubsetbuf(buffer, BUFFER_SIZE);
+
+			current << stream.rdbuf();
+		}
+
+		DuplexStream& operator >> (DuplexStream& pipe)
+		{
+			pipe.next << pipe.Transform(current).rdbuf();
+			return pipe;
+		}
+	private:
+		std::stringstream current;
+	};
 }
 #endif

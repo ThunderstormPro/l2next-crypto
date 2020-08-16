@@ -38,12 +38,12 @@ bool HeaderValidator::GetVersion(EHeaderVersion& versionRef)
 			return true;
 		}
 
-		versionRef = (EHeaderVersion&)version;
+		versionRef = EHeaderVersion::NOT_IMPL;
 		return false;
 	}
 	catch (std::exception e)
 	{
-		versionRef = INVALID;
+		versionRef = EHeaderVersion::INVALID;
 		return false;
 	}
 }

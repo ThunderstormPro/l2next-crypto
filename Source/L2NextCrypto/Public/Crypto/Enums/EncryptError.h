@@ -1,0 +1,12 @@
+#ifndef H_ENCRYPT_ERROR
+#define H_ENCRYPT_ERROR
+
+enum class EEncryptError
+{
+	VERSION_NOT_SUPPORTED,
+	INVALID_HEADER,
+	DEFLATE_FAILED,
+	NONE
+};
+
+#endif // H_ENCRYPT_ERROR
