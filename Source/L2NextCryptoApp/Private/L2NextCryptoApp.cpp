@@ -4,64 +4,23 @@
 #include "L2NextCryptoApp.h"
 
 using namespace L2NextCryptoStreams;
-
+using namespace Utils;
 
 unique_ptr<L2NextCryptoApp> L2NextCryptoApp::getRef()
 {
 	return make_unique<L2NextCryptoApp>();
 }
 
-void L2NextCryptoApp::PrintIntro()
-{
-	cout << "# L2NextCrypto.\n";
-	cout << "# By default config.yaml located in config/config.yaml is used for enc/dec tasks.\n";
-	cout << "# If you want to specify a custom yaml config, type a `filename.yaml`, that is located relative to app directory.\n";
-	cout << "#\n";
-	cout << "# Enter custom yaml config path, to skip just press ENTER:\n";
-}
-
-void L2NextCryptoApp::PrintDecryptResult(std::string path, EDecryptErrorStatus error) {
-
-	const std::string filename = path.substr(path.find_last_of("/\\") + 1);
-
-	if (error == EDecryptErrorStatus::NONE) {
-		cout << "-------------------------------------------------------------" << std::endl;
-		cout << "File decryption succeeded: " << filename << std::endl;
-		cout << "-------------------------------------------------------------" << std::endl;
-
-		return;
-	}
-
-	cout << "-------------------------------------------------------------" << std::endl;
-	cout << "File decryption failed:" << filename << std::endl;
-
-	switch (error)
-	{
-	case EDecryptErrorStatus::INVALID_HEADER:
-		cout << "Reason: Input file has invalid header" << std::endl;
-		break;
-	case EDecryptErrorStatus::VERSION_NOT_SUPPORTED:
-		cout << "Reason: Input file with this version is not supported" << std::endl;
-		break;
-	case EDecryptErrorStatus::INFLATE_FAILED:
-		cout << "Reason: zlib inflate operation failed" << std::endl;
-		break;
-	}
-
-	cout << "-------------------------------------------------------------" << std::endl;
-}
-
-
-string L2NextCryptoApp::GetConfigPath()
-{
-	return customYamlConfig.empty()
-		? Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
-		: Utils::FileHelper::GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
-}
-
 void L2NextCryptoApp::ReadCustomConfigPath()
 {
 	getline(cin, customYamlConfig);
+}
+
+std::string L2NextCryptoApp::GetConfigPath()
+{
+	return customYamlConfig.empty()
+		? FileHelper::GetCurrentWorkingDirectory() + "\\" + defaultYamlConfig
+		: FileHelper::GetCurrentWorkingDirectory() + "\\" + customYamlConfig;
 }
 
 void L2NextCryptoApp::awaitClosing()
@@ -75,32 +34,51 @@ int main()
 {
 	auto app = L2NextCryptoApp::getRef();
 
-	app->PrintIntro();
+	Logging::PrintIntro();
 	app->ReadCustomConfigPath();
 
+	Logging::PrintConfigLoadStart();
 	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
-	if (config == nullptr)
-	{
-		return 0;
-	}
-
-	if (!config->Decrypt.empty())
+	if (config && !config->Decrypt.empty())
 	{
 		for (ConfigPaths cp : config->Decrypt)
 		{
-			try
-			{
-				auto encrypted = Utils::FileHelper::ReadFromFile(cp.src);
-				auto decrypted = L2NextCrypto::Decrypt(encrypted);
-				Utils::FileHelper::WriteToFile(cp.out, decrypted);
+			Logging::PrintSeparator();
 
-				app->PrintDecryptResult(cp.src, EDecryptErrorStatus::NONE);
-			}
-			catch (EDecryptErrorStatus error)
+			std::ifstream input(cp.src, std::ios::binary);
+			std::ofstream output(cp.out, std::ios::binary);
+
+			if (input.is_open())
 			{
-				app->PrintDecryptResult(cp.src, error);
+				Logging::PrintDecryptStart(cp.src);
+
+				std::stringstream stream;
+				stream << input.rdbuf();
+
+				try {
+					auto decrypted = L2NextCrypto::Decrypt(stream);
+
+					std::copy(
+						decrypted.cbegin(),
+						decrypted.cend(),
+						std::ostream_iterator<char>(output)
+					);
+
+					Logging::PrintDecryptSuccess();
+				}
+				catch (EDecryptError err) {
+					Logging::PrintDecryptError(err);
+				}
 			}
+			else {
+				Logging::PrintFileError();
+			}
+
+			input.close();
+			output.close();
+
+			Logging::PrintSeparator();
 		}
 	}
 

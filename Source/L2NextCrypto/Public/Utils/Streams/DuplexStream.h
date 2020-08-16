@@ -8,23 +8,23 @@ namespace L2NextCryptoStreams
 {
 	class DuplexStream
 	{
-		public:
-			DuplexStream()
-			{}
+	public:
+		DuplexStream()
+		{}
 
-			virtual std::stringstream& Transform(std::stringstream& input)
-			{
-				return input;
-			};
+		virtual std::stringstream& Transform(std::stringstream& input)
+		{
+			return input;
+		};
 
-			DuplexStream& operator >> (DuplexStream& pipe)
-			{
-				pipe.next << pipe.Transform(next).rdbuf();
-				return pipe;
-			}
+		DuplexStream& operator >> (DuplexStream& pipe)
+		{
+			pipe.next << pipe.Transform(next).rdbuf();
+			return pipe;
+		}
 
-			std::stringstream current;
-			std::stringstream next;
+		std::stringstream current;
+		std::stringstream next;
 	};
 }
 

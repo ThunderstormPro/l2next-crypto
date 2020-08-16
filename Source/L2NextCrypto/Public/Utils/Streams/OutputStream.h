@@ -3,20 +3,23 @@
 
 #include <sstream>
 #include <memory>
+#include <vector>
 #include <streambuf>
 #include "DuplexStream.h"
 
 namespace L2NextCryptoStreams
 {
-	class OutputStream: public DuplexStream
+	class OutputStream : public DuplexStream
 	{
 	public:
 		OutputStream()
 		{}
 
-		std::string GetData()
+		std::vector<unsigned char> GetBuffer()
 		{
-			return std::string(next.str().c_str(), next.str().size());
+			std::vector<unsigned char> buffer{ std::istreambuf_iterator<char>(next), {} };
+
+			return buffer;
 		};
 	};
 }

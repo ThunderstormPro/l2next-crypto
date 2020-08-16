@@ -28,6 +28,8 @@ add_source_group(Source.ConfigReader.Struct
 add_source_group(Source.Utils
 	"Public/Utils/FileHelper.h"
 	"Private/Utils/FileHelper.cpp"
+	"Public/Utils/Logging.h"
+	"Private/Utils/Logging.cpp"
 )
 
 add_source_group(Source.PrecompiledHeaders

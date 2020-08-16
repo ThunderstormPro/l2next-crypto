@@ -11,11 +11,8 @@
 # Enqueue following files for decrypt.
 decrypt: 
     # Ver - 413
-  - src: 'C:\Projects\playground\system-hf-p5\chargrp.dat'
-    out: 'C:\Projects\playground\system-hf-p5-dec\dec-chargrp.dat'
-    # Ver - 413
-  - src: 'C:\Projects\playground\system-hf-p5\armorgrp.dat'
-    out: 'C:\Projects\playground\system-hf-p5-dec\dec-armorgrp.dat.dat'
+  - src: 'C:\Projects\Testing\Armorgrp.dat'
+    out: 'C:\Projects\Testing\dec-Armorgrp.dat'
 
 # Enqueue following files for encrypt.
 encrypt: []

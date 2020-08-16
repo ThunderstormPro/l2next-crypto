@@ -41,14 +41,8 @@ add_source_group(Source.Crypto.Validators.HeaderValidator.Structs
 add_source_group(Source.Crypto.Enums
 	"Public/Crypto/Enums/CryptType.h"
 	"Public/Crypto/Enums/HeaderVersion.h"
-	"Public/Crypto/Enums/DecryptErrorStatus.h"
-	"Public/Crypto/Enums/EncryptErrorStatus.h"
-)
-
-# Crypto structs.
-add_source_group(Source.Crypto.Structs
-	"Public/Crypto/Structs/DecryptResult.h"
-	"Public/Crypto/Structs/EncryptResult.h"
+	"Public/Crypto/Enums/DecryptError.h"
+	"Public/Crypto/Enums/EncryptError.h"
 )
 
 # Crypto algorithms.
@@ -116,10 +110,6 @@ add_source_group(Source.Crypto.Algorithms.41x.Shared
 # Shared.
 add_source_group(Source.Shared.Templates
 	"Public/Shared/Templates/EventTemplate.h"
-)
-
-add_source_group(Source.Shared.Structs
-	"Public/Shared/Structs/FileData.h"
 )
 
 # Utils.
