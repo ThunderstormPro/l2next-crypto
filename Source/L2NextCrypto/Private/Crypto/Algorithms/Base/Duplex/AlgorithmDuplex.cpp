@@ -26,6 +26,17 @@ std::stringstream& AlgorithmDuplex::Transform(std::stringstream& stream)
 	case ECryptType::DEC:
 	{
 		auto duplex = algorithm->GetDuplex().decrypt;
+
+		duplex->Bind_OnTransformChunk([&](STransformedChunk transformedChunk) {
+			
+			//TODO Should be revised later.
+			SDecryptedChunk decryptedChunk;
+			decryptedChunk.current = transformedChunk.current;
+			decryptedChunk.total = transformedChunk.total;
+
+			Exec_OnDecryptChunk(decryptedChunk);
+		});
+
 		return duplex->Transform(stream);
 	}
 	default:

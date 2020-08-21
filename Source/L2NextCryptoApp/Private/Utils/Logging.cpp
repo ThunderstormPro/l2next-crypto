@@ -1,5 +1,16 @@
 #include "Utils/Logging.h"
 
+void Utils::Logging::PrintLogo()
+{
+	std::printf(
+		" _     ___  _  _            _     ___                   _         \n"
+		"| |   |_  )| \\| | ___ __ __| |_  / __| _ _  _  _  _ __ | |_  ___  \n"
+		"| |__  / / | .` |/ -_)\\ \\ /|  _|| (__ | '_|| || || '_ \\|  _|/ _ \\ \n"
+		"|____|/___||_|\\_|\\___|/_\\_\\ \\__| \\___||_|   \\_, || .__/ \\__|\\___/ \n"
+		"                                            |__/ |_|              \n"
+	);
+}
+
 void Utils::Logging::PrintLog(std::string msg)
 {
 	std::printf("Log: %s \n", msg.c_str());
@@ -16,8 +27,11 @@ void Utils::Logging::PrintError(std::string msg, std::string reason)
 
 void Utils::Logging::PrintIntro()
 {
+	Utils::Logging::PrintLogo();
+
+	std::printf("\n");
+
 	std::printf(
-		"# L2NextCrypto.\n"
 		"# By default config.yaml located in config/config.yaml is used for enc/dec tasks.\n"
 		"# If you want to specify a custom yaml config, type a `filename.yaml`, that is located relative to app directory.\n"
 		"# Enter custom yaml config path, to skip just press ENTER:\n"
@@ -54,7 +68,7 @@ void Utils::Logging::PrintDecryptError(EDecryptError error)
 
 void Utils::Logging::PrintDecryptSuccess()
 {
-	Utils::Logging::PrintLog("File decryption succeeded.");
+	Utils::Logging::PrintLog("File successfully decrypted.");
 }
 
 void Utils::Logging::PrintFileError()
@@ -65,4 +79,22 @@ void Utils::Logging::PrintFileError()
 void Utils::Logging::PrintSeparator()
 {
 	std::printf("-------------------------------------------------------------\n");
+}
+
+void Utils::Logging::PrintProgress(std::string heading, unsigned int current, unsigned int total)
+{
+	double percentage = (double)current / total;
+	int val = (int)(percentage * 100);
+	int lpad = (int)(percentage * PBWIDTH);
+	int rpad = PBWIDTH - lpad;
+
+	std::printf(
+		"\rLog: %s - %3d%% [%.*s%*s].",
+		heading.c_str(), val, lpad, PBSTR, rpad, ""
+	);
+	fflush(stdout);
+
+	if (val == 100) {
+		std::printf("\n");
+	}
 }

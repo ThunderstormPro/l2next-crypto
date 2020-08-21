@@ -1,6 +1,7 @@
 #ifndef H_LINEAGE_CRYPTO
 #define H_LINEAGE_CRYPTO
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -9,6 +10,7 @@
 #include <ostream>
 #include <fstream>
 #include <iostream>
+#include <functional>
 #include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
 #include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
 #include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
@@ -25,11 +27,14 @@ using namespace L2NextCryptoStreams;
 class L2NextCrypto
 {
 public:
-	static std::vector<unsigned char> Decrypt(const std::stringstream& encrypted);
-	static std::vector<unsigned char> Decrypt(const std::vector<unsigned char>& encrypted);
+	std::string Decrypt(const std::stringstream& encrypted);
+
+	void OnDecryptChunk(std::function<void(const SDecryptedChunk&)> callback);
+	void OnInflateChunk(std::function<void(const SInflatedChunk&)> callback);
 
 private:
-	static std::vector<unsigned char> Decrypt(InputStream& encrypted);
+	std::function<void(const SDecryptedChunk&)> OnDecryptChunkCallback;
+	std::function<void(const SInflatedChunk&)> OnInflateChunkCallback;
 };
 
 #endif

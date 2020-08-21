@@ -1,27 +1,8 @@
 #include "L2NextCrypto.h"
 
-std::vector<unsigned char> L2NextCrypto::Decrypt(const std::vector<unsigned char>& encrypted)
-{
-	std::stringstream stream;
-
-	std::copy(encrypted.begin(), encrypted.end(), std::ostream_iterator<unsigned char>(stream));
-
-	InputStream input(stream);
-
-	return L2NextCrypto::Decrypt(input);
-}
-
-
-std::vector<unsigned char> L2NextCrypto::Decrypt(const std::stringstream& encrypted)
+std::string L2NextCrypto::Decrypt(const std::stringstream& encrypted)
 {
 	InputStream input(encrypted);
-
-	return L2NextCrypto::Decrypt(input);
-}
-
-
-std::vector<unsigned char> L2NextCrypto::Decrypt(InputStream& encrypted)
-{
 	HeaderValidatorDuplex validator;
 	AlgorithmDuplex algorithm(ECryptType::DEC);
 	InflateDuplex inflator;
@@ -40,11 +21,33 @@ std::vector<unsigned char> L2NextCrypto::Decrypt(InputStream& encrypted)
 		}
 	});
 
+	algorithm.Bind_OnDecryptChunk([&](SDecryptedChunk chunk) {
+		if (this->OnDecryptChunkCallback) {
+			OnDecryptChunkCallback(chunk);
+		}
+	});
+
+	inflator.Bind_OnInflateChunk([&](SInflatedChunk chunk) {
+		if (this->OnInflateChunkCallback) {
+			OnInflateChunkCallback(chunk);
+		}
+	});
+
 	inflator.Bind_OnInflateFailed([](const int& res) {
 		throw EDecryptError::INFLATE_FAILED;
 	});
 
-	encrypted >> validator >> algorithm >> inflator >> output;
+	input >> validator >> algorithm >> inflator >> output;
 
-	return output.GetBuffer();
+	return output.GetResult();
+}
+
+void L2NextCrypto::OnDecryptChunk(std::function<void(const SDecryptedChunk&)> callback)
+{
+	OnDecryptChunkCallback = callback;
+}
+
+void L2NextCrypto::OnInflateChunk(std::function<void(const SInflatedChunk&)> callback)
+{
+	OnInflateChunkCallback = callback;
 }

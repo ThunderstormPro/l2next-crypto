@@ -65,6 +65,7 @@ add_source_group(Source.Crypto.Algorithms.Base.Duplex
 
 # Base events.
 add_source_group(Source.Crypto.Algorithms.Base.Events
+	"Public/Crypto/Algorithms/Base/Events/OnDecryptChunk.h"
 	"Public/Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
 )
 	
@@ -78,6 +79,7 @@ add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Duplex
 
 add_source_group(Source.Crypto.Algorithms.Shared.ZLib.Events
 	"Public/Crypto/Algorithms/Shared/ZLib/Events/OnInflateFailed.h"
+	"Public/Crypto/Algorithms/Shared/ZLib/Events/OnInflateChunk.h"
 )
 
 add_source_group(Source.Crypto.Algorithms.Shared.Rsa
@@ -114,7 +116,7 @@ add_source_group(Source.Shared.Templates
 
 # Utils.
 
-# BufferedStream.
+# Streams.
 add_source_group(Source.Utils.Streams
 	"Public/Utils/Streams/InputStream.h"
 	"Private/Utils/Streams/InputStream.cpp"
@@ -122,4 +124,8 @@ add_source_group(Source.Utils.Streams
 	"Private/Utils/Streams/OutputStream.cpp"
 	"Public/Utils/Streams/DuplexStream.h"
 	"Private/Utils/Streams/DuplexStream.cpp"
+)
+
+add_source_group(Source.Utils.Streams.Events
+	"Public/Utils/Streams/Events/OnTransformChunk.h"
 )
