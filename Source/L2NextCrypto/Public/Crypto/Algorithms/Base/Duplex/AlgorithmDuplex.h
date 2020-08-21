@@ -5,6 +5,7 @@
 #include <sstream>
 #include "Utils/Streams/DuplexStream.h"
 #include "Crypto/Enums/CryptType.h"
+#include "Crypto/Algorithms/Base/Events/OnDecryptChunk.h"
 #include "Crypto/Algorithms/Base/Events/OnDecryptFailed.h"
 
 using namespace::L2NextCryptoStreams;
@@ -12,6 +13,7 @@ using namespace::CryptoEvents;
 
 class AlgorithmDuplex
 	: public DuplexStream
+	, public OnDecryptChunk
 	, public OnDecryptFailed
 {
 public:

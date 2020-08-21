@@ -4,6 +4,7 @@
 #include <sstream>
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <streambuf>
 #include "DuplexStream.h"
 
@@ -15,11 +16,9 @@ namespace L2NextCryptoStreams
 		OutputStream()
 		{}
 
-		std::vector<unsigned char> GetBuffer()
+		std::string GetResult()
 		{
-			std::vector<unsigned char> buffer{ std::istreambuf_iterator<char>(next), {} };
-
-			return buffer;
+			return next.str();
 		};
 	};
 }

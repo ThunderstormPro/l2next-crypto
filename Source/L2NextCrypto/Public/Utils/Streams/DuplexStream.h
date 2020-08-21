@@ -3,10 +3,14 @@
 
 #include <memory>
 #include <sstream>
+#include "Utils/Streams/Events/OnTransformChunk.h"
+
+using namespace::CryptoEvents;
 
 namespace L2NextCryptoStreams
 {
 	class DuplexStream
+		: public OnTransformChunk
 	{
 	public:
 		DuplexStream()

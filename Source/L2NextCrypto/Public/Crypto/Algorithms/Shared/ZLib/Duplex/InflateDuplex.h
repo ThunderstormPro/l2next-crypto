@@ -5,6 +5,7 @@
 
 #include "Utils/Streams/DuplexStream.h"
 #include "Crypto/Algorithms/Shared/ZLib/Events/OnInflateFailed.h"
+#include "Crypto/Algorithms/Shared/ZLib/Events/OnInflateChunk.h"
 
 constexpr unsigned int CHUNK = 16384;
 
@@ -13,6 +14,7 @@ using namespace::CryptoEvents;
 
 class InflateDuplex
 	: public DuplexStream
+	, public OnInflateChunk
 	, public OnInflateFailed
 {
 public:

@@ -7,10 +7,14 @@
 #include "FileHelper.h"
 #include "L2NextCrypto.h"
 
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 45
+
 
 namespace Utils {
 	class Logging {
 	public:
+		static void PrintLogo();
 		static void PrintIntro();
 		static void PrintConfigLoadStart();
 		static void PrintDecryptStart(std::string path);
@@ -18,6 +22,7 @@ namespace Utils {
 		static void PrintDecryptSuccess();
 		static void PrintFileError();
 		static void PrintSeparator();
+		static void PrintProgress(std::string heading, unsigned int current, unsigned int total);
 		static void PrintLog(std::string msg);
 		static void PrintError(std::string msg, std::string reason = "");
 	};

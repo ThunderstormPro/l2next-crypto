@@ -5,9 +5,10 @@
 std::stringstream& InflateDuplex::Transform(std::stringstream& input)
 {
 	int returnCode;
+	SInflatedChunk inflatedChunk;
 	unsigned int currentBlockSize = 0;
-	z_stream strm;
 
+	z_stream strm;
 	strm.zalloc = Z_NULL;
 	strm.zfree = Z_NULL;
 	strm.opaque = Z_NULL;
@@ -17,11 +18,16 @@ std::stringstream& InflateDuplex::Transform(std::stringstream& input)
 	{
 		Exec_OnInflateFailed(returnCode);
 	}
+
+	input.seekg(0, std::ios::end);
+	inflatedChunk.total = input.tellg();
+	input.seekg(0, std::ios::beg);
 	
 	do {
 		input.read(in.data(), CHUNK);
 
 		strm.avail_in = input.gcount();
+		inflatedChunk.current += strm.avail_in;
 
 		if (input.bad()) {
 			(void)inflateEnd(&strm);
@@ -32,6 +38,8 @@ std::stringstream& InflateDuplex::Transform(std::stringstream& input)
 			break;
 
 		strm.next_in = (Bytef*)in.data();
+
+		Exec_OnInflateChunk(inflatedChunk);
 
 		do {
 			strm.avail_out = CHUNK;

@@ -1,6 +1,3 @@
-// L2EncDec.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include "L2NextCryptoApp.h"
 
 using namespace L2NextCryptoStreams;
@@ -53,17 +50,21 @@ int main()
 			{
 				Logging::PrintDecryptStart(cp.src);
 
-				std::stringstream stream;
-				stream << input.rdbuf();
-
 				try {
-					auto decrypted = L2NextCrypto::Decrypt(stream);
+					std::stringstream stream;
+					stream << input.rdbuf();
 
-					std::copy(
-						decrypted.cbegin(),
-						decrypted.cend(),
-						std::ostream_iterator<char>(output)
-					);
+					auto crypto = std::make_unique<L2NextCrypto>();
+
+					crypto->OnDecryptChunk([&](const SDecryptedChunk& chunk) {
+						Logging::PrintProgress("Decrypt", chunk.current, chunk.total);
+					});
+
+					crypto->OnInflateChunk([&](const SInflatedChunk& chunk) {
+						Logging::PrintProgress("Inflate", chunk.current, chunk.total);
+					});
+
+					output << crypto->Decrypt(stream);
 
 					Logging::PrintDecryptSuccess();
 				}
