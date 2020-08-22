@@ -9,16 +9,16 @@ Encrypt / Decrypt C++ library for Lineage 2 files.
 std::ifstream input(cp.src, std::ios::binary);
 std::ofstream output(cp.out, std::ios::binary);
 
-		try {
-					std::stringstream stream;
-					stream << input.rdbuf();
+  try {
+    std::stringstream stream;
+    stream << input.rdbuf();
 
-					auto crypto = std::make_unique<L2NextCrypto>();
-					output << crypto->Decrypt(stream);
-     
-   catch (EDecryptError err) {
+    auto crypto = std::make_unique<L2NextCrypto>();
+    output << crypto->Decrypt(stream);
+  }
+  catch (EDecryptError err) {
      // Log error
-   }
+  }
 ```
 
 *With events*
@@ -27,25 +27,25 @@ std::ofstream output(cp.out, std::ios::binary);
 std::ifstream input(cp.src, std::ios::binary);
 std::ofstream output(cp.out, std::ios::binary);
 
-		try {
-					std::stringstream stream;
-					stream << input.rdbuf();
+  try {
+    std::stringstream stream;
+    stream << input.rdbuf();
 
-					auto crypto = std::make_unique<L2NextCrypto>();
-     
-     crypto->OnDecryptChunk([&](const SDecryptedChunk& chunk) {
-					  // Print progress
-					});
+    auto crypto = std::make_unique<L2NextCrypto>();
+    
+    crypto->OnDecryptChunk([&](const SDecryptedChunk& chunk) {
+      // Print progress
+    });
 
-					crypto->OnInflateChunk([&](const SInflatedChunk& chunk) {
-						 // Print progress
-					});
-     
-					output << crypto->Decrypt(stream);
-     
-   catch (EDecryptError err) {
+    crypto->OnInflateChunk([&](const SInflatedChunk& chunk) {
+      // Print progress
+    });
+    
+    output << crypto->Decrypt(stream);
+  }
+  catch (EDecryptError err) {
      // Log error
-   }
+  }
 ```
 
 # Requirements
