@@ -1,6 +1,53 @@
 # L2NextCrypto
 Encrypt / Decrypt C++ library for Lineage 2 files.
 
+# Usage
+
+*Simple usage*
+
+```
+std::ifstream input(cp.src, std::ios::binary);
+std::ofstream output(cp.out, std::ios::binary);
+
+		try {
+					std::stringstream stream;
+					stream << input.rdbuf();
+
+					auto crypto = std::make_unique<L2NextCrypto>();
+					output << crypto->Decrypt(stream);
+     
+   catch (EDecryptError err) {
+     // Log error
+   }
+```
+
+*With events*
+
+```
+std::ifstream input(cp.src, std::ios::binary);
+std::ofstream output(cp.out, std::ios::binary);
+
+		try {
+					std::stringstream stream;
+					stream << input.rdbuf();
+
+					auto crypto = std::make_unique<L2NextCrypto>();
+     
+     crypto->OnDecryptChunk([&](const SDecryptedChunk& chunk) {
+					  // Print progress
+					});
+
+					crypto->OnInflateChunk([&](const SInflatedChunk& chunk) {
+						 // Print progress
+					});
+     
+					output << crypto->Decrypt(stream);
+     
+   catch (EDecryptError err) {
+     // Log error
+   }
+```
+
 # Requirements
 
 The below requirements must be met to build this library.
