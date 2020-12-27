@@ -54,7 +54,7 @@ The below requirements must be met to build this library.
 
 * Windows 7 or newer OS
 * CMake version 3.1
-* Visual Studio 2010 or newer. Visual Studio 2019 and Windows 10 64-bit are recommended.
+* Visual Studio 2010 or newer. Visual Studio 2020 and Windows 10 64-bit are recommended.
  
 # Generating solution
 
@@ -65,7 +65,7 @@ Ex.
 
 * For Windows x32
 ```bash
- cmake -B Build -G "Visual Studio 16 2019" -A x32
+ cmake -B Build -G "Visual Studio 16 2020" -A x32
 ```
 
 - For Windows x64
@@ -85,7 +85,7 @@ Below is the list of supported VS versions:
 
 * Visual Studio 14 (2015)
 * Visual Studio 15 (2017)
-* Visual Studio 16 (2019)
+* Visual Studio 16 (2020)
 
 # Building solution
 
