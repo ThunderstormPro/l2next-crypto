@@ -65,9 +65,6 @@ int main()
 
 					Utils::Logging::PrintDecryptSuccess();
 				}
-				catch (std::error_code e) {
-					std::cout << e;
-				}
 				catch (EDecryptError err) {
 					Utils::Logging::PrintDecryptError(err);
 				}
