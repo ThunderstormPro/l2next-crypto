@@ -15,10 +15,6 @@
         {
           "name": "VCPKG_TARGET_TRIPLET",
           "value": "x64-windows-static-md"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "C:\\vcpkgx\\scripts\\buildsystems\\vcpkg.cmake"
         }
       ]
     },
@@ -37,10 +33,6 @@
         {
           "name": "VCPKG_TARGET_TRIPLET",
           "value": "x64-windows-static-md"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "C:\\vcpkgx\\scripts\\buildsystems\\vcpkg.cmake"
         }
       ]
     }
