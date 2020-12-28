@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "L2NextCrypto.h"
 
 std::string L2NextCrypto::Decrypt(const std::stringstream& encrypted)
