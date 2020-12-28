@@ -1,17 +1,6 @@
 #include <iostream>
 
 #include "L2NextCrypto.h"
-#include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
-#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
-#include "Crypto/Algorithms/Base/Events/OnDecryptChunk.h"
-#include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
-#include "Utils/Streams/InputStream.h"
-#include "Utils/Streams/OutputStream.h"
-#include "Utils/Streams/DuplexStream.h"
-#include "Crypto/Enums/HeaderVersion.h"
-#include "Crypto/Enums/CryptType.h"
-#include "Crypto/Enums/DecryptError.h"
-#include "Crypto/Enums/EncryptError.h"
 
 std::string L2NextCrypto::Decrypt(const std::stringstream& encrypted)
 {

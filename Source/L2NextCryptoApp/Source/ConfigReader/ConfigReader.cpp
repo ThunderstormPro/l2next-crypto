@@ -10,7 +10,7 @@ std::unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(const std::string& path)
 
 		if (!rootNode["decrypt"] || !rootNode["encrypt"])
 		{
-			//Utils::Logging::PrintError("Decrypt or encrypt fields are missing in yaml config file.");
+			Utils::Logging::PrintError("Decrypt or encrypt fields are missing in yaml config file.");
 			return nullptr;
 		}
 
@@ -38,13 +38,13 @@ std::unique_ptr<ConfigBase> ConfigReader::TryLoadConfig(const std::string& path)
 	}
 	catch (const YAML::BadFile e)
 	{
-		//Utils::Logging::PrintError("Cannot load yaml config file.", e.msg);
+		Utils::Logging::PrintError("Cannot load yaml config file.", e.msg);
 
 		return nullptr;
 	}
 	catch (const YAML::ParserException e)
 	{
-		//Logging::PrintError("Cannot load yaml config file due to parsing error.", e.msg);
+		Utils::Logging::PrintError("Cannot load yaml config file due to parsing error.", e.msg);
 		
 		return nullptr;
 	}
