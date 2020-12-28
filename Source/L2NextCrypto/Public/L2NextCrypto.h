@@ -1,5 +1,5 @@
-#ifndef H_LINEAGE_CRYPTO
-#define H_LINEAGE_CRYPTO
+#ifndef H_L2NEXTCRYPTO
+#define H_L2NEXTCRYPTO
 
 #include <memory>
 #include <string>
@@ -11,30 +11,38 @@
 #include <fstream>
 #include <iostream>
 #include <functional>
-#include "Crypto/Validators/HeaderValidator/Duplex/HeaderValidatorDuplex.h"
-#include "Crypto/Algorithms/Base/Duplex/AlgorithmDuplex.h"
-#include "Crypto/Algorithms/Shared/ZLib/Duplex/InflateDuplex.h"
-#include "Utils/Streams/InputStream.h"
-#include "Utils/Streams/OutputStream.h"
-#include "Utils/Streams/DuplexStream.h"
-#include "Crypto/Enums/HeaderVersion.h"
-#include "Crypto/Enums/CryptType.h"
-#include "Crypto/Enums/DecryptError.h"
-#include "Crypto/Enums/EncryptError.h"
 
-using namespace L2NextCryptoStreams;
+namespace CryptoEvents {
+	struct SDecryptedChunk {
+		unsigned int current;
+		unsigned int total;
+	};
+
+	struct SInflatedChunk {
+		unsigned int current;
+		unsigned int total;
+	};
+}
+
+enum class EDecryptError
+{
+	VERSION_NOT_SUPPORTED,
+	INVALID_HEADER,
+	INFLATE_FAILED,
+	NONE
+};
 
 class L2NextCrypto
 {
 public:
 	std::string Decrypt(const std::stringstream& encrypted);
 
-	void OnDecryptChunk(std::function<void(const SDecryptedChunk&)> callback);
-	void OnInflateChunk(std::function<void(const SInflatedChunk&)> callback);
+	void OnDecryptChunk(std::function<void(const CryptoEvents::SDecryptedChunk&)> callback);
+	void OnInflateChunk(std::function<void(const CryptoEvents::SInflatedChunk&)> callback);
 
 private:
-	std::function<void(const SDecryptedChunk&)> OnDecryptChunkCallback;
-	std::function<void(const SInflatedChunk&)> OnInflateChunkCallback;
+	std::function<void(const CryptoEvents::SDecryptedChunk&)> OnDecryptChunkCallback;
+	std::function<void(const CryptoEvents::SInflatedChunk&)> OnInflateChunkCallback;
 };
 
 #endif

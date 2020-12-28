@@ -1,34 +1,51 @@
-# Copyright (c) 2019 Alexei Gaidulean
+# Copyright (c) 2020 Alexei Gaidulean
 # All rights reserved.
 #
 # Use of this source code is governed by a MIT-style license that
 # can be found in the LICENSE file.
 
-# Project metadata.
-project(${PROJECT_NAME} VERSION 1.0.0)
+# List sources
+file(GLOB_RECURSE SOURCE_LIST "Source/*.cpp" "Source/*.h")
 
-# Add sources.
-include(App/Sources)
+# Add project and sources
+add_executable(L2NextCryptoApp ${SOURCE_LIST})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
 
-# Enqueue yaml for download.
-include("ThirdParty/yaml" REQUIRED)
+# Link libraries
+target_include_directories(L2NextCryptoApp PRIVATE ${CMAKE_CURRENT_LIST_DIR}/Source)
+target_link_libraries(L2NextCryptoApp PRIVATE L2NextCrypto)
 
-# Add executable target.
-add_executable(${PROJECT_NAME} WIN32 ${L2NextCryptoApp_SOURCES})
+# Add dependencies
+find_package(yaml-cpp CONFIG REQUIRED)
+target_link_libraries(L2NextCryptoApp PRIVATE yaml-cpp)
 
-# Add resources.
-include(App/Resources)
+# Setup build paths
+set_target_properties(L2NextCryptoApp
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${APP_BINARIES_DIR}
+    LIBRARY_OUTPUT_DIRECTORY ${APP_BINARIES_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${APP_BINARIES_DIR}
+)
 
-# Set test app properties.
-set_test_app_properties(L2NextCrypto)
+# Add post build events
+# Copy config file into /config directory
+add_custom_command(TARGET L2NextCryptoApp POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_BINARIES_DIR}/config)
+add_custom_command(TARGET L2NextCryptoApp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${APP_RESOURCES}/config.yaml ${APP_BINARIES_DIR}/config)
 
-# Link third party dependencies. 
-link_external_dependency(yaml ${PROJECT_NAME})
+# Copy library dll
+add_custom_command(TARGET L2NextCryptoApp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${LIB_BINARIES_DIR}/L2NextCrypto.dll ${APP_BINARIES_DIR})
 
-# Add project dependencies.
-link_internal_dependency(L2NextCrypto)
+# Copy library debug files
+list(APPEND LIB_DEBUG_BINARIES
+    ${LIB_BINARIES_DIR}/L2NextCrypto.exp
+    ${LIB_BINARIES_DIR}/L2NextCrypto.ilk
+    ${LIB_BINARIES_DIR}/L2NextCrypto.pdb
+)
 
-# Install export.
-if (L2NEXT_CPP_INSTALL)
-	export_install_configs()
-endif()
+set(ONLY_DEBUG $<NOT:$<CONFIG:DEBUG>>)
+add_custom_command(TARGET L2NextCryptoApp POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E
+    $<${ONLY_DEBUG}:echo>
+    $<${ONLY_DEBUG}:"">
+    copy_if_different ${LIB_DEBUG_BINARIES} ${APP_BINARIES_DIR}
+)
