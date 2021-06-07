@@ -14,6 +14,8 @@
 #include "Utils/Logging.h"
 #include "ConfigReader/ConfigReader.h"
 
+#define FORCE_EXIT 1;
+
 class L2NextCryptoApp
 {
 

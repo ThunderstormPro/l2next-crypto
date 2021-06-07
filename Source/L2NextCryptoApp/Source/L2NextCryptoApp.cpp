@@ -34,55 +34,58 @@ int main()
 	Utils::Logging::PrintConfigLoadStart();
 	auto config = ConfigReader::TryLoadConfig(app->GetConfigPath());
 
-	if (config && !config->Decrypt.empty())
+	if (config == nullptr || config->Decrypt.empty()) {
+		app->awaitClosing();
+		return FORCE_EXIT;
+	}
+
+	for (ConfigPaths cp : config->Decrypt)
 	{
-		for (ConfigPaths cp : config->Decrypt)
-		{
-			Utils::Logging::PrintSeparator();
+		Utils::Logging::PrintSeparator();
+		std::ifstream input(cp.src, std::ios::binary);
 
-			std::ifstream input(cp.src, std::ios::binary);
-			std::ofstream output(cp.out, std::ios::binary);
+		std::ofstream output(cp.out, std::ios::binary);
 
-			if (input.is_open())
-			{
-				Utils::Logging::PrintDecryptStart(cp.src);
-
-				try {
-					std::stringstream stream;
-					stream << input.rdbuf();
-					 
-					auto crypto = std::make_unique<L2NextCrypto>();
-
-					crypto->OnDecryptChunk([&](const CryptoEvents::SDecryptedChunk& chunk) {
-						Utils::Logging::PrintProgress("Decrypt", chunk.current, chunk.total);
-					});
-
-					crypto->OnInflateChunk([&](const CryptoEvents::SInflatedChunk& chunk) {
-						Utils::Logging::PrintProgress("Inflate", chunk.current, chunk.total);
-					});
-
-					output << crypto->Decrypt(stream);
-
-					Utils::Logging::PrintDecryptSuccess();
-				}
-				catch (EDecryptError err) {
-					Utils::Logging::PrintDecryptError(err);
-				}
-			}
-			else {
-				Utils::Logging::PrintFileError();
-			}
-
-			input.close();
-			output.close();
-
-			Utils::Logging::PrintSeparator();
+		if (!input.is_open()) {
+			Utils::Logging::PrintFileError();
+			app->awaitClosing();
+			return FORCE_EXIT;
 		}
+
+		Utils::Logging::PrintDecryptStart(cp.src);
+
+		try {
+			std::stringstream stream;
+			stream << input.rdbuf();
+
+			auto crypto = std::make_unique<L2NextCrypto>();
+
+			crypto->OnDecryptChunk([&](const CryptoEvents::SDecryptedChunk& chunk) {
+				Utils::Logging::PrintProgress("Decrypt", chunk.current, chunk.total);
+				});
+
+			crypto->OnInflateChunk([&](const CryptoEvents::SInflatedChunk& chunk) {
+				Utils::Logging::PrintProgress("Inflate", chunk.current, chunk.total);
+				});
+
+			output << crypto->Decrypt(stream);
+
+			Utils::Logging::PrintDecryptSuccess();
+		}
+		catch (EDecryptError err) {
+			Utils::Logging::PrintDecryptError(err);
+		}
+
+
+		input.close();
+		output.close();
+
+		Utils::Logging::PrintSeparator();
 	}
 
 	app->awaitClosing();
 	config.reset();
 	app.reset();
 
-	return 1;
+	return FORCE_EXIT;
 }
