@@ -5,7 +5,7 @@
 # can be found in the LICENSE file.
 
 # List sources
-file(GLOB_RECURSE SOURCE_LIST "Source/*.cpp" "Source/*.h")
+file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "Source/*.cpp" "Source/*.h")
 
 # Add project and sources
 add_executable(L2NextCryptoApp ${SOURCE_LIST})

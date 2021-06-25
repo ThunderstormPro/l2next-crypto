@@ -8,8 +8,8 @@
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS True)
 
 # List sources
-file(GLOB_RECURSE PUBLIC_SOURCE_LIST "Public/*.h")
-file(GLOB_RECURSE PRIVATE_SOURCE_LIST "Private/*.cpp" "Private/*.h")
+file(GLOB_RECURSE PUBLIC_SOURCE_LIST CONFIGURE_DEPENDS "Public/*.h")
+file(GLOB_RECURSE PRIVATE_SOURCE_LIST CONFIGURE_DEPENDS "Private/*.cpp" "Private/*.h")
 
 # Add project and sources
 add_library(L2NextCrypto SHARED ${PUBLIC_SOURCE_LIST} ${PRIVATE_SOURCE_LIST})
@@ -38,7 +38,8 @@ set_target_properties(L2NextCrypto
 )
 
 # Setup exports
-set_target_properties(L2NextCrypto
+set_target_properties(
+    L2NextCrypto
     PROPERTIES
     PUBLIC_HEADER ${PUBLIC_SOURCE_LIST}
 )
